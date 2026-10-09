@@ -1,0 +1,1786 @@
+智能体服务-开放服务接口
+
+
+提供智能体全生命周期的管理及调用。
+
+开放接口
+
+
+接口地址：在”接口认证信息“处获取
+
+鉴权认证
+
+
+在使用开放服务接口前，需要从平台上获取服务能力的 appKey 和 appSecret，其中 appKey 是应用标
+识，appSecret 是应用密钥，用以生成认证签名 sign，并作为应用鉴权的访问凭证。
+
+   1. 获取 appKey 和 appSecret：
+2. 生成 sign：
+
+ 基于 HmacSHA256 算法，将当前时间戳作为盐值，对 appKey 和 appSecret 进行哈希计算，进而生
+ 成认证签名 sign。
+
+ 示例（JAVA）：
+
+
+    public static String getSign(String key, String secret) {
+        long timestamp = System.currentTimeMillis();
+        String data = String.format("%d\n%s\n%s", timestamp, secret, key);
+        Mac hmacSHA256 = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secretKeySpec = new
+    SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        hmacSHA256.init(secretKeySpec);
+        byte[] sign = hmacSHA256.doFinal(data.getBytes(StandardCharsets.UTF_8));
+        return String.format("%d%s", timestamp, new String(new
+    org.apache.commons.codec.binary.Base64().encode(sign), StandardCharsets.UTF_8));
+    }
+
+
+ 示例 （Python）:
+
+
+    import hmac
+    import hashlib
+    import base64
+    import time
+
+    def get_sign(key, secret):
+        timestamp = int(time.time() * 1000)
+        data = f"{timestamp}\n{secret}\n{key}"
+        hmac_sha256 = hmac.new(secret.encode('utf-8'), data.encode('utf-8'), hashlib.sha256)
+        sign = hmac_sha256.digest()
+        return f"{timestamp}{base64.b64encode(sign).decode('utf-8')}"
+
+
+3. 访问凭证：
+
+ 此时，appKey 和 sign 即为访问凭证。
+
+ 注意，为了保护应用安全，请勿在接口调用时携带 appSecret，同时也应尽量避免将 appKey、
+  appSecret 以及生成的 sign 与他人共享或硬编码到程序。
+工作流程图
+
+
+
+
+
+接口列表
+
+
+   智能体执行：/open/api/v2/agent/execute
+
+    智能体停止：/open/api/v2/agent/execute/stop
+
+   智能体查询：/open/api/v2/agent/search
+    文件上传：/open/api/v2/agent/file/upload
+
+    文件下载：/open/api/v2/agent/file/download
+
+   智能体执行统计接口：/open/api/v2/agent/statistics
+
+   异步任务提交：/open/api/v2/agent/task/submit
+
+   异步任务取消：/open/api/v2/agent/task/stop
+
+   异步任务状态查询：/open/api/v2/agent/task/status
+
+   异步任务执行结果查询：/open/api/v2/agent/task/messages
+
+   智能体交互回答：/open/api/v2/agent/execute/resume
+
+   智能体测试集查询：/open/api/v2/agent/testCases
+
+
+公共认证参数
+
+
+http类型请求
+
+
+ 参数               位置               类型
+
+  appKey                            header                                 string
+
+  sign                               header                                 string
+
+
+状态码说明
+
+
+请求响应的code含义见下文"状态码表格"。
+
+FLAG状态码：服务调用反馈标识
+
+后续接口返回的flag状态码含义：
+
+1、标识为"0"：表示本次调用成功，无需其他操作
+
+2、标识为"1"：表示本次调用请求处理失败 ，无需其他操作，可以直接跳过
+
+3、标识为"2"：标识调用的服务异常，请停止调用，等待xx分钟后重试
+
+示例：其中的flag等于2就表示当前调用出错，并且不能直接跳过
+
+
+  {
+      "msg": "签名验证失败，请查看本地服务器时间是否正确. 当前服务器时间:2024-07-02 10:42:21",
+      "code": -402,
+      "flag": 2,
+      "data": null
+  }
+1. 智能体执行
+
+
+执行智能体。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/execute
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json、text/event-stream
+
+Body参数
+
+
+         必
+ 参数         类型         说明
+         须
+
+  sid      是     string         唯一会话标志（格式需为UUID格式的字符串）
+
+  id       是     string          智能体ID
+
+  input     否     string        用户输入， input和inputs优先使用input
+
+                       用户输入，参考 <附录-智能体：清单文件结构
+                                    AgentManifest>中input_parameters。对于文件类型的参
+  inputs     否    map<string,object>
+                        数，调用接口4进行上传得到文件id，以字符串形式传给对
+                       应参数
+
+  stream     否    boolean       是否流式，默认非流式
+
+  order     否     string             处理模式，常规routine/优先priority，默认routine
+
+  debugSwitch  否    boolean         是否开启调试模式，默认false
+
+header参数
+
+
+ 参数    必须    类型     说明
+
+  ext     否            string        扩展参数，示例child_preview:1;reason:1
+
+
+ child_preview ：是否显示子智能体的预览内容
+
+
+  默认值：0 （不显示）
+  可选值：
+
+         0 ：不输出子智能体预览
+
+         1 ：输出子智能体预览内容
+
+
+  适用场景：调试多智能体协作时，便于观察子任务执行过程
+
+
+
+
+ reason ：是否在最终结果中包含推理过程
+
+  默认值：0 （包含推理过程 —— 即“拼接”到主消息中）
+
+  可选值：
+
+         0 ：将推理过程拼接到最终消息正文
+
+         1 ：不拼接推理过程，但会在 mode=execute_result 的消息中额外返回一个
+         reasoning_content 字段，独立存放推理内容
+
+  适用场景：
+
+         reason=0 ：适合需要完整上下文的前端展示
+         reason=1 ：适合后端处理或需要分离“结果”与“思考”的场景
+
+
+非流式响应说明
+
+
+ 参数     必须     类型            说明
+
+  code     是             string             状态码，0成功，非0失败
+
+  msg     否             string            消息
+
+  data     否           <AgentResult>        智能体执行结果
+
+AgentResult结构
+
+
+ 参数          必须    类型               说明
+
+  session         是          <Session>            会话信息
+
+  results         是           map<string,object>        智能体解析信息
+
+  token_usage      是         <TokenUsage>          模型用量
+
+TokenUsage结构
+ 参数                   必须      类型      说明
+
+  prompt_tokens              是                  int          输入token
+
+  completion_tokens            是                  int          生成token
+
+  total_tokens               是                  int            总token
+
+Session结构
+
+
+ 参数          必须      类型               说明
+
+  id            是                 string                   会话ID
+
+  messages        是              list<Message>          会话记录
+
+Message结构
+
+
+ 参数           必须        类型         说明
+
+  role            是                     string         消息角色
+
+  content          是                     string         消息内容
+
+
+示例
+
+
+请求示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/execute' -H 'appKey: hengnaoG2rFOgq0HAeFAzgv2JXj'
+  -H 'sign: 1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type:
+  application/json' -d '{"id":"6fa29609-f174-4d3c-b040-696f5e49008f","inputs":{"input":"你
+  好","file":"file:abc.exe<b17da7f2-aa5a-414b-b7f7-57da4f922ea4>"},"sid":"6f01a692-8e33-4843-
+  b1b5-77fe4f50e805"}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+      "data": {
+          "token_usage":{
+            "completion_tokens":1,
+            "prompt_tokens":2,
+            "total_tokens":3
+          },
+          "session": {
+              "id": "5ae3f9dd243f73d6444460b64fbe8e08",
+              "messages": [
+                  {
+                      "role": "user",
+                      "content": "你好"
+                  },
+                  {
+                      "role": "assistant",
+                      "content": null
+                  }
+              ]
+          },
+          "results": {
+              "arg": "12345"
+          }
+      }
+  }
+
+
+
+流式响应说明
+
+
+ 参数     必须     类型            说明
+
+  code     是             string             状态码，0成功，非0失败
+
+  msg     否             string            消息
+
+  data     否           <AgentResult>        智能体执行结果
+
+AgentResult结构
+ 参数        必须    类型             说明
+
+
+                                消息模式，流式交互类型
+  mode       是           string
+                                                     总是preview
+
+                                消息类型：
+  type        是           string                       inline内置
+                                              custom自定义
+
+                                消息来源：
+                                                                        basic_llm
+                                                                         react_think
+                                                                        react_action
+                                                                    react_observe
+                                                                   react_answer
+                                                                         retrieval_doc_action
+  from        是           string
+                                                                        retrieval_doc_context
+                                                                      retrieval_doc_answer
+                                                                         retrieval_sql_generate
+                                                                           retrieval_sql_context
+                                                                         retrieval_sql_answer
+                                                                       restful_answer
+                                                                       execute_result
+
+  name        是           string             智能体名称
+
+  timestamp     是           string             消息时间戳
+
+  message_id     是           string               消息ID，相同消息ID拼接
+
+  content       是           string             消息内容
+
+  results       是         map<string,object>      执行结果参数
+
+
+示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/execute' -H 'appKey: hengnaoG2rFOgq0HAeFAzgv2JXj'
+  -H 'sign: 1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type:
+  application/json' -d '{"id":"6fa29609-f174-4d3c-b040-696f5e49008f","inputs":{"input":"你
+  好"},"sid":"6f01a692-8e33-4843-b1b5-77fe4f50e805","stream":true}'
+
+
+
+响应示例
+
+
+
+  data:{"code":0,"msg":"恭喜您，操作成功","data":{"mode":"preview","name":"插件列表查询助
+  手","from":"execute_result","message_id":"4595873339546348","type":"inline","content":"
+  {","timestamp":"1719538228859"}}
+  data:{"code":0,"msg":"恭喜您，操作成功","data":{"mode":"preview","name":"插件列表查询助
+  手","from":"execute_result","message_id":"4595873339546348","type":"inline","content":"\"","t
+  imestamp":"1719538228859"}}
+
+  ...
+
+  data:{"code":0,"msg":"恭喜您，操作成功","data":{"mode":"preview","name":"插件列表查询助
+  手","from":"execute_result","message_id":"4595873339546348","type":"inline","content":"}","ti
+  mestamp":"1719538228859"}}
+
+  data:{"code":0,"msg":"恭喜您，操作成功","data":{"mode":"preview","name":"插件列表查询助
+  手","from":"execute_result","message_id":"4595873339546348","type":"inline","timestamp":"1719
+  538228859"}}
+
+2. 智能体停止
+
+
+停止智能体执行。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/execute/stop
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+
+Body参数
+
+
+ 参数    必须    类型    说明
+
+  sid    是           string    唯一会话标志（格式需为UUID格式的字符串）
+
+
+响应说明
+
+
+ 参数      必须      类型       说明
+
+  code      是                string       状态码，0成功，非0失败
+
+  msg      否                string      消息
+
+  data      否                string      空
+示例
+
+
+请求示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/execute/stop' -H 'appKey:
+  hengnaoG2rFOgq0HAeFAzgv2JXj' -H 'sign:
+  1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type: application/json'
+  -d '{"sid":"6f01a692-8e33-4843-b1b5-77fe4f50e805"}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+      "data":null
+  }
+
+3.智能体查询
+
+
+查询智能体列表。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/search
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+Body参数:
+
+
+        必
+ 参数        类型    说明
+        须
+
+  keyword   否      string   根据应用名称、介绍、智能体ID模糊搜索
+
+                 智能体的查询范围，默认为0；
+                  0：全部智能体
+  scope    否       int
+                  1：仅官方的智能体
+                  2：非官方的智能体
+
+                    是否包含未授权的智能体，默认为false(不包含)
+                          withForbid=false，仅包含有权限的
+  withForbid  否     boolean
+                       withForbid=true，包含所有的，是否有权限根据结构中的forbid值判断
+                     为true则表示无权限
+
+  page    否       int    页码，默认第一页
+
+  size     否       int     每页大小，默认10
+
+
+响应说明
+
+
+ 参数      必须     类型        说明
+
+  code     是               string        状态码，0成功，非0失败
+
+  msg      否               string        消息
+
+  data      是           <Page>       分页数据
+
+Page结构
+
+
+ 参数     必须     类型                   说明
+
+   title      是              string                   固定说明
+
+  page     是            long                   总页码
+
+  size      是            long                   每页大小
+
+  total     是            long                   总数量
+
+  data     否             list<AgentApplication>           智能应用列表
+
+AgentApplication结构
+          必
+参数            类型     说明
+          须
+
+name       是      string     名称
+
+                     头像地址 访问时拼上地址，如 https://gc.das-ai.com/agent-
+avatarUrl      是      string
+                                              avatar/default-6.png
+
+introduce      是      string     介绍
+
+prologue      是      string     开场白
+
+type        是       int      类型 1：智能体应用 2：智能体组合
+
+mode       是       int      编排模式 1：自然语言模式 2：配置模式 3：工作流模式
+
+temperature    否       float          Temperature 0-2范围内的数字
+
+scriptContentType  是       int      剧本内容类型 1:字符串 2:json 3:yaml
+
+                      可见范围：1：完全公开 2：同租户 3：官方 4：内置 5：仅
+visibleRange    是       int
+                     执行
+
+id         是      string      智能体ID
+
+publisher      否      string     发布人
+
+categoryName   是      string     分类
+
+updateContent   否      string     更新内容
+
+callNum      是       int      调用次数
+
+inputParameters   是      list<object>  输入参数
+
+outputParameters  是      list<object>  输出参数
+
+preQuestions    否      list<string>  预置问题
+
+tags        否     AgentTags   标签
+
+createTime     是      string       创建时间，例如：2025-09-24 13:54:15
+
+updateTime     是      string       更新时间，例如：2025-09-24 13:54:15
+
+publishTime     是      string       发表时间，例如：2025-09-24 13:54:15
+
+version       是      string     版本
+           必
+ 参数            类型     说明
+           须
+
+
+                      智能体类型：
+                        0：用户发布
+                         1：官方-产品对接
+  agentType     是       int       2：官方-独立销售
+                         3：官方-限时免费
+                         4：官方-内置示例
+                        5：系统内置
+
+  forbid       是     boolean    是否禁止
+
+  supportNew     是     boolean    是否支持恒脑3.0交互
+
+AgentTags结构
+
+
+ 参数         必须       类型              说明
+
+  scene        否                   list<string>           场景标签
+
+  model        否                   list<string>           模型标签
+
+  state         否                   list<string>           状态标签
+
+
+示例
+
+请求示例（curl）
+
+
+  curl --location --request POST 'http://127.0.0.1/open/api/v2/agent/search' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"size":10,"page":1,"keyword":"react2"}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+      "data": {
+          "title": "智能体检索",
+          "page": 1,
+          "size": 10,
+          "data": [
+              {
+                  "id": "6fa29609-f174-4d3c-b040-696f5e49008f",
+                  "name": "react2",
+                  ...
+              }
+          ],
+          "total": "1"
+      }
+  }
+
+
+4. 上传文件
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/file/upload
+
+请求方法：POST
+
+Content-Type：multipart/form-data
+
+Accept：application/json
+
+Body参数:
+
+
+ 参数        必须        类型        说明
+
+   file         是                            file         上传的文件
+
+
+响应说明
+
+
+ 参数      必须     类型         说明
+
+  code     是               string         状态码，0成功，非0失败
+
+  msg      否               string        消息
+
+  data      是             <string>          文件id
+
+
+示例
+
+请求示例（curl）
+
+
+  curl -L -X POST 'http://127.0.0.1/open/api/v2/agent/file/upload' \
+  -H 'appKey: hengnao5TKz9KoXdeFSYNEowaWw' \
+  -H 'sign: 1696849841699XXIfoUdkLbiX2HEkjVYkYP71aqQ6rhlZq+it6NChNs4=' \
+  -H 'Content-Type: multipart/form-data' \
+  --form 'file=@"/Users/filename.docx"'
+
+
+
+响应示例
+  {
+      "code": 0,
+      "msg": "成功",
+      "data":"file:abc.exe<b17da7f2-aa5a-414b-b7f7-57da4f922ea4>"
+  }
+
+5.文件下载
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/file/download
+
+请求方法：POST
+
+Content-Type：application/json
+
+Body参数
+
+
+ 参数          必须         类型           说明
+
+   fileId          是                        string              文件id
+
+
+响应说明
+
+
+返回文件流。
+
+
+示例
+
+请求示例（curl）
+
+
+  curl --location --request POST 'http://127.0.0.1/open/api/v2/agent/file/download' \
+  --header 'appKey: hengnao5TKz9KoXdeFSYNEowaWw' \
+  --header 'sign: 1696849841699XXIfoUdkLbiX2HEkjVYkYP71aqQ6rhlZq+it6NChNs4=' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+      "fileId": "file:abc.exe<b17da7f2-aa5a-414b-b7f7-57da4f922ea4>"
+  }'
+
+
+响应示例(返回对应的文件流)
+
+6. 智能体执行统计接口
+
+
+统计租户能看到的智能体调用情况。
+基本信息
+
+
+请求地址：/open/api/v2/agent/statistics
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+
+Body参数:
+
+
+ 参数       必须       类型       说明
+
+  page       否                    int        页码，默认第一页
+
+  size        否                    int         每页大小，默认10
+
+
+响应说明
+
+
+ 参数      必须     类型        说明
+
+  code     是               string        状态码，0成功，非0失败
+
+  msg      否               string        消息
+
+  data      是           <Page>       分页数据
+
+Page结构
+
+
+ 参数     必须     类型                   说明
+
+   title      是              string                   固定说明
+
+  page     是            long                   总页码
+
+  size      是            long                   每页大小
+
+  total     是            long                   总数量
+
+  data     否             list<AgentApplication>           智能应用列表
+
+AgentApplication结构
+ 参数          必须    类型    说明
+
+  name         是           string    名称
+
+  id           是           string     智能体ID
+
+  createTime       是           string     发布时间，例：2024-05-27 16:22:29
+
+  callNum        是            int     调用次数
+
+  todayCallNum     是            int     今日调用次数
+
+  type          是            int     类型 1：智能体应用 2：智能体组合
+
+
+示例
+
+请求示例（curl）
+
+
+  curl --location --request POST 'http://127.0.0.1/open/api/v2/agent/statistics' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"size":10,"page":1}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+      "data": {
+          "title": "智能体检索",
+          "page": 1,
+          "size": 10,
+          "data": [
+              {
+                  "id": "6fa29609-f174-4d3c-b040-696f5e49008f",
+                  "name": "react2",
+                  "createTime":"2024-05-27 16:22:29",
+                  "callNum":100,
+                  "todayCallNum":10,
+                  "type":1
+              }
+          ],
+          "total": "1"
+      }
+  }
+
+
+7. 异步任务提交
+
+
+提交异步任务。
+基本信息
+
+
+请求地址：/open/api/v2/agent/task/submit
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+
+Body参数
+
+
+         必
+ 参数         类型         说明
+         须
+
+  id       是     string          智能体ID
+
+  input     否     string        用户输入， input和inputs优先使用input
+
+                       用户输入，参考 <附录-智能体：清单文件结构
+                                    AgentManifest>中input_parameters。对于文件类型的参
+  inputs     否    map<string,object>
+                        数，调用接口4进行上传得到文件id，以字符串形式传给对
+                       应参数
+
+  order     否     string             处理模式，常规routine/优先priority，默认routine
+
+  debugSwitch  否    boolean         是否开启调试模式，默认false
+
+header参数
+
+
+ 参数    必须    类型     说明
+
+  ext     否            string        扩展参数，示例child_preview:1;reason:1
+
+
+ child_preview ：是否显示子智能体的预览内容
+
+  默认值：0 （不显示）
+
+  可选值：
+
+         0 ：不输出子智能体预览
+
+         1 ：输出子智能体预览内容
+
+
+  适用场景：调试多智能体协作时，便于观察子任务执行过程
+ reason ：是否在最终结果中包含推理过程
+
+  默认值：0 （包含推理过程 —— 即“拼接”到主消息中）
+
+
+  可选值：
+
+
+         0 ：将推理过程拼接到最终消息正文
+
+         1 ：不拼接推理过程，但会在 mode=execute_result 的消息中额外返回一个
+         reasoning_content 字段，独立存放推理内容
+
+
+  适用场景：
+
+
+         reason=0 ：适合需要完整上下文的前端展示
+         reason=1 ：适合后端处理或需要分离“结果”与“思考”的场景
+
+
+响应说明
+
+
+ 参数      必须      类型       说明
+
+  code      是                string       状态码，0成功，非0失败
+
+  msg      否                string      消息
+
+  data      否                string         任务id
+
+
+示例
+
+
+请求示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/submit' -H 'appKey: hengnaoG2rFOgq0HAeFAzgv2JXj' -
+  H 'sign: 1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type:
+  application/json' -d '{"id":"6fa29609-f174-4d3c-b040-696f5e49008f","inputs":{"input":"你
+  好","file":"file:abc.exe<b17da7f2-aa5a-414b-b7f7-57da4f922ea4>"}}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+      "data": "1839582469398519810"
+  }
+8. 异步任务取消
+
+
+停止智能体异步任务。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/task/stop
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+
+Body参数
+
+
+ 参数           必须         类型          说明
+
+  taskId          是                        string              任务id
+
+
+响应说明
+
+
+ 参数      必须      类型       说明
+
+  code      是                string       状态码，0成功，非0失败
+
+  msg      否                string      消息
+
+  data      否                string      空
+
+
+示例
+
+
+请求示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/stop' -H 'appKey: hengnaoG2rFOgq0HAeFAzgv2JXj' -H
+  'sign: 1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type:
+  application/json' -d '{"taskId":"1839582469398519810"}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+  }
+9. 异步任务状态查询
+
+
+查询异步任务状态。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/task/status
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+
+Body参数
+
+
+ 参数           必须         类型          说明
+
+  taskId          是                        string              任务id
+
+
+响应说明
+
+
+ 参数      必须      类型       说明
+
+  code      是                string       状态码，0成功，非0失败
+
+  msg      否                string      消息
+
+                         任务状态
+                           正在运行：1
+  data      否                 int        已完成：2
+                            已取消：3
+                           执行失败：4
+
+
+示例
+
+
+请求示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/status' -H 'appKey: hengnaoG2rFOgq0HAeFAzgv2JXj' -
+  H 'sign: 1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type:
+  application/json' -d '{"taskId":"1839582469398519810"}'
+
+
+
+响应示例
+  {
+      "code": 0,
+      "msg": "成功",
+      "data": 2
+  }
+
+10. 异步任务执行结果查询
+
+
+查询异步任务执行结果。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/task/messages
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+
+Body参数
+
+
+ 参数     必须    类型     说明
+
+  taskId    是            string      任务id
+
+                        非否全量查询，默认为true。
+   full     否          bool       全量：true （全量返回已接收到的数据）
+                        增量：false（增量返回已接收到的数据）
+
+
+响应说明
+
+
+ 参数    必须    类型              说明
+
+  code    是            string               状态码，0成功，非0失败
+
+  msg     否            string              消息
+
+  data    否         <AgentMessages>        结果数据
+
+AgentMessages结构
+ 参数     必须  类型         说明
+
+
+                      任务状态
+                        正在运行：1
+  status    是        int          已完成：2
+                         已取消：3
+                        执行失败：4
+
+  messages  否       list<AgentResult>   智能体执行结果，根据full参数决定是全量还是增量返回
+
+  errors    否        string        错误消息 (智能体执行出错时)
+
+AgentResult结构
+
+
+ 参数        必须    类型             说明
+
+
+                                消息模式，流式交互类型
+  mode       是           string
+                                                     总是preview
+
+                                消息类型：
+  type        是           string                       inline内置
+                                              custom自定义
+
+                                消息来源：
+                                                                        basic_llm
+                                                                         react_think
+                                                                        react_action
+                                                                    react_observe
+                                                                   react_answer
+                                                                         retrieval_doc_action
+  from        是           string
+                                                                        retrieval_doc_context
+                                                                      retrieval_doc_answer
+                                                                         retrieval_sql_generate
+                                                                           retrieval_sql_context
+                                                                         retrieval_sql_answer
+                                                                       restful_answer
+                                                                       execute_result
+
+  name        是           string             智能体名称
+
+  timestamp     是           string             消息时间戳
+
+  message_id     是           string               消息ID，相同消息ID拼接
+
+  content       是           string             消息内容
+
+  results       是         map<string,object>      执行结果参数
+示例
+
+
+请求示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/messages' -H 'appKey: hengnaoG2rFOgq0HAeFAzgv2JXj'
+  -H 'sign: 1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type:
+  application/json' -d '{"taskId":"1839582469398519810"}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+      "data": {
+          "messages": [
+              {
+                  "mode": "preview",
+                  "type": "inline",
+                  "node_id": "node0",
+                  "from": "basic_llm",
+                  "name": "数据分类分级-驾驶舱-教育",
+                  "timestamp": 1728991200852,
+                  "message_id": "1903338296396310",
+                  "content": "该字段所在表为(tmp_import_cust_done)，推测表含义为(成交导入临时
+ 表)，结合其他信息，推测该字段(done_date)的中文含义为(成交日期)，字段具体含义为(记录了每笔交易
+ 完成的具体日期，用于标识交易发生的时间点)。"
+              },
+              {
+                  "mode": "preview",
+                  "type": "inline",
+                  "node_id": "node1",
+                  "from": "basic_llm",
+                  "name": "数据分类分级-驾驶舱-教育",
+                  "timestamp": 1728991204615,
+                  "message_id": "7320833596017410",
+                  "content": "业务数据"
+              },
+              {
+                  "mode": "preview",
+                  "type": "inline",
+                  "node_id": "node2",
+                  "from": "basic_llm",
+                  "name": "数据分类分级-驾驶舱-教育",
+                  "timestamp": 1728991205289,
+                  "message_id": "5592988888653318",
+                  "content": "业务数据-交易信息"
+              },
+              {
+                  "mode": "preview",
+                  "type": "inline",
+                  "node_id": "node3",
+                  "from": "basic_llm",
+                  "name": "数据分类分级-驾驶舱-教育",
+                  "timestamp": 1728991206059,
+                  "message_id": "0075902716693264",
+                  "content": "业务数据-交易信息-通用交易信息"
+              },
+              {
+                  "mode": "preview",
+                  "type": "inline",
+                  "node_id": "node4",
+                  "from": "basic_llm",
+                  "name": "数据分类分级-驾驶舱-教育",
+                  "timestamp": 1728991206962,
+                  "message_id": "4216333322681836",
+                  "content": "业务数据-交易信息-通用交易信息-交易基本信息"
+              },
+              {
+                  "mode": "preview",
+                  "type": "inline",
+                  "from": "execute_result",
+                  "name": "数据分类分级-驾驶舱-教育",
+                  "timestamp": 1728991207582,
+                  "message_id": "2739558436213531",
+                  "content": "业务数据-交易信息-通用交易信息-交易基本信息",
+                  "results": {
+                      "l1": "业务数据",
+                      "l2": "交易信息",
+                      "l3": "通用交易信息",
+                      "l4": "交易基本信息",
+                      "mean": "该字段所在表为(tmp_import_cust_done)，推测表含义为(成交导入临时
+ 表)，结合其他信息，推测该字段(done_date)的中文含义为(成交日期)，字段具体含义为(记录了每笔交易
+ 完成的具体日期，用于标识交易发生的时间点)。"
+                  }
+              }
+          ],
+          "status": 2
+      }
+  }
+
+11. 智能体交互回答
+
+
+智能体交互回答。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/execute/resume
+
+请求方法：POST
+
+Content-Type：application/json
+Accept：application/json
+
+Body参数
+
+
+ 参数          必须     类型                 说明
+
+  messageId       是               string                       消息ID
+
+  inputs         是             map<string,object>           用户输入
+
+  principle        否               string                 用户身份
+
+
+响应说明
+
+
+ 参数     必须    类型     说明
+
+  code     是             string     状态码，0成功，非0失败
+
+  msg     否             string     消息
+
+  data     是             string       完成时间，yyyy-MM-dd HH:mm:ss
+
+
+示例
+
+
+请求示例
+
+
+
+  curl -L 'http://127.0.0.1/open/api/v2/agent/execute/resume' -H 'appKey:
+  hengnaoG2rFOgq0HAeFAzgv2JXj' -H 'sign:
+  1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type: application/json'
+  -d '{"messageId":"8894564300003712","inputs":{"query":{"A":"介绍一下网络安全是什么"}}}'
+
+
+
+响应示例
+
+
+
+  {
+      "code": 0,
+      "msg": "成功",
+      "data": "2024-12-18 17:18:41"
+  }
+
+
+
+接口说明
+
+
+交互对接流程：
+
+   1. 先调用接口/open/api/v2/agent/execute，采用流式方法调用
+2. 在流式输出的message结果中会返回带有mode="question"类型的消息，这里包含需要交互的问题和
+ 回答的可选项信息
+
+
+
+    {"mode":"question","name":"confirm","options":{"A":"不准确，我要重新输入，然后再提取关键
+   信息","B":"不太准确，我要提一些修改意见","C":"准确，请帮我直接生成密评文
+    件"},"message_id":"3950274300015627","type":"type_select","message":"文件名：未知 / 单位
+  名称：未知 / 单位类型：未知 / 建设单位地址：未知 / 系统名称：未知 / 机房名称：未知 / 所属
+  密码管理部门：未知 / 系统上线运行时间：未知 / 使用单位：未知 / 使用人员：未知 / 使用场
+  景：未知 / 是否为关键信息基础设施：未知 / 系统等保定级：未知 / 备案时间：未知 / 备案号：
+  未知 / 业务通道1：未知 / 业务通道2：未知 / 业务通道3：未知 / 业务通道4：未知 / 运维通道
+   1：未知 / 数据交互信道1：未知 / 数据共享/灾备信道1：未知 / 通用服务器：未知 / 数据库管理
+  系统：未知 / 整机类密码产品：未知 / 堡垒机：未知 / 系统类密码产品：未知 / 身份鉴别：未知
+    / 鉴别数据：未知 / 重要业务数据：未知 / 个人敏感信息：未知 / 日志记录：未知 / 填写所属数
+  据库：未知 ****** 上述关键信息是否正
+    确?","qid":"1956242274266636290","node_id":"node5","timestamp":"1755239502743"}
+
+
+3. 在将问题渲染到前端之后，用户可以对问题进行回答，调用/open/api/v2/agent/execute/resume接
+ 口即可将回答的接口提交到恒脑系统
+
+
+
+    curl -L 'http://127.0.0.1/open/api/v2/agent/execute/resume' -H 'appKey:
+    hengnaoG2rFOgq0HAeFAzgv2JXj' -H 'sign:
+    1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type:
+    application/json' -d '{"messageId":"3950274300015627","inputs":{"confirm":{"B":"不太准
+   确，我要提一些修改意见"}}}'
+
+
+4. 紧接着/open/api/v2/agent/execute接口会继续输出后续消息，如果遇到mode="question"消息再次
+ 做上面操作即可
+
+备注：根据问答ID和传入用户输入，并恢复智能体继续执行。当用户响应问题后，会按照问题的名
+称存储问题的内容（_question）、选项（_options）和答案（_answer）。
+
+
+{
+  "nodex": { // 节点名称
+    "query": { // 问题名称
+      "_question": "请选择一个问题", // 问题内容
+      "_answer": { // 问题答案
+        "A": "介绍一下网络安全是什么"
+      },
+      "_options": { // 问题选项
+        "A": "介绍一下网络安全是什么",
+        "B": "介绍一下大模型是什么"
+      }
+    }
+  }
+}
+12. 智能体测试集查询
+
+
+查询公开的智能体测试集用例。
+
+
+基本信息
+
+
+请求地址：/open/api/v2/agent/testCases
+
+请求方法：POST
+
+Content-Type：application/json
+
+Accept：application/json
+
+Body参数
+
+
+ 参数           必须        类型         说明
+
+  agentId          是                     string           智能体ID
+
+
+响应说明
+
+
+ 参数     必须     类型            说明
+
+  code     是             string            状态码，0成功，非0失败
+
+  msg     否             string           消息
+
+  data     否            list<TestCase>        测试集列表
+
+TestCase结构
+
+
+ 参数       必须   类型   说明
+
+  id        是        string   测试用例id
+
+  caseName     是        string   用例名称
+
+  content      是     map    用例内容，注：直接作为智能体执行接口中的inputs参数
+
+  contentString   是        string   带格式的content字符串
+
+  createTime    是        string   创建时间
+
+
+示例
+
+
+请求示例
+  curl -L 'http://127.0.0.1/open/api/v2/agent/execute/testCases' -H 'appKey:
+  hengnaoG2rFOgq0HAeFAzgv2JXj' -H 'sign:
+  1709703938860rk0yrvLQ9jOk5Jab9WaHsZCN218BB85lWNThTOXgLEY=' -H 'Content-Type: application/json'
+  -d '{"agentId":"73664ed8-c841-4360-82ab-2e1670dfb578"}'
+
+
+
+响应示例
+
+
+
+  {
+      "msg": "成功",
+      "code": 0,
+      "flag": 0,
+      "data": [
+          {
+              "createTime": "2024-12-26 11:05:55",
+              "caseName": "test1",
+              "id": "1872116603618955266",
+              "content": {"input":"你好啊"}
+          }
+      ]
+  }
+状态码
+
+
+  Code      描述
+
+  0        成功
+
+  -100      生成报告出错
+
+  -200       ai引擎调用出错
+
+  -201      应用下租户令牌超过限制
+
+  -202      您充值的流量已不足，请联系管理员充值后使用
+
+  -300       ws连接数超过限制
+
+  -301      应用并发提问数超过限制
+
+  -302      引擎任务过期
+
+  -303      任务队列已满
+
+  -304      今日接口调用次数已达到限制！
+
+  -401      参数异常
+
+  -402      认证失败
+
+  -403      缺少权限
+
+  -404      数据不存在
+
+  -405      不支持的请求方法
+
+  -406      密钥有误
+
+  -407      加解密有误
+
+  -408      数据权限有误
+
+  -409      数据异常
+
+  -410      任务已被锁定，请稍后重试
+
+  -500      服务内部错误
+
+  -502      无可用服务
+
+  -503      远程服务异常
+
+  -504      远程过程调用异常
+
+  -1000      列参数校验出错
+
+  -1001      数据分类任务排队处理时失败
+  Code      描述
+
+  -1002      数据分类任务调用智能体时出错
+
+附录-智能体
+
+
+清单文件（AgentManifest）
+
+表格 1 智能体配置清单
+
+
+ 序               必
+    参数名称            类型            描述
+ 号               须
+
+                                      智能体ID，当为空时系统自动
+  1       id            否     String            生成，用户智能体相关操作参
+                                   数。
+
+  2    name           是     String            智能体名称，用于用户显示。
+
+                                   智能体描述信息，用于用户展
+  3      description        是     String
+                                   示。
+
+
+                                   系统提示词，当节点未配置系
+  4     system_prompt_template  否     String
+                                   统提示词时，使用此配置。
+
+
+                                   用户提示词，当节点未配置用
+  5      user_prompt_template   否     String
+                                   户提示词时，使用此配置。
+
+                                      输入参数，参考:表格 2 参数描
+  6      input_parameters     否     List<ParameterDescription>
+                                   述结构。
+
+                                      输出参数，参考:表格 2 参数描
+  7      output_parameters     否     List<ParameterDescription>
+                                   述结构。
+
+
+                                   智能体模型配置，当节点未配
+  8     model          是                 置模型时，默认使用此配置。
+                                       配置参考:表格 3 模型配置结构
+
+  9      entry           是     String             智能体工作流入口节点ID。
+
+                                   智能体工作流节点列表。配置
+  10    nodes          是    List<AgentWorkflow>
+                                         参考:表格 4 智能体工作流节点
+
+                                   智能体工作流连接边列表。配
+  11    edges          否    List<WorkflowEdge>
+                                        置参考:表格 8 工作流边
+
+表格 2 参数描述结构
+
+ParameterDescription
+ 序号     参数名称        必须     类型      描述
+
+  1          name         是             String     参数名称
+
+  2              description       是             String     参数描述
+
+  3             type          是             String     参数类型，枚举
+
+  4            example        否          Any      参数值样例
+
+  5             required        否           Bool      是否必须，默认否
+
+表格 3 模型配置结构
+
+ModelConfiguration
+
+
+ 序          必
+    参数名称       类型   描述
+ 号          须
+
+  1     model     是     String   模型名称
+
+                    默认为 1。要使用的采样温度(temperature)，介于 0 和 2 之间。
+  2      temperature  否     Float32  较高的值（如 0.8）会使输出更随机，而较低的值（如 0.2）则会
+                    使其更加专注和确定。
+
+
+表格 4 智能体工作流节点
+
+AgentWorkflow
+
+
+ 序                必
+     参数名称             类型        描述
+ 号                须
+
+  1       id            是      String        节点ID，工作流内唯一
+
+  2     name           是      String        节点名称
+
+                               节点类型，可选参考节点类型枚举表，
+  3      type           是      String
+                               默认基础模型链
+
+  4      system_prompt_template  否      String        系统提示模板
+
+  5      user_prompt_template   否      String        用户提示模板
+
+                               节点模型配置 参考：表格 3 模型配置
+  6     model          否
+                               结构
+
+
+                               节点结果变量保存键名称，默认使用
+  7       result_key         否      String
+                                                                        result_key
+
+  8       result_parsers       否      List<ResultParser>  节点结果解析器 参考表格6 果解析器
+
+表格 5 节点类型枚举表
+ 序号       名称              值             描述
+
+  1         基础模型链                          llm_basic
+
+表格 6 结果解析器
+
+ResultParser
+
+
+ 序号   参数名称    必须   类型   描述
+
+  1        type      是         解析器类型，可选参考:表格 7 解析器类型枚举表
+
+  2        key      是        String   解析结果存储的键名称
+
+  3         expression   是        String   解析表达式，根据解析器类型表示不同的表达式
+
+表格 7 解析器类型枚举表
+
+ParserRegex
+
+
+ 序号       名称             值                描述
+
+  1        正则解析器                      parser_regex
+
+表格 8 工作流边
+
+WorkflowEdge
+
+
+ 序         必
+     参数名称      类型   描述
+ 号         须
+
+  1       src_node  是      String  起始节点ID
+
+  2      dst_node  是      String  目标节点ID
+
+                          边触发条件表达式，语法参考：https://expr-
+  3       condition  否      String
+                                          lang.org/docs/getting-started
+
+FAQ
+
+
+一些常见的问题。
+
+
+问题一
+
+
+Q：发布到生产环境后签名失败？
+
+A：目前签名有效期60分钟，需要注意操作系统时间是否正常
+问题二
+
+
+Q：目前可以可视化编排吗？
+
+A：登录能力中台->安全智能体管理。
+
+问题三
+
+
+Q：工具接入有什么要求吗？
+
+A：支持接入插件工具。
+
+问题四
+
+
+Q：支持接入知识库吗？
+
+A：支持接入知识库。
+
+更新日志
+
+
+R24C01
+
+2024-03-18
+
+   [重要] 新增智能体操作接口
+
+R24C20
+
+2024-06-13
+
+   [重要] 去掉增删改接口
+   [重要] 执行接口补充input和stream参数，支持流式输出
+   [重要] 查询接口改成查询智能体市场上的应用
+   [重要] 新增服务调用反馈标识
+
+R24C30
+
+2024-08-08
+
+   [重要] 新增4.上传文件接口
+
+   [重要] 新增5.文件下载接口
+   [重要] 新增6.智能体执行统计接口
+
+R24C41
+
+2024-10-28
+
+   [重要] 新增7.异步任务提交接口
+   [重要] 新增8.异步任务取消接口
+   [重要] 新增9.异步任务状态查询接口
+   [重要] 新增10.异步任务执行结果查询接口
+
+R24C50
+
+2024-12-19
+
+   **[重要] 接口3支持keyword根据agentId查询 **
+   [重要] 新建接口11.智能体交互回答
+   [重要] 新建接口12.智能体测试集查询
+
+R25C02
+
+2025-03-14
+
+   **[重要] 接口3支持scope字段，查询指定范围智能体 **
+   [重要] 接口12返回的字段补充contentString字段
+
+R25C10
+
+2025-05-13
+
+   [重要] 接口3返回的visibleRange增加4(内置智能体)
+
+R25C11
+
+2025-06-05
+
+   [重要] 接口1和接口7请求参数增加debugSwitch，允许打开调试开关
+
+R25C30
+
+2025-09-15
+
+   [重要] 接口1和接口7支持参数ext，控制智能体执行
+   [重要] 接口3支持withForbid参数，控制是否查询未授权智能体
+[重要] 接口3返回字段增加tags字段

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.log
+
+# Node（管理端如使用）
+node_modules/
+dist/
+*.local
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 测试与报告产物（保留目录，忽略生成物）
+tests/.cache/
+reports/*.html
+reports/*.pdf
