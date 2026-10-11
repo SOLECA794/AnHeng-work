@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "description": "T40 loopback-only evaluation fixtures; all identifiers and secrets are synthetic",
+  "sites": {
+    "A": "http://127.0.0.1:18081",
+    "B": "http://127.0.0.1:18082",
+    "C": "http://127.0.0.1:18083",
+    "D": "http://127.0.0.1:18084",
+    "E": "http://127.0.0.1:18085"
+  },
+  "baseline": "baselines/c-index.html",
+  "cases": [
+    {"id": "A-01", "site": "A", "category": "VULN", "path": "/search?q=%3Cb%3Efixture-probe%3C%2Fb%3E", "positive": true, "evidence": "unescaped HTML appears in the response"},
+    {"id": "A-02", "site": "A", "category": "WEAK_CONFIG", "path": "/listing/", "positive": true, "evidence": "directory listing exposes probe.txt"},
+    {"id": "A-03", "site": "A", "category": "VULN", "path": "/safe.html", "positive": false, "evidence": "static page without dynamic input"},
+    {"id": "B-01", "site": "B", "category": "MALICIOUS_LINK", "path": "/", "positive": true, "evidence": "synthetic collector.example.invalid link"},
+    {"id": "B-02", "site": "B", "category": "MALICIOUS_LINK", "path": "/about.html", "positive": false, "evidence": "ordinary internal page"},
+    {"id": "C-01", "site": "C", "category": "TAMPER", "path": "/", "positive": true, "evidence": "current page differs from baselines/c-index.html"},
+    {"id": "C-02", "site": "C", "category": "TAMPER", "path": "/baseline.html", "positive": false, "evidence": "served content matches baselines/c-index.html"},
+    {"id": "D-01", "site": "D", "category": "SENSITIVE", "path": "/", "positive": true, "evidence": "synthetic email, phone and token markers"},
+    {"id": "D-02", "site": "D", "category": "SENSITIVE", "path": "/.env", "positive": true, "evidence": "synthetic environment file"},
+    {"id": "D-03", "site": "D", "category": "SENSITIVE", "path": "/backup.bak", "positive": true, "evidence": "synthetic backup file extension"},
+    {"id": "E-01", "site": "E", "category": "VULN", "path": "/", "positive": false, "evidence": "clean site"},
+    {"id": "E-05", "site": "E", "category": "WEAK_CONFIG", "path": "/", "positive": false, "evidence": "security headers present"},
+    {"id": "E-02", "site": "E", "category": "MALICIOUS_LINK", "path": "/", "positive": false, "evidence": "clean site"},
+    {"id": "E-04", "site": "E", "category": "SENSITIVE", "path": "/", "positive": false, "evidence": "clean site"}
+  ]
+}

@@ -1,0 +1,1 @@
+This is a synthetic backup fixture. No real credentials or private data.

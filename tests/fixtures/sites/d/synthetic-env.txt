@@ -1,0 +1,2 @@
+DEMO_ACCESS_TOKEN=fixture-only-token
+CONTACT_EMAIL=fixture@example.invalid
