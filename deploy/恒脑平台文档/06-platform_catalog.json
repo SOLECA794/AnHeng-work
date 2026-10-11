@@ -1,0 +1,2429 @@
+{
+  "generated_at": "2026-10-11T09:40:58Z",
+  "scope": {
+    "mode": "user",
+    "tenant_id": "2104773610486145026",
+    "user_id": "2104776855686258689",
+    "private_range_3_included": true
+  },
+  "user": {
+    "id": "2104776855686258689",
+    "name": "苏子恒",
+    "tenant_id": "2104773610486145026",
+    "status": 1,
+    "system_flag": 0
+  },
+  "id_mapping": {
+    "uid": "scope.user_id（tenant 模式无 user_id 时留空或占位）",
+    "org": "scope.tenant_id",
+    "tools[].id": "plugins[].abilities[].tool_id（不是 toolkit_id）",
+    "coding_agent_config.skills[]": "skills[].skill_id",
+    "mcps[].id": "mcps[].server_id（节点 JSON 字段名为 id）",
+    "coding_agent_config.mcps[]": "mcps[].server_id（字符串数组）",
+    "knowledge_base_id": "knowledge_bases[].id（写入/检索插件的 options）",
+    "act_agent.agents[].id": "callable_agents[].agent_id"
+  },
+  "visibility": {
+    "1": "完全公开",
+    "2": "同租户",
+    "3": "仅自己（create_id = 当前用户）",
+    "5": "受限公开",
+    "system": "type=system 或 tenant_id=0 的内置能力，始终包含"
+  },
+  "models": [
+    {
+      "name": "HengNao-v4",
+      "used_in_agents": 0,
+      "origin": "platform_default"
+    },
+    {
+      "name": "HengNao-r1",
+      "used_in_agents": 0,
+      "origin": "platform_default"
+    },
+    {
+      "name": "GLM-5.1",
+      "used_in_agents": 0,
+      "origin": "platform_default"
+    }
+  ],
+  "plugins": [
+    {
+      "toolkit_id": "be9fa4a1-4332-adc6-9956-ab24547341d0",
+      "name": "DeepSeek-API",
+      "description": "DeepSeek-API",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "6116e2d1-2489-ec8e-e32d-34da2edf7aa4",
+          "name": "DeepSeek-R1",
+          "description": "调用DeepSeek-R1",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "messages",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "消息列表"
+            }
+          ]
+        },
+        {
+          "tool_id": "9981e18a-14d5-0a11-47ad-3bdb4d320ee2",
+          "name": "DeepSeek-V3",
+          "description": "调用DeepSeek-V3",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "messages",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "消息列表"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "11d08b7a-c324-4e56-9ce8-7b5037a75795",
+      "name": "代码执行器",
+      "description": "如果你想通过运行一段代码，可以使用这个工具包。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "5c1e41d0-91d4-4082-88cd-35a30a33e01f",
+          "name": "代码执行器v1",
+          "description": "如果你想通过运行一段代码，可以使用这个工具。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "code",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "python代码"
+            }
+          ]
+        },
+        {
+          "tool_id": "df907c68-3d21-11f0-9dce-000c29676a38",
+          "name": "代码执行器v2",
+          "description": "代码执行器v2版本是一款升级版代码执行工具。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "lang",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "语言, 支持python、javascript"
+            },
+            {
+              "name": "code",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "代码"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "a946e035-c201-334d-8f46-f761616ff1c6",
+      "name": "图表生成工具集",
+      "description": "支持生成雷达图、饼状图、散点图、折线图、柱状图等图表。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "33f73e36-6bf6-c151-05e9-8acb080aec5f",
+          "name": "雷达图生成",
+          "description": "基于数据生成雷达图。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "indicators",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "雷达图指示器"
+            },
+            {
+              "name": "data",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "数据项数组"
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "图表标题,示例值(测试雷达图)"
+            }
+          ]
+        },
+        {
+          "tool_id": "7ac15ff1-885d-31f1-2069-593c81652473",
+          "name": "饼状图生成",
+          "description": "基于数据生成饼状图。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "饼图标题,示例值(饼图标题)"
+            },
+            {
+              "name": "absolute",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否展示绝对值:是否在饼图上展示绝对值,默认展示比例,示例值(true)"
+            },
+            {
+              "name": "composition",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "数值项:一维数组，数组元素为数值，用于饼图计算每一项比例的数值列表，每项是个数值,示例值([ 52, 48 ])"
+            },
+            {
+              "name": "colors",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "颜色项:一维数组，用于设置饼图每一项的颜色列表, 支持RGB 16进制颜色值, 如: #ff0000,示例值([ \"#ff0000\", \"#00ff00\" ])"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "标签项:一维数组，用于饼图每一项展示的标签名称列表,示例值([ \"男\", \"女\" ])"
+            }
+          ]
+        },
+        {
+          "tool_id": "bf193751-949b-0e6b-83b3-c202f1d57442",
+          "name": "折线图生成",
+          "description": "基于数据生成折线图。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "图表标题,示例值(测试图表)"
+            },
+            {
+              "name": "labelX",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "横坐标名称,示例值(横坐标)"
+            },
+            {
+              "name": "labelY",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "纵坐标名称,示例值(纵坐标)"
+            },
+            {
+              "name": "smooth",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否平滑曲线,示例值(true)"
+            },
+            {
+              "name": "x",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "x坐标，一维数组，用于显示在横坐标上的坐标刻度,示例值([ \"2021-01-01\", \"2021-01-02\", \"2021-01-03\" ])"
+            },
+            {
+              "name": "y",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "y坐标数据，二维数组，数组元素为数值，数组每一行对应一条折线，数组的列数必须与x长度一致,示例值([ [ 1, 2, 3 ], [ 4, 5, 6 ] ])"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签项，每个标签对应一条折线,示例值([ \"标签1\", \"标签2\" ])"
+            }
+          ]
+        },
+        {
+          "tool_id": "ac24dd58-cb10-9c3e-3734-e751f840b24b",
+          "name": "柱状图生成",
+          "description": "基于数据生成柱状图。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "图表标题,示例值(测试图表)"
+            },
+            {
+              "name": "labelX",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "横坐标名称,示例值(横坐标)"
+            },
+            {
+              "name": "labelY",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "纵坐标名称,示例值(纵坐标)"
+            },
+            {
+              "name": "x",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "x坐标，一维数组，用于显示在横坐标上的坐标刻度,示例值([ \"2021-01-01\", \"2021-01-02\", \"2021-01-03\" ])"
+            },
+            {
+              "name": "y",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "y坐标数据，二维数组，数组元素为数值，每行为每个标签项对应的y坐标数据，即每一行对应一个labels中的一项,示例值([ [ 1, 2, 3 ], [ 4, 5, 6 ] ])"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签项，一维数组，对于每一个标签项都会生成柱状图,示例值([ \"标签1\", \"标签2\" ])"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "274af08c-2928-0266-cc0e-1f613b3d6c01",
+      "name": "图片处理工具集",
+      "description": "可对图片进行相关操作，目前支持对图片内容进行提取。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "80e10a21-4e49-c384-5ba5-cdbe1249875d",
+          "name": "图片内容提取",
+          "description": "用于图片内容提取。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "指定需要提取内容的图片"
+            },
+            {
+              "name": "ocrType",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "默认：ocr_system（提取文本） 可选：structure_table（提取表格）"
+            }
+          ]
+        },
+        {
+          "tool_id": "587e7efd-3a4e-46e2-a832-fbaf645c02eb",
+          "name": "图片内容位置识别",
+          "description": "该能力能够根据用户关注的内容关键词进行图片内容识别和位置定位。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "待处理图片文件"
+            },
+            {
+              "name": "keyword",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "用户关注的关键词"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "b719ff1f-2b4e-de95-b015-dc5cd077501f",
+      "name": "文档解析工具集",
+      "description": "用于提取各种文档的内容。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "018826c1-610a-3545-79de-3fe32b82a95b",
+          "name": "文档解析内容获取",
+          "description": "获取文档解析的文本内容。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "taskId",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "任务ID"
+            }
+          ]
+        },
+        {
+          "tool_id": "8342e6cb-9371-75fb-6394-728b37cf498b",
+          "name": "文档解析任务创建",
+          "description": "创建一个文档解析任务，提交需要文档解析的文件。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "指定需要解析的文件"
+            },
+            {
+              "name": "imageocr",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否需要理解图片内容 false/true"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "f8d92e7a-b3c5-4a1d-9e87-6f4a2b5c8d3e",
+      "name": "文档解析器",
+      "description": "解析各种文档格式（PDF、Word、Excel、PowerPoint）并提取其内容。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "a7c3e9d1-5b2f-4c8d-9a6e-3f1d2b5c8a7e",
+          "name": "文档解析工具",
+          "description": "解析文档并提取文本、表格内容。支持PDF、DOCX、XLSX、JSON、TXT和PPTX格式。支持OCR图片文字识别功能。(暂不支持较早版本的Office文档解析，如xls,ppt,doc)",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "filename",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "文档文件"
+            },
+            {
+              "name": "filetype",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "文档类型（pdf、docx、xlsx、pptx、json、txt），如果不提供将根据文件扩展名推断"
+            },
+            {
+              "name": "split_mode",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "输出类型（page：按页输出(支持页眉页脚检出)，toc：按标题层级输出(按标题段落提前内容)），默认为page，"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否启用OCR图片文字识别功能"
+            },
+            {
+              "name": "confidence",
+              "type": "number",
+              "required": false,
+              "location": "body",
+              "description": "OCR识别结果的最小置信度阈值（0.0-1.0），默认为0.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "75a3e7eb-2133-992c-9a03-1a2d48d8e284",
+      "name": "文档生成工具集",
+      "description": "文档格式转换生成。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "4432fa25-a348-a709-ebec-1822e0666b76",
+          "name": "文档生成",
+          "description": "支持：markdown转docx、html、pdf",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "markdown文本"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "生成文档的格式 docx/html/pdf"
+            }
+          ]
+        },
+        {
+          "tool_id": "76c6f57a-dd1d-9b17-dc26-6b69559e1882",
+          "name": "表格生成",
+          "description": "支持：csv、json格式的文本转xlsx文件",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "csv/json格式的文本"
+            }
+          ]
+        },
+        {
+          "tool_id": "5525f862-0d49-4e65-989b-1e157f18889d",
+          "name": "文档生成-超长内容",
+          "description": "文档生成-超长内容",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "markdown文本"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "生成文档的格式 docx/html/pdf"
+            }
+          ]
+        },
+        {
+          "tool_id": "09d00dd1-902c-40ea-94ee-f61189d616dd",
+          "name": "表格生成-超长内容",
+          "description": "表格生成-超长内容",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "body"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "df50eefb-9be2-499f-86d9-d649b88682ce",
+      "name": "知识检索工具集",
+      "description": "这是一组知识检索相关的工具集。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "a11aead3-fa72-4983-9f64-d0be72ff92ee",
+          "name": "原文内容召回",
+          "description": "检索原文，检索出相应的分块文件相关的属性。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "query",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "待检索的内容"
+            },
+            {
+              "name": "size",
+              "type": "integer",
+              "required": false,
+              "location": "body",
+              "description": "希望得到的分块数量"
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "上传者"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签集合"
+            },
+            {
+              "name": "permissions",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "权限集合"
+            }
+          ]
+        },
+        {
+          "tool_id": "69d4ee4e-8044-4d72-b3bf-b6c2d56a9f48",
+          "name": "文本向量转换_Embedding_v1",
+          "description": "用于将自然语言文本转换为向量表示。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "input",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "待embedding数据"
+            }
+          ]
+        },
+        {
+          "tool_id": "0dc0b54c-3d12-4261-82e9-0cf1e1915c7e",
+          "name": "FAQ检索问答",
+          "description": "FAQ场景使用的一个能力。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "query",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "用户问题"
+            },
+            {
+              "name": "answerNum",
+              "type": "integer",
+              "required": true,
+              "location": "body",
+              "description": "返回的答案数量"
+            },
+            {
+              "name": "withKeywords",
+              "type": "boolean",
+              "required": true,
+              "location": "body",
+              "description": "是否也同时用tfidf的方式召回，不仅限于词向量"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "文档标签集合"
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "上传者"
+            },
+            {
+              "name": "permissions",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "权限集合"
+            }
+          ]
+        },
+        {
+          "tool_id": "82cb9a87-4836-09db-9bab-e8f383cec20a",
+          "name": "文本相似度检索_Similarity",
+          "description": "相似度检索工具，返回top k高相似度字符串。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "strings",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "包含多个字符串的列表"
+            },
+            {
+              "name": "query",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "需要计算相似度的字符串"
+            },
+            {
+              "name": "top_k",
+              "type": "integer",
+              "required": false,
+              "location": "body",
+              "description": "返回相似度排名前top_k的字典，默认值为3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "toolkit_id": "08833eb2-c5a1-4ca1-aa7c-ff41ac164da0",
+      "name": "知识写入工具集",
+      "description": "知识写入的工具集,包括知识写入、状态查询和知识删除等能力。",
+      "origin": "system",
+      "type": "system",
+      "visible_range": null,
+      "status": 1,
+      "abilities": [
+        {
+          "tool_id": "e114fc63-7c41-4d80-a0d9-2e30b9ee7edd",
+          "name": "知识写入",
+          "description": "将知识按照文件的形式提交，将按照预设的规则进行解析处理并写入。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "源⽂件(⽀持doc、docx、pdf、json、txt、xls、xlsx、ppt、pptx 格式⽂件)"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "默认“doc”。可选：“doc”：普通⽂档, “faq”：为json、xlsx格式的 faq⽂档，faq类型的模板请在“新建知识库”下载"
+            },
+            {
+              "name": "sourceId",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "租户⽂件来源ID，⽤于关联原始⽂件，该id为文件唯一标识"
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "⽂件的上传者"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签集合"
+            },
+            {
+              "name": "permissions",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "权限集合"
+            },
+            {
+              "name": "imageocr",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否对文档中图片进行ocr处理，默认是false"
+            },
+            {
+              "name": "blockSize",
+              "type": "integer",
+              "required": false,
+              "location": "body",
+              "description": "自定义分块大小，范围256~1024"
+            },
+            {
+              "name": "separator",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "自定义分隔符，长度要求10~20个字符"
+            }
+          ]
+        },
+        {
+          "tool_id": "19606802-ebd6-41b5-8112-b3333c0f2a5a",
+          "name": "状态查询",
+          "description": "提交知识写入任务后，需要通过状态查询判断是否已经解析处理完毕。",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "taskId",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "任务id"
+            }
+          ]
+        },
+        {
+          "tool_id": "bdfd85db-42ad-4b06-9ac1-93434e8baadc",
+          "name": "知识删除",
+          "description": "将已经写入的知识进行删除",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "sourceIds",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "普通租户文件ID列表"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mcps": [
+    {
+      "server_id": "16fa6aee-466a-4251-8a7b-8df87fdc2805",
+      "name": "Amass攻击面发现",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/amass-mcp",
+          "amass"
+        ]
+      }
+    },
+    {
+      "server_id": "967566de-6054-4c7f-a5ac-fd6df86e74b7",
+      "name": "DuckDuckGo搜索",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "duckduckgo-mcp-server",
+        "args": null
+      }
+    },
+    {
+      "server_id": "529c938c-5dbd-490e-aa1c-d85a0336afef",
+      "name": "Elasticsearch数据查询",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-server-elasticsearch"
+        ]
+      }
+    },
+    {
+      "server_id": "96f2c49e-7d83-4c71-bf8d-42df383e54a5",
+      "name": "FTP服务器交互",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/mcp-server-ftp"
+        ]
+      }
+    },
+    {
+      "server_id": "171cd5fb-ef5e-483c-bcaf-2c54c492b517",
+      "name": "HTTP参数发现",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/arjun-mcp",
+          "arjun"
+        ]
+      }
+    },
+    {
+      "server_id": "d373b800-87c2-468f-9276-226cc22c2cc0",
+      "name": "Masscan端口扫描",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/masscan-mcp",
+          "masscan"
+        ]
+      }
+    },
+    {
+      "server_id": "a190d9c8-9012-44be-ae3c-d0fa75eb1ba2",
+      "name": "mcp-server-atip",
+      "description": "这是ATIP威胁情报管理平台的MCP Server",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": null,
+        "command": null,
+        "args": null
+      },
+      "transport": "streamable-http",
+      "template_version": "V1.0.2",
+      "environment_variables": [
+        {
+          "name": "ATIP_MCP_SERVER_HOST",
+          "type": "string",
+          "description": "可选，mcp服务地址默认0.0.0.0",
+          "default": "0.0.0.0"
+        },
+        {
+          "name": "ATIP_MCP_SERVER_PORT",
+          "type": "string",
+          "description": "可选，mcp服务开放端口默认8080",
+          "default": "8080"
+        },
+        {
+          "name": "ATIP_CLUSTER_ENDPOINT",
+          "type": "string",
+          "description": "可选，mcp端口地址，默认http://127.0.0.1:8080",
+          "default": "http://127.0.0.1:8080"
+        },
+        {
+          "name": "ATIP_SERVER_URL",
+          "type": "string",
+          "description": "必填，ATIP服务地址",
+          "default": "https://10.20.183.29"
+        },
+        {
+          "name": "ATIP_OUTH_TYPE",
+          "type": "string",
+          "description": "可选（oauth/openapi），mcp鉴权类型默认openapi",
+          "default": "openapi"
+        },
+        {
+          "name": "ATIP_OAUTH_CLIENT_ID",
+          "type": "string",
+          "description": "当为oauth鉴权时必填",
+          "default": "5567b00300844f6d95dc9bc17b328128"
+        },
+        {
+          "name": "ATIP_OAUTH_CLIENT_SECRET",
+          "type": "string",
+          "description": "当为oauth鉴权时必填",
+          "default": "4530631785394006809f75837cf6c828"
+        },
+        {
+          "name": "ATIP_AUTH_URL",
+          "type": "string",
+          "description": "可选，oauth鉴权时的认证地址，默认/home/ailpha/#/oauth/authorize",
+          "default": "/home/ailpha/#/oauth/authorize"
+        },
+        {
+          "name": "ATIP_TOKEN_URL",
+          "type": "string",
+          "description": "可选，oauth鉴权时的token获取地址，默认/api/oauth/token",
+          "default": "/api/oauth/token"
+        },
+        {
+          "name": "ATIP_OPENAPI_APP_ID",
+          "type": "string",
+          "description": "当为openapi鉴权时必填",
+          "default": "1ee496da00000"
+        },
+        {
+          "name": "ATIP_OPENAPI_APP_SECRET",
+          "type": "string",
+          "description": "当为openapi鉴权时必填",
+          "default": "4uc06s7q3h"
+        }
+      ],
+      "tool_names": [
+        "query_ip_intelligence",
+        "query_domain_intelligence",
+        "query_hash_intelligence",
+        "query_vul_intelligence"
+      ],
+      "packages": {
+        "preloads": [
+          {
+            "args": [
+              "./mcp-server-atip/bin/mcp-install.sh"
+            ],
+            "env": {
+              "ATIP_OPENAPI_APP_ID": "<redacted>",
+              "ATIP_CLUSTER_ENDPOINT": "<redacted>",
+              "ATIP_OAUTH_CLIENT_SECRET": "<redacted>",
+              "ATIP_MCP_SERVER_PORT": "<redacted>",
+              "ATIP_OPENAPI_APP_SECRET": "<redacted>",
+              "ATIP_OUTH_TYPE": "<redacted>",
+              "ATIP_MCP_SERVER_HOST": "<redacted>",
+              "ATIP_SERVER_URL": "<redacted>",
+              "ATIP_AUTH_URL": "<redacted>",
+              "ATIP_OAUTH_CLIENT_ID": "<redacted>",
+              "ATIP_TOKEN_URL": "<redacted>"
+            },
+            "command": "bash"
+          }
+        ],
+        "package_name": "file:mcp-server-atip-V1.0.0-linux-x86-20251210201129.dmcp<54f8a2ed-aeec-42b4-8284-8a3609b1a506>"
+      }
+    },
+    {
+      "server_id": "af6ca79d-912c-4935-a9ed-8943f58f336f",
+      "name": "MySQL安全交互",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "mysql_mcp_server",
+        "args": null
+      }
+    },
+    {
+      "server_id": "ac73b334-77b5-4bc7-952c-b1cde7a5d827",
+      "name": "MySQL数据库访问",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-server-mysql"
+        ]
+      }
+    },
+    {
+      "server_id": "f0081bcc-84a1-440d-8494-26e21f866bbc",
+      "name": "Nmap网络扫描",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/nmap-mcp",
+          "nmap"
+        ]
+      }
+    },
+    {
+      "server_id": "859c5d16-83f8-43c6-95b2-ddf36e2df3e5",
+      "name": "Nuclei漏洞扫描",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/nuclei-mcp",
+          "nuclei"
+        ]
+      }
+    },
+    {
+      "server_id": "ce270502-f530-4b98-9e0c-de9c515610c9",
+      "name": "SQLmap注入检测",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/sqlmap-mcp",
+          "sqlmap"
+        ]
+      }
+    },
+    {
+      "server_id": "5a94dbb9-6378-4ff4-aa95-1e8140aaa544",
+      "name": "SSH远程命令",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "ssh-mcp-server",
+        "args": [
+          "--host",
+          "192.168.1.1",
+          "--port",
+          "22",
+          "--username",
+          "your-username",
+          "--password",
+          "your-password"
+        ]
+      }
+    },
+    {
+      "server_id": "09e212eb-9241-4ef5-8788-02d3306a2e69",
+      "name": "SSL/TLS检测",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/sslscan-mcp",
+          "sslscan"
+        ]
+      }
+    },
+    {
+      "server_id": "40f04cb4-d476-427c-b457-8718ead5be6b",
+      "name": "Webhook消息发送",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": null
+      }
+    },
+    {
+      "server_id": "0d6c760d-4e78-486d-8b94-6d0cbd962919",
+      "name": "Web模糊测试",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/ffuf-mcp",
+          "ffuf"
+        ]
+      }
+    },
+    {
+      "server_id": "bfc4c031-4f87-4efe-a835-906b2f196c2e",
+      "name": "WordPress安全检测",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/wpscan-mcp",
+          "wpscan"
+        ]
+      }
+    },
+    {
+      "server_id": "a3e04a55-0c1d-4be5-bf83-89fd104456a0",
+      "name": "钉钉机器人",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-dingding-bot"
+        ]
+      }
+    },
+    {
+      "server_id": "c0e4a28f-a885-4cec-a6be-957b0482c38c",
+      "name": "多引擎网络搜索",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/open-webSearch"
+        ]
+      }
+    },
+    {
+      "server_id": "cf1fdc88-33bd-40c0-9b91-f1cce6e2f277",
+      "name": "二维码工具",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "qrcode-mcp",
+        "args": null
+      }
+    },
+    {
+      "server_id": "dd1be65a-a946-4a7d-ba6c-3fbc131ea5d4",
+      "name": "加密解密工具",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/crypto-mcp"
+        ]
+      }
+    },
+    {
+      "server_id": "95131b27-0c50-4782-928d-f71de67617b2",
+      "name": "流量包分析",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "pcap-mcp",
+        "args": null
+      }
+    },
+    {
+      "server_id": "71b380db-9026-411e-a57c-6419ce59cc0b",
+      "name": "企业微信机器人",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "wecom-bot-mcp-server",
+        "args": null
+      }
+    },
+    {
+      "server_id": "d7bd7612-02f1-43f7-aa14-4eb3848728ef",
+      "name": "渗透测试工具集",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "pentest-mcp",
+        "args": null
+      }
+    },
+    {
+      "server_id": "047a309d-4be4-40a4-b163-8c46ad25ddb4",
+      "name": "时间感知服务",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "time-mcp"
+        ]
+      }
+    },
+    {
+      "server_id": "78413ad0-85e3-4453-8c7b-21d99a4a2388",
+      "name": "数据处理工具",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "datap-mcp",
+        "args": null
+      }
+    },
+    {
+      "server_id": "97a3d737-7975-434e-9947-d73257a3ffe5",
+      "name": "图表生成",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-server-chart"
+        ]
+      }
+    },
+    {
+      "server_id": "cf993dee-00f4-414f-96c5-cdcf50e2ffbf",
+      "name": "文档转Markdown",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "markitdown-mcp",
+        "args": null
+      }
+    },
+    {
+      "server_id": "deb6a17a-a29a-4539-9f9f-f889b8947be8",
+      "name": "文件系统操作",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/filesystem-mcp-server"
+        ]
+      }
+    },
+    {
+      "server_id": "2f6b2e61-83ec-413d-a31a-a5d4d4d985bb",
+      "name": "邮件工具",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/mcp-mail"
+        ]
+      }
+    },
+    {
+      "server_id": "0de71fa7-3b8b-4331-859b-8c1953e9066d",
+      "name": "证书透明查询",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/crtsh-mcp",
+          "crtsh"
+        ]
+      }
+    },
+    {
+      "server_id": "b9f3ce4a-7287-4441-b225-d3f019a9041e",
+      "name": "子域名发现",
+      "description": "",
+      "origin": "template",
+      "visible_range": null,
+      "config": {
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "/app/mcps/assetfinder-mcp",
+          "assetfinder"
+        ]
+      }
+    }
+  ],
+  "skills": [
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8112",
+      "name": "PCAP流量分析",
+      "description": "分析 PCAP 和 PCAPNG 抓包文件并生成结构化网络取证摘要。适用于梳理通信主机、端口分布、DNS、TLS、HTTP 等协议活动，以及识别扫描、异常重传和可疑外联等网络异常行为。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8109",
+      "name": "PDF文本提取",
+      "description": "从 PDF 文档中提取文本内容，支持 OCR、批量处理、多种输出格式、元数据提取和基础语言识别。适用于扫描件数字化、合同和报告解析、内容检索，以及为后续分析或大模型处理准备文本数据。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8104",
+      "name": "YARA规则编写",
+      "description": "指导编写用于恶意软件识别的高质量 YARA-X 检测规则。适用于编写、审查或优化 YARA 规则，涵盖命名规范、字符串选择、性能优化、从旧版 YARA 迁移以及降低误报等内容，并涉及 YARA、YARA-X、恶意软件检测、威胁狩猎、IOC、特征签名、crx 模块和 dex 模块等主题。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8106",
+      "name": "安全审计工具包",
+      "description": "对代码库和基础设施进行安全问题审计。适用于扫描依赖项中的漏洞、检测硬编码的密钥、检查 OWASP 十大安全风险、验证 SSL/TLS 配置、审计文件权限，或审查代码中的注入漏洞和身份验证缺陷。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8105",
+      "name": "高级安全运营",
+      "description": "面向应用安全、漏洞管理、合规检查与安全开发实践的综合 SecOps 技能。包含安全扫描、漏洞评估、合规检查和安全自动化能力，适用于实施安全控制、执行安全审计、响应漏洞问题以及满足各类合规要求。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8111",
+      "name": "恒脑工作流智能体",
+      "description": "发现并调用恒脑工作流智能体。适用于根据用户请求匹配合适的恒脑工作流，补齐所需参数，并通过工作流接口执行后返回最终结果。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a7238e5b-947a-46b2-8792-a1371b00237f",
+      "name": "恒脑运维及常见问题处理",
+      "description": "用于回答恒脑的部署和运维时的常见问题解答、操作手册、环境设置、Kubernetes 部署问题、Pod 或 Service 查找、日志访问、das-start 命令行工具故障排查、发布和回滚指导、值班交接或轻量级故障排查等。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8100",
+      "name": "检测工程师",
+      "description": "基于恶意软件分析结果创建检测规则和威胁狩猎查询。适用于编写 SIEM 的 Sigma 规则、网络 IDS 的 Suricata 规则、安全去活化 IOC，以及将分析结论转化为可供 SOC 团队和威胁猎手使用的检测内容。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8103",
+      "name": "内容总结",
+      "description": "使用 summarize 命令行工具总结 URL 或文件内容，支持网页、PDF、图片、音频和 YouTube 等来源。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8110",
+      "name": "天气查询",
+      "description": "查询实时天气和天气预报，无需 API Key。适用于快速获取城市当前天气、温度、湿度、风力及短期预报，也可作为调用 wttr.in 和 Open-Meteo 等免费天气服务的简洁入口。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8108",
+      "name": "文本人性化润色",
+      "description": "识别并弱化 AI 生成文本的常见痕迹，使内容表达更自然、更像真人写作。适用于文章改写、说明文润色、语气调整，以及减少模板化、宣传化和机械化表达。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8101",
+      "name": "恶意软件报告撰写",
+      "description": "用于企业级恶意软件分析和事件响应场景的专业报告撰写。适用于创建、组织或优化恶意软件分析报告，编写样本技术文档，生成管理层摘要，以及以专业格式整理 IOC 和检测规则。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8107",
+      "name": "智能翻译",
+      "description": "提供具备上下文感知能力的高质量翻译，强调术语一致性、语体适配和文化本地化。适用于文档、内容和多语言材料的翻译、润色与跨语言表达优化。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    },
+    {
+      "skill_id": "a1b2fabb-6e0f-41f2-8540-de30f07f8102",
+      "name": "专项文件分析",
+      "description": "分析标准 PE 可执行文件之外的专项文件类型，包括 .NET 程序集、Office 宏、PDF、PowerShell 脚本、JavaScript、压缩包以及 Linux ELF 二进制。适用于需要针对特定格式使用专门分析工具和方法的文档、脚本或非 Windows 可执行文件。",
+      "origin": "system",
+      "source": 4,
+      "scope": 1
+    }
+  ],
+  "knowledge_bases": [],
+  "capability_index": [
+    {
+      "capability": "文档解析",
+      "matches": [
+        {
+          "tool_id": "018826c1-610a-3545-79de-3fe32b82a95b",
+          "name": "文档解析内容获取",
+          "toolkit": "文档解析工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "taskId",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "任务ID"
+            }
+          ]
+        },
+        {
+          "tool_id": "8342e6cb-9371-75fb-6394-728b37cf498b",
+          "name": "文档解析任务创建",
+          "toolkit": "文档解析工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "指定需要解析的文件"
+            },
+            {
+              "name": "imageocr",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否需要理解图片内容 false/true"
+            }
+          ]
+        },
+        {
+          "tool_id": "a7c3e9d1-5b2f-4c8d-9a6e-3f1d2b5c8a7e",
+          "name": "文档解析工具",
+          "toolkit": "文档解析器",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "filename",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "文档文件"
+            },
+            {
+              "name": "filetype",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "文档类型（pdf、docx、xlsx、pptx、json、txt），如果不提供将根据文件扩展名推断"
+            },
+            {
+              "name": "split_mode",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "输出类型（page：按页输出(支持页眉页脚检出)，toc：按标题层级输出(按标题段落提前内容)），默认为page，"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否启用OCR图片文字识别功能"
+            },
+            {
+              "name": "confidence",
+              "type": "number",
+              "required": false,
+              "location": "body",
+              "description": "OCR识别结果的最小置信度阈值（0.0-1.0），默认为0.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "知识写入",
+      "matches": [
+        {
+          "tool_id": "e114fc63-7c41-4d80-a0d9-2e30b9ee7edd",
+          "name": "知识写入",
+          "toolkit": "知识写入工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "源⽂件(⽀持doc、docx、pdf、json、txt、xls、xlsx、ppt、pptx 格式⽂件)"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "默认“doc”。可选：“doc”：普通⽂档, “faq”：为json、xlsx格式的 faq⽂档，faq类型的模板请在“新建知识库”下载"
+            },
+            {
+              "name": "sourceId",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "租户⽂件来源ID，⽤于关联原始⽂件，该id为文件唯一标识"
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "⽂件的上传者"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签集合"
+            },
+            {
+              "name": "permissions",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "权限集合"
+            },
+            {
+              "name": "imageocr",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否对文档中图片进行ocr处理，默认是false"
+            },
+            {
+              "name": "blockSize",
+              "type": "integer",
+              "required": false,
+              "location": "body",
+              "description": "自定义分块大小，范围256~1024"
+            },
+            {
+              "name": "separator",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "自定义分隔符，长度要求10~20个字符"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "知识写入状态",
+      "matches": [
+        {
+          "tool_id": "19606802-ebd6-41b5-8112-b3333c0f2a5a",
+          "name": "状态查询",
+          "toolkit": "知识写入工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "taskId",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "任务id"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "知识删除",
+      "matches": [
+        {
+          "tool_id": "bdfd85db-42ad-4b06-9ac1-93434e8baadc",
+          "name": "知识删除",
+          "toolkit": "知识写入工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "sourceIds",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "普通租户文件ID列表"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "知识检索-原文召回",
+      "matches": [
+        {
+          "tool_id": "a11aead3-fa72-4983-9f64-d0be72ff92ee",
+          "name": "原文内容召回",
+          "toolkit": "知识检索工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "query",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "待检索的内容"
+            },
+            {
+              "name": "size",
+              "type": "integer",
+              "required": false,
+              "location": "body",
+              "description": "希望得到的分块数量"
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "上传者"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签集合"
+            },
+            {
+              "name": "permissions",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "权限集合"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "知识检索-FAQ",
+      "matches": [
+        {
+          "tool_id": "0dc0b54c-3d12-4261-82e9-0cf1e1915c7e",
+          "name": "FAQ检索问答",
+          "toolkit": "知识检索工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "query",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "用户问题"
+            },
+            {
+              "name": "answerNum",
+              "type": "integer",
+              "required": true,
+              "location": "body",
+              "description": "返回的答案数量"
+            },
+            {
+              "name": "withKeywords",
+              "type": "boolean",
+              "required": true,
+              "location": "body",
+              "description": "是否也同时用tfidf的方式召回，不仅限于词向量"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "文档标签集合"
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "上传者"
+            },
+            {
+              "name": "permissions",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "权限集合"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "代码执行",
+      "matches": [
+        {
+          "tool_id": "5c1e41d0-91d4-4082-88cd-35a30a33e01f",
+          "name": "代码执行器v1",
+          "toolkit": "代码执行器",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "code",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "python代码"
+            }
+          ]
+        },
+        {
+          "tool_id": "df907c68-3d21-11f0-9dce-000c29676a38",
+          "name": "代码执行器v2",
+          "toolkit": "代码执行器",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "lang",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "语言, 支持python、javascript"
+            },
+            {
+              "name": "code",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "代码"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "图表生成",
+      "matches": [
+        {
+          "tool_id": "33f73e36-6bf6-c151-05e9-8acb080aec5f",
+          "name": "雷达图生成",
+          "toolkit": "图表生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "indicators",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "雷达图指示器"
+            },
+            {
+              "name": "data",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "数据项数组"
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "图表标题,示例值(测试雷达图)"
+            }
+          ]
+        },
+        {
+          "tool_id": "7ac15ff1-885d-31f1-2069-593c81652473",
+          "name": "饼状图生成",
+          "toolkit": "图表生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "饼图标题,示例值(饼图标题)"
+            },
+            {
+              "name": "absolute",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否展示绝对值:是否在饼图上展示绝对值,默认展示比例,示例值(true)"
+            },
+            {
+              "name": "composition",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "数值项:一维数组，数组元素为数值，用于饼图计算每一项比例的数值列表，每项是个数值,示例值([ 52, 48 ])"
+            },
+            {
+              "name": "colors",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "颜色项:一维数组，用于设置饼图每一项的颜色列表, 支持RGB 16进制颜色值, 如: #ff0000,示例值([ \"#ff0000\", \"#00ff00\" ])"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "标签项:一维数组，用于饼图每一项展示的标签名称列表,示例值([ \"男\", \"女\" ])"
+            }
+          ]
+        },
+        {
+          "tool_id": "bf193751-949b-0e6b-83b3-c202f1d57442",
+          "name": "折线图生成",
+          "toolkit": "图表生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "图表标题,示例值(测试图表)"
+            },
+            {
+              "name": "labelX",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "横坐标名称,示例值(横坐标)"
+            },
+            {
+              "name": "labelY",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "纵坐标名称,示例值(纵坐标)"
+            },
+            {
+              "name": "smooth",
+              "type": "boolean",
+              "required": false,
+              "location": "body",
+              "description": "是否平滑曲线,示例值(true)"
+            },
+            {
+              "name": "x",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "x坐标，一维数组，用于显示在横坐标上的坐标刻度,示例值([ \"2021-01-01\", \"2021-01-02\", \"2021-01-03\" ])"
+            },
+            {
+              "name": "y",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "y坐标数据，二维数组，数组元素为数值，数组每一行对应一条折线，数组的列数必须与x长度一致,示例值([ [ 1, 2, 3 ], [ 4, 5, 6 ] ])"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签项，每个标签对应一条折线,示例值([ \"标签1\", \"标签2\" ])"
+            }
+          ]
+        },
+        {
+          "tool_id": "ac24dd58-cb10-9c3e-3734-e751f840b24b",
+          "name": "柱状图生成",
+          "toolkit": "图表生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "图表标题,示例值(测试图表)"
+            },
+            {
+              "name": "labelX",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "横坐标名称,示例值(横坐标)"
+            },
+            {
+              "name": "labelY",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "纵坐标名称,示例值(纵坐标)"
+            },
+            {
+              "name": "x",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "x坐标，一维数组，用于显示在横坐标上的坐标刻度,示例值([ \"2021-01-01\", \"2021-01-02\", \"2021-01-03\" ])"
+            },
+            {
+              "name": "y",
+              "type": "array",
+              "required": true,
+              "location": "body",
+              "description": "y坐标数据，二维数组，数组元素为数值，每行为每个标签项对应的y坐标数据，即每一行对应一个labels中的一项,示例值([ [ 1, 2, 3 ], [ 4, 5, 6 ] ])"
+            },
+            {
+              "name": "labels",
+              "type": "array",
+              "required": false,
+              "location": "body",
+              "description": "标签项，一维数组，对于每一个标签项都会生成柱状图,示例值([ \"标签1\", \"标签2\" ])"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "文档生成",
+      "matches": [
+        {
+          "tool_id": "4432fa25-a348-a709-ebec-1822e0666b76",
+          "name": "文档生成",
+          "toolkit": "文档生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "markdown文本"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "生成文档的格式 docx/html/pdf"
+            }
+          ]
+        },
+        {
+          "tool_id": "76c6f57a-dd1d-9b17-dc26-6b69559e1882",
+          "name": "表格生成",
+          "toolkit": "文档生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "query",
+              "description": "csv/json格式的文本"
+            }
+          ]
+        },
+        {
+          "tool_id": "5525f862-0d49-4e65-989b-1e157f18889d",
+          "name": "文档生成-超长内容",
+          "toolkit": "文档生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "markdown文本"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "生成文档的格式 docx/html/pdf"
+            }
+          ]
+        },
+        {
+          "tool_id": "09d00dd1-902c-40ea-94ee-f61189d616dd",
+          "name": "表格生成-超长内容",
+          "toolkit": "文档生成工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "location": "body"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability": "图片处理",
+      "matches": [
+        {
+          "tool_id": "80e10a21-4e49-c384-5ba5-cdbe1249875d",
+          "name": "图片内容提取",
+          "toolkit": "图片处理工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "指定需要提取内容的图片"
+            },
+            {
+              "name": "ocrType",
+              "type": "string",
+              "required": false,
+              "location": "body",
+              "description": "默认：ocr_system（提取文本） 可选：structure_table（提取表格）"
+            }
+          ]
+        },
+        {
+          "tool_id": "587e7efd-3a4e-46e2-a832-fbaf645c02eb",
+          "name": "图片内容位置识别",
+          "toolkit": "图片处理工具集",
+          "origin": "system",
+          "input_parameters": [
+            {
+              "name": "file",
+              "type": "file",
+              "required": true,
+              "location": "body",
+              "description": "待处理图片文件"
+            },
+            {
+              "name": "keyword",
+              "type": "string",
+              "required": true,
+              "location": "body",
+              "description": "用户关注的关键词"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "callable_agents": [],
+  "indexes": {
+    "tool_ids": [
+      "6116e2d1-2489-ec8e-e32d-34da2edf7aa4",
+      "9981e18a-14d5-0a11-47ad-3bdb4d320ee2",
+      "5c1e41d0-91d4-4082-88cd-35a30a33e01f",
+      "df907c68-3d21-11f0-9dce-000c29676a38",
+      "33f73e36-6bf6-c151-05e9-8acb080aec5f",
+      "7ac15ff1-885d-31f1-2069-593c81652473",
+      "bf193751-949b-0e6b-83b3-c202f1d57442",
+      "ac24dd58-cb10-9c3e-3734-e751f840b24b",
+      "80e10a21-4e49-c384-5ba5-cdbe1249875d",
+      "587e7efd-3a4e-46e2-a832-fbaf645c02eb",
+      "018826c1-610a-3545-79de-3fe32b82a95b",
+      "8342e6cb-9371-75fb-6394-728b37cf498b",
+      "a7c3e9d1-5b2f-4c8d-9a6e-3f1d2b5c8a7e",
+      "4432fa25-a348-a709-ebec-1822e0666b76",
+      "76c6f57a-dd1d-9b17-dc26-6b69559e1882",
+      "5525f862-0d49-4e65-989b-1e157f18889d",
+      "09d00dd1-902c-40ea-94ee-f61189d616dd",
+      "a11aead3-fa72-4983-9f64-d0be72ff92ee",
+      "69d4ee4e-8044-4d72-b3bf-b6c2d56a9f48",
+      "0dc0b54c-3d12-4261-82e9-0cf1e1915c7e",
+      "82cb9a87-4836-09db-9bab-e8f383cec20a",
+      "e114fc63-7c41-4d80-a0d9-2e30b9ee7edd",
+      "19606802-ebd6-41b5-8112-b3333c0f2a5a",
+      "bdfd85db-42ad-4b06-9ac1-93434e8baadc"
+    ],
+    "skill_ids": [
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8112",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8109",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8104",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8106",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8105",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8111",
+      "a7238e5b-947a-46b2-8792-a1371b00237f",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8100",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8103",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8110",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8108",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8101",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8107",
+      "a1b2fabb-6e0f-41f2-8540-de30f07f8102"
+    ],
+    "server_ids": [
+      "16fa6aee-466a-4251-8a7b-8df87fdc2805",
+      "967566de-6054-4c7f-a5ac-fd6df86e74b7",
+      "529c938c-5dbd-490e-aa1c-d85a0336afef",
+      "96f2c49e-7d83-4c71-bf8d-42df383e54a5",
+      "171cd5fb-ef5e-483c-bcaf-2c54c492b517",
+      "d373b800-87c2-468f-9276-226cc22c2cc0",
+      "a190d9c8-9012-44be-ae3c-d0fa75eb1ba2",
+      "af6ca79d-912c-4935-a9ed-8943f58f336f",
+      "ac73b334-77b5-4bc7-952c-b1cde7a5d827",
+      "f0081bcc-84a1-440d-8494-26e21f866bbc",
+      "859c5d16-83f8-43c6-95b2-ddf36e2df3e5",
+      "ce270502-f530-4b98-9e0c-de9c515610c9",
+      "5a94dbb9-6378-4ff4-aa95-1e8140aaa544",
+      "09e212eb-9241-4ef5-8788-02d3306a2e69",
+      "40f04cb4-d476-427c-b457-8718ead5be6b",
+      "0d6c760d-4e78-486d-8b94-6d0cbd962919",
+      "bfc4c031-4f87-4efe-a835-906b2f196c2e",
+      "a3e04a55-0c1d-4be5-bf83-89fd104456a0",
+      "c0e4a28f-a885-4cec-a6be-957b0482c38c",
+      "cf1fdc88-33bd-40c0-9b91-f1cce6e2f277",
+      "dd1be65a-a946-4a7d-ba6c-3fbc131ea5d4",
+      "95131b27-0c50-4782-928d-f71de67617b2",
+      "71b380db-9026-411e-a57c-6419ce59cc0b",
+      "d7bd7612-02f1-43f7-aa14-4eb3848728ef",
+      "047a309d-4be4-40a4-b163-8c46ad25ddb4",
+      "78413ad0-85e3-4453-8c7b-21d99a4a2388",
+      "97a3d737-7975-434e-9947-d73257a3ffe5",
+      "cf993dee-00f4-414f-96c5-cdcf50e2ffbf",
+      "deb6a17a-a29a-4539-9f9f-f889b8947be8",
+      "2f6b2e61-83ec-413d-a31a-a5d4d4d985bb",
+      "0de71fa7-3b8b-4331-859b-8c1953e9066d",
+      "b9f3ce4a-7287-4441-b225-d3f019a9041e"
+    ],
+    "knowledge_base_ids": [],
+    "agent_ids": []
+  },
+  "abilities_by_tool_id": {
+    "6116e2d1-2489-ec8e-e32d-34da2edf7aa4": {
+      "tool_id": "6116e2d1-2489-ec8e-e32d-34da2edf7aa4",
+      "name": "DeepSeek-R1",
+      "toolkit": "DeepSeek-API",
+      "origin": "system"
+    },
+    "9981e18a-14d5-0a11-47ad-3bdb4d320ee2": {
+      "tool_id": "9981e18a-14d5-0a11-47ad-3bdb4d320ee2",
+      "name": "DeepSeek-V3",
+      "toolkit": "DeepSeek-API",
+      "origin": "system"
+    },
+    "5c1e41d0-91d4-4082-88cd-35a30a33e01f": {
+      "tool_id": "5c1e41d0-91d4-4082-88cd-35a30a33e01f",
+      "name": "代码执行器v1",
+      "toolkit": "代码执行器",
+      "origin": "system"
+    },
+    "df907c68-3d21-11f0-9dce-000c29676a38": {
+      "tool_id": "df907c68-3d21-11f0-9dce-000c29676a38",
+      "name": "代码执行器v2",
+      "toolkit": "代码执行器",
+      "origin": "system"
+    },
+    "33f73e36-6bf6-c151-05e9-8acb080aec5f": {
+      "tool_id": "33f73e36-6bf6-c151-05e9-8acb080aec5f",
+      "name": "雷达图生成",
+      "toolkit": "图表生成工具集",
+      "origin": "system"
+    },
+    "7ac15ff1-885d-31f1-2069-593c81652473": {
+      "tool_id": "7ac15ff1-885d-31f1-2069-593c81652473",
+      "name": "饼状图生成",
+      "toolkit": "图表生成工具集",
+      "origin": "system"
+    },
+    "bf193751-949b-0e6b-83b3-c202f1d57442": {
+      "tool_id": "bf193751-949b-0e6b-83b3-c202f1d57442",
+      "name": "折线图生成",
+      "toolkit": "图表生成工具集",
+      "origin": "system"
+    },
+    "ac24dd58-cb10-9c3e-3734-e751f840b24b": {
+      "tool_id": "ac24dd58-cb10-9c3e-3734-e751f840b24b",
+      "name": "柱状图生成",
+      "toolkit": "图表生成工具集",
+      "origin": "system"
+    },
+    "80e10a21-4e49-c384-5ba5-cdbe1249875d": {
+      "tool_id": "80e10a21-4e49-c384-5ba5-cdbe1249875d",
+      "name": "图片内容提取",
+      "toolkit": "图片处理工具集",
+      "origin": "system"
+    },
+    "587e7efd-3a4e-46e2-a832-fbaf645c02eb": {
+      "tool_id": "587e7efd-3a4e-46e2-a832-fbaf645c02eb",
+      "name": "图片内容位置识别",
+      "toolkit": "图片处理工具集",
+      "origin": "system"
+    },
+    "018826c1-610a-3545-79de-3fe32b82a95b": {
+      "tool_id": "018826c1-610a-3545-79de-3fe32b82a95b",
+      "name": "文档解析内容获取",
+      "toolkit": "文档解析工具集",
+      "origin": "system"
+    },
+    "8342e6cb-9371-75fb-6394-728b37cf498b": {
+      "tool_id": "8342e6cb-9371-75fb-6394-728b37cf498b",
+      "name": "文档解析任务创建",
+      "toolkit": "文档解析工具集",
+      "origin": "system"
+    },
+    "a7c3e9d1-5b2f-4c8d-9a6e-3f1d2b5c8a7e": {
+      "tool_id": "a7c3e9d1-5b2f-4c8d-9a6e-3f1d2b5c8a7e",
+      "name": "文档解析工具",
+      "toolkit": "文档解析器",
+      "origin": "system"
+    },
+    "4432fa25-a348-a709-ebec-1822e0666b76": {
+      "tool_id": "4432fa25-a348-a709-ebec-1822e0666b76",
+      "name": "文档生成",
+      "toolkit": "文档生成工具集",
+      "origin": "system"
+    },
+    "76c6f57a-dd1d-9b17-dc26-6b69559e1882": {
+      "tool_id": "76c6f57a-dd1d-9b17-dc26-6b69559e1882",
+      "name": "表格生成",
+      "toolkit": "文档生成工具集",
+      "origin": "system"
+    },
+    "5525f862-0d49-4e65-989b-1e157f18889d": {
+      "tool_id": "5525f862-0d49-4e65-989b-1e157f18889d",
+      "name": "文档生成-超长内容",
+      "toolkit": "文档生成工具集",
+      "origin": "system"
+    },
+    "09d00dd1-902c-40ea-94ee-f61189d616dd": {
+      "tool_id": "09d00dd1-902c-40ea-94ee-f61189d616dd",
+      "name": "表格生成-超长内容",
+      "toolkit": "文档生成工具集",
+      "origin": "system"
+    },
+    "a11aead3-fa72-4983-9f64-d0be72ff92ee": {
+      "tool_id": "a11aead3-fa72-4983-9f64-d0be72ff92ee",
+      "name": "原文内容召回",
+      "toolkit": "知识检索工具集",
+      "origin": "system"
+    },
+    "69d4ee4e-8044-4d72-b3bf-b6c2d56a9f48": {
+      "tool_id": "69d4ee4e-8044-4d72-b3bf-b6c2d56a9f48",
+      "name": "文本向量转换_Embedding_v1",
+      "toolkit": "知识检索工具集",
+      "origin": "system"
+    },
+    "0dc0b54c-3d12-4261-82e9-0cf1e1915c7e": {
+      "tool_id": "0dc0b54c-3d12-4261-82e9-0cf1e1915c7e",
+      "name": "FAQ检索问答",
+      "toolkit": "知识检索工具集",
+      "origin": "system"
+    },
+    "82cb9a87-4836-09db-9bab-e8f383cec20a": {
+      "tool_id": "82cb9a87-4836-09db-9bab-e8f383cec20a",
+      "name": "文本相似度检索_Similarity",
+      "toolkit": "知识检索工具集",
+      "origin": "system"
+    },
+    "e114fc63-7c41-4d80-a0d9-2e30b9ee7edd": {
+      "tool_id": "e114fc63-7c41-4d80-a0d9-2e30b9ee7edd",
+      "name": "知识写入",
+      "toolkit": "知识写入工具集",
+      "origin": "system"
+    },
+    "19606802-ebd6-41b5-8112-b3333c0f2a5a": {
+      "tool_id": "19606802-ebd6-41b5-8112-b3333c0f2a5a",
+      "name": "状态查询",
+      "toolkit": "知识写入工具集",
+      "origin": "system"
+    },
+    "bdfd85db-42ad-4b06-9ac1-93434e8baadc": {
+      "tool_id": "bdfd85db-42ad-4b06-9ac1-93434e8baadc",
+      "name": "知识删除",
+      "toolkit": "知识写入工具集",
+      "origin": "system"
+    }
+  },
+  "mcp_tool_names_by_server_id": {
+    "a190d9c8-9012-44be-ae3c-d0fa75eb1ba2": [
+      "query_ip_intelligence",
+      "query_domain_intelligence",
+      "query_hash_intelligence",
+      "query_vul_intelligence"
+    ]
+  },
+  "reference_agents": [
+    {
+      "origin": "workspace_local",
+      "id": "2108741846294634497",
+      "name": "01",
+      "description": "网站安全智能巡检智能体",
+      "type": 1,
+      "script_note": "工作区 config 为加密字段，无法作为结构参考直接展开"
+    },
+    {
+      "origin": "workspace_local",
+      "id": "2107817347466436610",
+      "name": "work-leader",
+      "description": "智能体小队的主脑，核心分配作用，",
+      "type": 2,
+      "script_note": "工作区 config 为加密字段，无法作为结构参考直接展开"
+    },
+    {
+      "origin": "workspace_local",
+      "id": "2105648758714048513",
+      "name": "恒脑应用安全急救Agent",
+      "description": "定位：\n对可疑文件做可解释安全体检，在备份、人工确认和回滚保护下，清理脚本型可疑代码、隔离高风险文件、修复应用依赖，尽量让应用安全且继续可用。\n可做：文件类型、哈希、元数据、字符串、PE/脚本基础信息识别。\n\n调用公开威胁情报、ClamAV/YARA 规则、EICAR 测试文件做安全初筛。\n\n对文本/脚本类文件定位可疑代码片段，解释风险。\n\n备份、隔离、删除、替换、回滚。\n\n对脚本型应用做“可疑…",
+      "type": 1,
+      "script_note": "工作区 config 为加密字段，无法作为结构参考直接展开"
+    }
+  ],
+  "counts": {
+    "plugins": 9,
+    "abilities": 24,
+    "mcps": 32,
+    "skills": 14,
+    "knowledge_bases": 0,
+    "reference_agents": 3,
+    "callable_agents": 0
+  }
+}
