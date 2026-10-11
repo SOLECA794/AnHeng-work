@@ -95,7 +95,7 @@ def main():
     print("=== T06 知识库接口链路实测 ===")
 
     # 1) upload（异步任务）
-    r = post_multipart("/open/api/v2/document/upload", SAMPLE, {"name": "敏感信息定义样例-测试", "description": "T06 实测用"}, key, secret)
+    r = post_multipart("/open/api/v2/document/upload", SAMPLE, {"sourceId": "sensitive-rules", "name": "敏感信息定义样例-测试", "description": "T06 实测用"}, key, secret)
     show("document/upload", r, r"D:\Desktop\AnHeng-work\deploy\恒脑平台文档\09-document-upload.json")
     task_id = None
     try:
