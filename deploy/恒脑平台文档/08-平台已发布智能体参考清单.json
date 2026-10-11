@@ -1,0 +1,2503 @@
+[
+  {
+    "id": "9397edeb-c6da-40cb-847d-47dc49819440",
+    "name": "环境变量测试api",
+    "publisher": "智能体管理员",
+    "scene": [
+      "安全运行与维护"
+    ],
+    "callNum": 51,
+    "introduce": "环境变量测试环境变量测试"
+  },
+  {
+    "id": "c5844d4c-4913-4c70-b761-d290db930275",
+    "name": "恶意IoC查询智能体",
+    "publisher": "智能体管理员",
+    "scene": [
+      "安全应急与防御"
+    ],
+    "callNum": 97,
+    "introduce": "本智能体为专业威胁情报查询工具，支持自动从用户自然语言输入中提取 IP、域名、文件哈希（Hash）等多类型 IoC 指标，对接多源威胁情报库快速核验恶意属性，输"
+  },
+  {
+    "id": "1da3469f-233c-486d-a6de-13b666050d46",
+    "name": "告警研判智能体",
+    "publisher": "智能体管理员",
+    "scene": [
+      "安全运行与维护"
+    ],
+    "callNum": 264112358,
+    "introduce": "告警研判智能体是一款专为网络安全领域设计的智能化分析工具，致力于提升安全运营效率与威胁响应能力。该智能体通过集成先进的自然语言处理技术与深度学习算法，能够对各类"
+  },
+  {
+    "id": "c0875de5-8b0b-4fe7-a084-24ee69447fb7",
+    "name": "通用行业数据分类分级",
+    "publisher": "智能体管理员",
+    "scene": [
+      "安全合规与管理"
+    ],
+    "callNum": 12764932,
+    "introduce": "开放历史打标知识库检索权限"
+  },
+  {
+    "id": "ba452c99-ff48-41f2-84d8-3de9b95193ca",
+    "name": "恶意邮件研判智能体",
+    "publisher": "智能体管理员",
+    "scene": [
+      "安全应急与防御"
+    ],
+    "callNum": 1270682,
+    "introduce": "研判eml文件是否为异常邮件，并给出依据。\n\n特色：\n1. 支持邮件中的二维码识别和图片内容OCR\n2. 支持邮件附件的解密，支持复杂密码的提取\n3. 依托大模"
+  },
+  {
+    "id": "cb023e22-2e70-4294-bd4a-71673ef028b9",
+    "name": "安全情报专家",
+    "publisher": "大恒智聊的爹",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 662,
+    "introduce": "安全情报专家拥有海量的网络安全领域知识，能够通过插件调用获取IP、域名、Hash、漏洞等情报信息。"
+  },
+  {
+    "id": "42bec68a-6d2f-475d-b9bc-f7135f587144",
+    "name": "安全数据专家",
+    "publisher": "大恒智聊的爹",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 214,
+    "introduce": "安全数据专家拥有海量的网络安全领域知识，能够通过插件调用获取IP、域名、Hash、漏洞、黑客、家族组织，各类威胁情报事件等信息。"
+  },
+  {
+    "id": "a53a0148-8691-4d98-b74e-3c1f2c5e0d09",
+    "name": "信息预警助手",
+    "publisher": "曾旭",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2371,
+    "introduce": "你是一位信息预警助手。"
+  },
+  {
+    "id": "ab3ab0e5-a155-457a-9a76-aea3cb418e3f",
+    "name": "安全分析简报小助手",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1190,
+    "introduce": "安全分析简报小助手"
+  },
+  {
+    "id": "34a707e4-5435-4522-8783-8b7a34991d92",
+    "name": "HelperAssistant",
+    "publisher": "孔令威",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 943,
+    "introduce": "这是一个有用的助手"
+  },
+  {
+    "id": "9963c991-ee26-4ca1-bcc3-fa41753d6d5d",
+    "name": "群聊数据分析智能体",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 38,
+    "introduce": "我能够基于群聊数据执行内容分析、意图识别及内容推理，可输出包括聊天主题、人员信息、聊天背景、书否涵盖敏感信息等相关内容......"
+  },
+  {
+    "id": "88283659-a1f6-4210-839f-1accd5b0cc50",
+    "name": "群聊监控助手",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 17,
+    "introduce": "我可以对聊天数据进行分析，识别潜在犯罪行为及敏感信息"
+  },
+  {
+    "id": "9c46814e-ba7b-4ead-98dc-5779c4cb1958",
+    "name": "慢SQL优化智能体_SQL优化",
+    "publisher": "唐宇飞",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 749,
+    "introduce": "慢SQL优化智能体是一款集成了先进算法和大数据技术的智能工具，专注于解决数据库中的慢查询问题。它具备强大的风险研判能力和丰富的优化策略，能够在复杂的数据库环境中"
+  },
+  {
+    "id": "35ef48f3-f600-4662-93d9-f51d4fcae2db",
+    "name": "数据库运维人员异常操作识别智能体",
+    "publisher": "许诚",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 62,
+    "introduce": "智能体结合运维人员行为的操作场景类别自动判别在一组会话中不应该出现在该场景的异常操作行为的SQL语句。"
+  },
+  {
+    "id": "c3b1dbcc-cb44-44b6-ad2f-ac0330f180d8",
+    "name": "SQL语句转自然语言智能体",
+    "publisher": "王顺",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 153,
+    "introduce": "数据库操作语句翻译为自然语言\n对于审计人员角色，从运维人员操作的数据库SQL语句中理解运维人员操作行为的难度会远大于理解自然语言，因此如果智能体能够将SQL语句"
+  },
+  {
+    "id": "9fcb0eee-f7cf-49ea-8a4c-23f9180135c6",
+    "name": "生成式UI智能体-GenUI",
+    "publisher": "程从业",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 18,
+    "introduce": "通过大语言模型实时生成用户交互界面"
+  },
+  {
+    "id": "b8ef55bd-3292-41eb-b779-4ec19fec3532",
+    "name": "运维人员操作场景分析",
+    "publisher": "钱男",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 13,
+    "introduce": "本智能体专为深入理解与解析数据库运维人员的操作行为而设计。它能够分析一系列SQL语句，识别其背后的意图与目的，将复杂的数据库活动归类到预设的操作场景中，如DBA"
+  },
+  {
+    "id": "05c503d4-a5df-4ebb-86ca-1a44a5910c0b",
+    "name": "案件侦查助手智能体-IP或域名查询插件",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 75,
+    "introduce": "能够查询IP或域名归属"
+  },
+  {
+    "id": "6e269060-f427-47eb-a676-c686d653a0a0",
+    "name": "案件侦查助手智能体-网址类型识别插件",
+    "publisher": "吕中伟",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 71,
+    "introduce": "我可以甄别黑灰产网址类型，匹配是否命中模版，验证网址识别准确性或协助案件溯源分析"
+  },
+  {
+    "id": "71ce2a74-c75a-4f12-99f9-0681014014e4",
+    "name": "数据防泄露风险日志分析智能体",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 26,
+    "introduce": "该智能体主要是通过对终端DLP产品产生的日志信息进行推理分析，从中发现用户可能导致敏感信息泄露的异常行为。"
+  },
+  {
+    "id": "1dfd5dd2-1c6e-42de-9d38-56976326a716",
+    "name": "离职人员操作日志异常行为分析智能体",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 54,
+    "introduce": "该智能体主要是通过对终端DLP产品产生的日志信息进行推理分析，从中发现用户可能导致敏感信息泄露的异常行为。\n可以获取以下内容：\n1、离职人员异常行为分析；\n2、"
+  },
+  {
+    "id": "e8422b02-a753-4a25-8e46-44decb2220fe",
+    "name": "通用意图识别智能体",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 8,
+    "introduce": "根据用户的输入，猜测意图，为用户找出所需的应用或接口。"
+  },
+  {
+    "id": "0a329717-5288-496f-9620-a3680f1e7072",
+    "name": "医保问答智能体",
+    "publisher": "董进",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 80,
+    "introduce": "你是一个医药机构网络改造和运维专家，可以根据提问给出解答。"
+  },
+  {
+    "id": "f8e0c0da-022b-4bcc-92d0-efc17bf68f23",
+    "name": "用户名及密码提取器",
+    "publisher": "William",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "根据输入的内容，分析其中的口令和密码，并且输出判断内容"
+  },
+  {
+    "id": "e82c1d83-81b8-477f-b3b3-ba2ac3e8c143",
+    "name": "网络安全解决方案专家",
+    "publisher": "吴延枫",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 233,
+    "introduce": "你是安恒信息资深行销专家，熟悉安恒信息的所有产品和解决方案，熟悉公司所有典型案例，能够结合不同行业不同层级客户的要求输出售前技术解决方案，能够为产品和服务提供问"
+  },
+  {
+    "id": "af0121df-caa9-4ed0-8582-0da28abfaa54",
+    "name": "二进制报告编写",
+    "publisher": "王晓天",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 548,
+    "introduce": "您是专门从事漏洞分析的网络安全专家，为我编写漏洞报告"
+  },
+  {
+    "id": "e6d6fd8f-f58a-4f40-87d0-994514de110c",
+    "name": "应用SQL语句转自然语言智能体",
+    "publisher": "王顺",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 227,
+    "introduce": "数据库操作语句翻译为自然语言\n对于审计人员角色，从运维人员操作的数据库SQL语句中理解运维人员操作行为的难度会远大于理解自然语言，因此如果智能体能够将SQL语句"
+  },
+  {
+    "id": "16beb57b-fa38-461f-a9b5-2fa7b23d6a96",
+    "name": "安全事件简报-资产视角",
+    "publisher": "何颖华",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 120,
+    "introduce": "以资产视角提供安全事件研判和处置建议"
+  },
+  {
+    "id": "8ec8185d-5316-47eb-a0ca-c7d6afa5ade7",
+    "name": "特殊AI",
+    "publisher": "肖静",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 15,
+    "introduce": "这是一个测试人员使用的AI"
+  },
+  {
+    "id": "1fe0efe8-6864-496a-9987-01343f39d852",
+    "name": "刑法知识专家",
+    "publisher": "董进",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 29,
+    "introduce": "你是一个刑法和监狱法相关法律法规的专家，可以根据提问给出相关法律法规的解答。"
+  },
+  {
+    "id": "ec105a40-186f-4cc4-9084-64d77fb37c88",
+    "name": "剑鱼数据处理",
+    "publisher": "金成强",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 18,
+    "introduce": "用于对标讯信息的分析与处理"
+  },
+  {
+    "id": "48068907-8bd6-40c1-ae79-fc9c97409bf5",
+    "name": "AiLog日志转换",
+    "publisher": "叶峥豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 32,
+    "introduce": "将原始日志中的信息提取转化为DASDS标准json"
+  },
+  {
+    "id": "5753e315-376a-4ca6-9bb2-b593773a6dbe",
+    "name": "SOAR2024内置剧本解读",
+    "publisher": "宋振",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 132,
+    "introduce": "1、SOAR2024内置剧本解读\n2、SOAR剧本编排指导，已内置SOAR”初中高“三个级别的剧本编排指导手册"
+  },
+  {
+    "id": "9a55eb2e-0e07-4649-b274-be97f278c088",
+    "name": "超时智能体测试",
+    "publisher": "MrDesTinY",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "当输入给定数据时将发生超时或网络错误，请恒脑团队分析，评估是否有改善方案？"
+  },
+  {
+    "id": "cf5d12ed-592b-47df-b2fc-2c264083f22b",
+    "name": "ailog生成正则表达式test",
+    "publisher": "谢智贤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 48334,
+    "introduce": "测试ailog生成正则表达式"
+  },
+  {
+    "id": "89bebc45-e99f-4c21-8c7e-0421bcddf03d",
+    "name": "SOAR剧本编排助手",
+    "publisher": "陈晓冬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 13,
+    "introduce": "你是一个SOAR剧本编排专家，能够通过用户对安全场景的简单描述进行分析，生成剧本名称、剧本描述、剧本流程以及剧本需要使用的组件。"
+  },
+  {
+    "id": "ff523416-6f04-4890-a04c-39a1bd8806ed",
+    "name": "Demo_代码拆分_招标参数分析",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "作为专业的安恒招投标参数助手，能够对比分析招投标参数与安恒产品的匹配度"
+  },
+  {
+    "id": "7256b17d-e5b4-452f-ab87-d9a27b6a3f21",
+    "name": "Demo_赋值操作_参数传递和使用",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 8,
+    "introduce": "能够根据用户的输入进行字符串处理。"
+  },
+  {
+    "id": "86bf29de-9661-423e-8166-73cdde509057",
+    "name": "Demo_提示词_引导输出指定格式",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "智能体可以根据用户的输入，分析语义并按指定格式输出，并给出分析原因。"
+  },
+  {
+    "id": "2b8d73cf-c9a8-42dc-abe5-d94868b90c36",
+    "name": "Demo_提示词单列_意图识别",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": "根据用户的输入，猜测意图，为用户找出所需的应用或接口。"
+  },
+  {
+    "id": "0d2a2195-c8cb-4606-9a0c-8858b9769a61",
+    "name": "Demo_提示词_DLP风险场景测试",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": "该智能体主要是通过对终端DLP产品产生的日志信息进行推理分析，从中发现用户可能导致敏感信息泄露的异常行为。"
+  },
+  {
+    "id": "56577279-594b-41f9-903c-d6da21a0ea8d",
+    "name": "Demo_模型路由器_自动提参并执行",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 8,
+    "introduce": "参数提取Demo是为了测试使用各类工具的调用，并验证参数提取能力。"
+  },
+  {
+    "id": "ec24cc1d-6233-4f4c-9eb2-e22514688b86",
+    "name": "Demo_知识库调用_文档问答",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "我是一个知识库智能体，可以回答知识库相关的内容。"
+  },
+  {
+    "id": "5d29ccc1-011c-4deb-9791-7cf8efae617d",
+    "name": "Demo_边的使用",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 12,
+    "introduce": "本智能体主要用于边的使用演示，通过介绍各种边的特性来加强理解，供参考使用。"
+  },
+  {
+    "id": "af1aeef4-1d2a-413e-891a-040f45278e5f",
+    "name": "debug_zhixian_API打标",
+    "publisher": "谢智贤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 414,
+    "introduce": "在智能体中通过http报文对API打标签,v1.2.020240820c20&c30"
+  },
+  {
+    "id": "50fc2387-cf9d-46c3-9d37-002c2671f0f3",
+    "name": "安恒云智能问答机器人",
+    "publisher": "胡琪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 27,
+    "introduce": "安恒云小助手回答用户提出的安恒云问题。"
+  },
+  {
+    "id": "cbfda9d3-6204-42e3-adfd-fde69e8f78f4",
+    "name": "网易云音乐ID查询用户信息",
+    "publisher": "William",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 20,
+    "introduce": "根据网易云音乐的用户ID查询用户的基本信息"
+  },
+  {
+    "id": "bb75d4e0-0259-4c03-8bcb-f5ce4bc50ec2",
+    "name": "安恒400售后问答机器人-代码路由",
+    "publisher": "黄睿捷",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 81,
+    "introduce": "精通DB数据库审计/SOC综合日志审计/WAF应用防火墙/TGFW防火墙/NGFW安全网关/EDR终端安全防病毒/USM运维审计堡垒机/RAS漏洞扫描系统/AP"
+  },
+  {
+    "id": "c6518de6-ce33-4ff1-ac98-a48947b6ea74",
+    "name": "慢SQL优化智能体-数审",
+    "publisher": "唐宇飞",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 225,
+    "introduce": "慢SQL优化智能体是一款集成了先进算法和大数据技术的智能工具，专注于解决数据库中的慢查询问题。它具备强大的风险研判能力和丰富的优化策略，能够在复杂的数据库环境中"
+  },
+  {
+    "id": "ea581723-552e-4a97-be74-74412f610569",
+    "name": "数据库运维场景分析以及异常操作识别",
+    "publisher": "许诚",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 74,
+    "introduce": "智能体结合运维人员行为的操作场景类别自动判别在一组会话中不应该出现在该场景的异常操作行为的SQL语句。"
+  },
+  {
+    "id": "5284373e-367d-4b75-8a36-015d619d7515",
+    "name": "告警研判智能体",
+    "publisher": "温延龙",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 593,
+    "introduce": "告警研判智能体是一款专为网络安全领域设计的智能化分析工具，致力于提升安全运营效率与威胁响应能力。该智能体通过集成先进的自然语言处理技术与深度学习算法，能够对各类"
+  },
+  {
+    "id": "66be7d33-5aed-4119-b1f7-e99942736b8f",
+    "name": "小恒智聊",
+    "publisher": "安恒信息",
+    "scene": [
+      "安全运行与维护",
+      "安全应急与防御"
+    ],
+    "callNum": 188,
+    "introduce": "小恒智聊是基于恒脑·安全垂域大模型形成的集问答、分析、工具为一体的对话式安全专家，支持可以创建多会话问答，让用户通过问答方式体验到恒脑所具备的威胁情报分析、 ."
+  },
+  {
+    "id": "f588f969-c032-4d10-ad36-800f98951142",
+    "name": "零信任系统智能体",
+    "publisher": "李玉婷",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 20,
+    "introduce": "你是一个专门负责零信任售前问答的专家，你有很多渠道可以获取到信息。"
+  },
+  {
+    "id": "2c3ca0f0-4d11-4dc7-9435-8b6658b5f7a2",
+    "name": "报告-内容生成",
+    "publisher": "王天博",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 19652,
+    "introduce": "处理自动化报告过程中的内容生成"
+  },
+  {
+    "id": "aff629e0-524b-437d-bb07-2e2ff305154c",
+    "name": "暗网周报生成器",
+    "publisher": "钟晓骏",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 35,
+    "introduce": "自动生成每周暗网周报"
+  },
+  {
+    "id": "3c60710f-ffd9-433e-a871-79f8813d9989",
+    "name": "恶意样本分析智能体",
+    "publisher": "关宇哲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 148,
+    "introduce": "恶意样本分析智能体"
+  },
+  {
+    "id": "c81d5305-64aa-4caf-ae71-efbd32e42fe1",
+    "name": "YJGLB-工单关键要素提取智能体",
+    "publisher": "William",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 58,
+    "introduce": "运维平台工单信息提取需求，根据工单内容，将需要的信息字段提取到表格中。"
+  },
+  {
+    "id": "1425ffdc-76a3-43de-9f05-c97aa7a7f20c",
+    "name": "中英互译小助手",
+    "publisher": "刘明嘉",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 141,
+    "introduce": "无论你说什么，中英互译，只输出另外一种语言，不会出现其他无关信息"
+  },
+  {
+    "id": "1b94d28a-605f-4d16-90e0-a20362188202",
+    "name": "自动化报告生成",
+    "publisher": "王天博",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 337,
+    "introduce": "自动化报告生成，用于启动任务                        "
+  },
+  {
+    "id": "3cfd004d-89ae-457b-8f3e-7b402e47bb81",
+    "name": "告警分类",
+    "publisher": "张钰明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2154,
+    "introduce": "对异构数据告警做类型和子类型区分"
+  },
+  {
+    "id": "a339558b-253d-4242-bbb1-6a76502b1e2c",
+    "name": "字段映射",
+    "publisher": "张钰明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 951,
+    "introduce": "异构设备字段映射"
+  },
+  {
+    "id": "c7cb3004-f7c2-447d-be9c-62757c4c05c5",
+    "name": "恶意IoC查询智能体",
+    "publisher": "Admin",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 226,
+    "introduce": "我是一个威胁情报专家，擅于从用户的输入中，提取关键IoC信息，并查询和总结出对应的威胁情报"
+  },
+  {
+    "id": "2126fbf8-56ec-4b90-b1a8-ec2432cb2636",
+    "name": "不用任何插件的知识库检索智能体",
+    "publisher": "肖静",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 17,
+    "introduce": "解决客户各种问题和产品使用场景"
+  },
+  {
+    "id": "c5e850f5-7983-4255-b948-0f80be592c7d",
+    "name": "域名云防护情况查询",
+    "publisher": "陆祥宇",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 8,
+    "introduce": "根据用户输入的域名，查询站点是否接入玄武盾。"
+  },
+  {
+    "id": "18385e1c-640b-4600-a1b3-75c31d168531",
+    "name": "API行为风险分析智能体-暴力破解v2",
+    "publisher": "许诚",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "API行为风险分析智能体"
+  },
+  {
+    "id": "1970c288-a44a-42f5-a8df-d5936ed092d7",
+    "name": "API行为风险分析智能体-暴力破解",
+    "publisher": "许诚",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "API行为风险分析智能体-暴力破解"
+  },
+  {
+    "id": "5c1b5518-61db-443c-bc41-25052f62ae03",
+    "name": "自动化报告生成-查询状态",
+    "publisher": "王天博",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 52000,
+    "introduce": "自动化报告生成，查询状态                                                     "
+  },
+  {
+    "id": "59048476-caa4-41bc-836e-0b15ef991d69",
+    "name": "自动化报告生成-报告获取",
+    "publisher": "王天博",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 78,
+    "introduce": "自动化报告生成，报告获取                              "
+  },
+  {
+    "id": "00dac59c-67a4-4897-addd-7c66b55dedf2",
+    "name": "剑鱼中标单位缺失治理",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 21258,
+    "introduce": "用于中标单位缺失治理，基于公告内容推理中标单位"
+  },
+  {
+    "id": "96d425f1-0215-46dd-ab51-dcda40c0c1aa",
+    "name": "剑鱼行业疑似缺失治理_不存在采购单位",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 51811,
+    "introduce": "用于行业疑似缺失治理，基于公告内容推理行业信息"
+  },
+  {
+    "id": "0b2d9684-bab6-465f-b2a4-2e101113b79a",
+    "name": "剑鱼预算中位数缺失治理",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 344323,
+    "introduce": "用于预算中位数缺失治理，基于公告内容推理预算金额"
+  },
+  {
+    "id": "9e9eb2c8-251d-4926-ace0-931f10e2b473",
+    "name": "剑鱼项目编码缺失治理",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "用于项目编码缺失治理，基于公告内容推理项目编码"
+  },
+  {
+    "id": "bf5453d2-64fb-4ad8-85d0-1fea6d0d1048",
+    "name": "剑鱼采购单位缺失治理",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 17460,
+    "introduce": "用于采购单位缺失治理，基于公告内容推理采购单位"
+  },
+  {
+    "id": "f70daeb5-3918-4c8d-ac2e-4e2ef60a6350",
+    "name": "剑鱼行业疑似缺失治理_存在采购单位",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 72141,
+    "introduce": "用于行业疑似缺失治理，基于公告内容、采购单位推理行业信息"
+  },
+  {
+    "id": "986b7b7f-2432-4a92-ace9-2692ffaca94c",
+    "name": "剑鱼省份是全国治理_存在采购单位",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6842,
+    "introduce": "用于省份是全国治理，基于公告内容、采购单位推理省份信息"
+  },
+  {
+    "id": "1d2a2d0d-43e3-4446-95d8-2f446b474c04",
+    "name": "剑鱼省份是全国治理_不存在采购单位",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 10628,
+    "introduce": "用于省份是全国治理，基于公告内容推理省份信息"
+  },
+  {
+    "id": "f96ff31d-27d0-4a63-aa14-f3da584657c0",
+    "name": "剑鱼城市缺失治理_存在采购单位",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 30929,
+    "introduce": "用于城市缺失治理，基于公告内容、采购单位推理城市信息"
+  },
+  {
+    "id": "10a54ca2-8a68-4089-8beb-42e1b91d0248",
+    "name": "剑鱼城市缺失治理_不存在采购单位",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 17559,
+    "introduce": "用于城市缺失治理，基于公告内容推理城市信息"
+  },
+  {
+    "id": "759f9894-395c-412d-b61d-bb063952ae2f",
+    "name": "剑鱼公告类型缺失治理",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 25705,
+    "introduce": "用于公告类型缺失治理，基于公告内容推理公告类型"
+  },
+  {
+    "id": "af43ae7a-85d3-4749-8791-c26b6f16bcb9",
+    "name": "剑鱼中标金额中位数缺失治理",
+    "publisher": "吕乐乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 111866,
+    "introduce": "用于中标金额中位数缺失治理，基于公告内容推理中标金额"
+  },
+  {
+    "id": "ac80e822-5269-49d4-9b83-c92d49cf7260",
+    "name": "MSS资产梳理智能体",
+    "publisher": "王澳",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2619,
+    "introduce": "资产数据识别与自动化清洗、分类分级"
+  },
+  {
+    "id": "9d7c2111-b39c-42c0-bf08-a97aa075e89d",
+    "name": "接口自动化用例生成器_低代码_dev",
+    "publisher": "陈其梦",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 293,
+    "introduce": "接口自动化用例生成器_低代码"
+  },
+  {
+    "id": "5a721785-115f-43a8-abe5-5ee3521cf786",
+    "name": "告警分类-DAS",
+    "publisher": "张钰明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 10363,
+    "introduce": "告警分类-DAS"
+  },
+  {
+    "id": "40176ed0-a30b-4fcd-801c-3143e918d544",
+    "name": "API--账号单日获取数据条数超过万条",
+    "publisher": "许诚",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "对API监测产品发现的API账号单日获取数据条数超过10000异常行为风险进行二次研判，判断该行为风险是否真实存在"
+  },
+  {
+    "id": "f155b70d-5f3e-4919-a2c1-3036f24afe8d",
+    "name": "智慧400",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 63,
+    "introduce": "安恒信息智慧400在线助手。"
+  },
+  {
+    "id": "eddf2815-09de-40e6-93cd-d5aaf31b6c70",
+    "name": "代码修复建议智能体",
+    "publisher": "邓胜科",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 199,
+    "introduce": "代码修复建议智能体"
+  },
+  {
+    "id": "73f3623d-e6e0-4b0a-8c98-abab8d0bb4b8",
+    "name": "国标事件等级自动分类",
+    "publisher": "张钰明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": "依据国标事件分类对事件等级进行分类"
+  },
+  {
+    "id": "fbb60331-1abe-4389-a721-3b79e2a48647",
+    "name": "产品问答助手",
+    "publisher": "胡佳慧",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 59,
+    "introduce": "理解用户提出的问题，为用户解答对应问题，包括但不限于问题答疑、公司产品咨询等"
+  },
+  {
+    "id": "d1040780-d1dd-43b6-b5d5-5a7dfe749a50",
+    "name": "安全咨询助手",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 23,
+    "introduce": "这是一个恒脑服务备案智能体。"
+  },
+  {
+    "id": "70de9a3f-db56-4322-91f8-b0c29c0d7333",
+    "name": "API接口行为风险研判",
+    "publisher": "王顺",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 10,
+    "introduce": "API接口行为风险研判智能体。"
+  },
+  {
+    "id": "5d1876f3-d116-48f4-ba8c-2f22510e7e2a",
+    "name": "安恒-态势-产品问答助手",
+    "publisher": "肖静",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 44,
+    "introduce": "理解用户提出的问题，为用户解答对应问题，包括但不限于问题答疑、公司产品咨询等"
+  },
+  {
+    "id": "33b2726b-e5ba-4064-ad96-470155fc789d",
+    "name": "报文研判智能体V2",
+    "publisher": "温延龙",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 18274,
+    "introduce": "“报文研判智能体”是一种基于人工智能技术构建的智能化分析系统，旨在自动识别、解析并评估网络中的各种通信报文。它不仅能够理解报文结构，还能结合上下文信息对潜在风险"
+  },
+  {
+    "id": "8bd9f72f-6fff-4ae1-9cab-77aadeb0e57f",
+    "name": "安全资讯周报生成器",
+    "publisher": "钟晓骏",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 23,
+    "introduce": "我是一个安全资讯周报生成器"
+  },
+  {
+    "id": "b866e3d2-a334-455b-a83d-87314c426f18",
+    "name": "制度匹配助手",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "你是制度匹配助手"
+  },
+  {
+    "id": "7446f585-277b-4c9c-9d67-992cc8720b4c",
+    "name": "仿冒网站检测智能体-输出文件",
+    "publisher": "吕中伟",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "可以基于目标网站检测是否存在相关仿冒站点"
+  },
+  {
+    "id": "890c88dd-91fb-450c-b3a8-a1fbbce7019b",
+    "name": "威胁情报提取XX",
+    "publisher": "何东轩",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 615435,
+    "introduce": "威胁情报提取\n威胁情报提取"
+  },
+  {
+    "id": "c08f9104-c7c4-4de8-8ad7-cb4ca1724e8e",
+    "name": "API接口行为风险研判-单日超量获取数据",
+    "publisher": "王顺",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "API接口行为风险研判智能体-账号单日获取超过1W条，V1.0.1"
+  },
+  {
+    "id": "406d59ca-bddb-479c-befe-a7ed91edfda4",
+    "name": "1452345324",
+    "publisher": "吴延枫",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "123542432574532"
+  },
+  {
+    "id": "37fd6ccf-c7ac-4326-aede-1858cc858a31",
+    "name": "CodeQL静态扫描报告研判智能体",
+    "publisher": "金成强",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2303,
+    "introduce": "CodeQL静态扫描报告研判智能体擅长代码审计，能够准确发现代码中的安全问题"
+  },
+  {
+    "id": "7a1fde1e-7d99-43c0-8110-d078e480ac0c",
+    "name": "事件调查日志分析智能体_2",
+    "publisher": "杨涛",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 341,
+    "introduce": "通过对话的方式让大模型自动检索相关日志信息，例如：“导出IP地址在xxx时间段内的访问记录”“导出xxx时间段全部访问记录”“导出xxx时间段内哪些账号登陆了系"
+  },
+  {
+    "id": "8424ec9b-ae39-4232-bd5d-59c37c8efc95",
+    "name": "AI造数智能体-零代码",
+    "publisher": "安天赤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 148,
+    "introduce": "你是一个网络行业的专家，熟悉各类协议方面知识，可以获取协议内容以及生成协议数据文件"
+  },
+  {
+    "id": "fb27984e-f18e-49a1-bdee-69bba7b27f38",
+    "name": "数字人智能体-预发布",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 731,
+    "introduce": "能够根据用户的提问，进行知识库检索，如果查询到相关知识，则结合知识库回答，如果未查询到相关内容，则自由回答。"
+  },
+  {
+    "id": "5dd93d7c-2aa8-4350-ab24-344c8a90d642",
+    "name": "ai_FAQ_test",
+    "publisher": "熊扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "1111111111"
+  },
+  {
+    "id": "6b48fc03-ecf1-4d16-b252-07aeb62ec6c3",
+    "name": "功能点拆分智能体",
+    "publisher": "董进",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "对软件的功能点进行拆分"
+  },
+  {
+    "id": "0f60b82a-4776-47de-aa72-bbd763f23974",
+    "name": "测试1",
+    "publisher": "叶张乐",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "测试恒脑功能，看看回答的效果"
+  },
+  {
+    "id": "c0cd1a96-43a0-421b-bbdc-49d6269a7b62",
+    "name": "Assistant_Chat",
+    "publisher": "丁莹",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 24,
+    "introduce": "智能助教角色，请用中文沟通"
+  },
+  {
+    "id": "8e1d2a2b-5ba1-4e35-b3c9-4f9520efda5c",
+    "name": "事件调查日志分析智能体_3",
+    "publisher": "杨涛",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 75,
+    "introduce": "通过对话的方式让大模型自动检索相关日志信息，例如：“导出IP地址在xxx时间段内的访问记录”“导出xxx时间段全部访问记录”“导出xxx时间段内哪些账号登陆了系"
+  },
+  {
+    "id": "8ba7478c-32e8-4719-9364-523748ce7a42",
+    "name": "恒脑签名生成器ygp",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 23,
+    "introduce": "恒脑签名生成器,个人专用"
+  },
+  {
+    "id": "ae2f335b-acbe-4b12-97b3-298366a7a02d",
+    "name": "2024世界互联网大会乌镇峰会小助手",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 92,
+    "introduce": "进行世界互联网大会乌镇峰会知识问答，包括官方活动环节安排、会议地点安排、安恒书院相关问题。包括大会背景、大会活动时间、地点、峰会主场活动安排、安恒信息参与环节具"
+  },
+  {
+    "id": "0e09ba2e-01df-47c7-9e4d-44101abb737e",
+    "name": "Demo_图文检索",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 57,
+    "introduce": "用于演示知识库图文检索的效果，支持用户提供图文文档，然后进行知识库检索和回答，并显示图文内容。"
+  },
+  {
+    "id": "9523c185-f210-4c3c-9631-b5712c2f0c59",
+    "name": "文档小助手111",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "文档小助手文档小助手111"
+  },
+  {
+    "id": "56f0c1bf-6201-4e30-8f3e-cc5879da68df",
+    "name": "功能用例_通用2_1",
+    "publisher": "陈其梦",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 53,
+    "introduce": "你是一个功能用例生成器"
+  },
+  {
+    "id": "6ab249a2-b473-463b-a765-7211dc362298",
+    "name": "网络安全问答助手",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 9,
+    "introduce": "回答网络安全相关问题"
+  },
+  {
+    "id": "7b7db8ac-18d3-4eb7-b950-c9a667f101a5",
+    "name": "网络安全机器人",
+    "publisher": "卢颂文",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 13,
+    "introduce": "你是一个网络安全专家，可以回答任何有关网络安全的问题。"
+  },
+  {
+    "id": "00fa57e4-db8d-47ae-a849-361e7ab884de",
+    "name": "恒脑AI杀毒引擎",
+    "publisher": "王天博",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 528,
+    "introduce": "恒脑AI杀毒引擎，给出样本判定及恶意研判依据"
+  },
+  {
+    "id": "7e07d294-3179-4150-a49e-af9d82720569",
+    "name": "API接口行为风险研判-账号暴力破解",
+    "publisher": "王顺",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "API接口行为风险研判智能-账号暴力破解，V1.0.1"
+  },
+  {
+    "id": "729bdc5e-e44f-4f41-8e34-4678b9b9e330",
+    "name": "Demo_文件处理",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 26,
+    "introduce": "用于演示文件输入输出，并通过文件处理插件处理并输出处理后的文件。"
+  },
+  {
+    "id": "6afac10b-998e-4733-a3dd-aeb84e5edc03",
+    "name": "分析平台-文件类型识别",
+    "publisher": "王天博",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "分析平台系列智能体，测试用，用于文件类型识别"
+  },
+  {
+    "id": "5ac6d2e4-4fb5-4842-a310-94ca47249db2",
+    "name": "APT-AIQL生成器",
+    "publisher": "临时",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 373,
+    "introduce": "AIQL生成器，针对用户输入的自然语言查询，转成成符合AiLog AIQL语法的检索条件。"
+  },
+  {
+    "id": "dedfd6d3-79e9-4b83-b2c9-a0c45ffdc83b",
+    "name": "打分",
+    "publisher": "钟晓骏",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "暗网数据分类打分"
+  },
+  {
+    "id": "4aad0212-8e27-44a9-bcf5-c0ab60631c8f",
+    "name": "负载均衡智能体",
+    "publisher": "叶子律",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "功能：将输入均匀分成五份\n通过智能体组合来调用其他的智能体作为输入，可以配合以下智能体组合突破并发限制\n输入可以是列表或字典\n\n智能体组合：\n负载均衡智能体\n "
+  },
+  {
+    "id": "1060068b-f363-4755-8399-97f02fbf0c95",
+    "name": "策略翻译_循环并发版",
+    "publisher": "叶子律",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 107,
+    "introduce": "输入列表/字典后，核心为“负载均衡智能体”&\"循环拆分智能体\"，将输入的字典or列表分成5等分，支持并发5个“策略翻译-中英互译_循环执行版”智能体，并执行翻译"
+  },
+  {
+    "id": "f8a55a2d-cb9c-48ac-97fb-3c36af55b062",
+    "name": "命令执行分析助手",
+    "publisher": "罗家强",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 57,
+    "introduce": "帮我助我分析命令执行类的告警，并提取出攻击者想要执行的命令以及命令的影响"
+  },
+  {
+    "id": "d25054de-8677-4197-8d99-243688c5588b",
+    "name": "纠错小能手",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": "我是纠错小能手，给我需要分析的文档，我可以帮你找出错误的地方。"
+  },
+  {
+    "id": "a3edd007-9fb0-4bbc-8c32-55757f578f04",
+    "name": "分析平台-样本字符串研判",
+    "publisher": "Admin",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "分析平台-样本字符串研判"
+  },
+  {
+    "id": "f5ddbc8b-e893-4fd5-a6e0-703cff403304",
+    "name": "EASM研判智能体",
+    "publisher": "曹万亮",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 57,
+    "introduce": "# 角色\n你是一个数据泄露研判专家，数据泄露的定义是，属于客户的信息或数据资产被泄露在了互联网中。关键词是我单位关心的重要字符，基于该关键词来搜索可能存在的代码"
+  },
+  {
+    "id": "bf73a768-9925-4e5a-a21b-418af761f746",
+    "name": "循环拆分_无迭代",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "循环拆循环拆循环拆"
+  },
+  {
+    "id": "d3b30be7-babc-4849-ac56-eaaf6941c0e9",
+    "name": "测试一下3_1",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "能够正常分组并且引用"
+  },
+  {
+    "id": "55faa5dc-2cc5-4819-8f8a-67e17a2c9740",
+    "name": "方案扩写智能体",
+    "publisher": "熊扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 7,
+    "introduce": "基于提供的方案，进行内容扩写"
+  },
+  {
+    "id": "8684429b-95ce-4df6-8124-3de42e78c181",
+    "name": "周报生成智能体",
+    "publisher": "卢颂文",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "可以获取上周的威胁事件生成的周报，返回简介、目录、周报PDF文件"
+  },
+  {
+    "id": "ef3fd769-8a91-4439-a3f9-e23d67a3d9bd",
+    "name": "安全情报分析智能体",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 481,
+    "introduce": "基于安全数据能力形成多维度、多主题的分析报告，如周报、月报等"
+  },
+  {
+    "id": "5e2b8f99-78dc-40cf-9009-09a1ec5bb4c6",
+    "name": "表达式生成",
+    "publisher": "黄旗亮",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": "cron表达式生成专家"
+  },
+  {
+    "id": "442e037d-be7b-446a-a1bb-41dce12d4c59",
+    "name": "测试漏洞翻译",
+    "publisher": "钟晓骏",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 8,
+    "introduce": "测试漏洞翻译低代码"
+  },
+  {
+    "id": "7babbb66-1c4f-43ba-802d-d9d15c5fbef6",
+    "name": "告警数据质量分析智能体",
+    "publisher": "朱爱兵",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 12,
+    "introduce": "告警数据质量分析智能体"
+  },
+  {
+    "id": "fa8e2682-d8a2-42f7-898f-fb86b375b393",
+    "name": "文本需求功能点分析",
+    "publisher": "Hardy",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 57,
+    "introduce": "你是一个资深产品专家，擅长分析梳理业务功能需求。"
+  },
+  {
+    "id": "a19dfbd5-f76c-4d17-b439-ac8857905c83",
+    "name": "通用技术原理生成助手",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "通过输入的内容，完成技术原理输出"
+  },
+  {
+    "id": "a5afd29b-3a4d-43a6-8320-46755a78238b",
+    "name": "邮件钓鱼话术专家",
+    "publisher": "钟晓骏",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 187,
+    "introduce": "你是一名红队渗透测试专家，你现在在给客户进行邮件钓鱼安全意识检测，我能帮助你快速生成贴合真实场景的邮件主题和内容"
+  },
+  {
+    "id": "67f77bc6-593f-4b13-80be-c2cca50ec5e8",
+    "name": "代码注入分析",
+    "publisher": "王振",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "提取告警中的HTTP请求包中所注入的代码"
+  },
+  {
+    "id": "92854d37-d3e8-4405-824c-f0f2b78b664e",
+    "name": "Demo_智能体节点",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 8,
+    "introduce": "介绍智能体节点使用"
+  },
+  {
+    "id": "73f54ca6-e77c-45ef-833f-ab436e95b31a",
+    "name": "纠错小能手pro",
+    "publisher": "黄旗亮",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "我是纠错小能手，给我需要分析的文档，我可以帮你找出错误的地方。"
+  },
+  {
+    "id": "593e4c84-46b4-4c93-95bd-91dea2bf8758",
+    "name": "渗透测试报告纠错小能手",
+    "publisher": "邓胜科",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 42,
+    "introduce": "我是纠错小能手，给我需要分析的文档，我可以帮你找出错误的地方。"
+  },
+  {
+    "id": "76174d0b-e056-413d-899f-4402bc5a85a9",
+    "name": "告警工单研判",
+    "publisher": "周浩男",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "告警工单研判111"
+  },
+  {
+    "id": "d7085c3b-2fbb-496a-bcbf-fc0e71a3b600",
+    "name": "非正式-安服-数据安全合规评估助手",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 24,
+    "introduce": "本智能体用作数据安全合规评估功能"
+  },
+  {
+    "id": "f9dc69f0-d8ac-43f6-b1db-a28a688b1e8f",
+    "name": "告警类型分类",
+    "publisher": "赵贤哲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 9,
+    "introduce": "对接DAS-DS - ruleType规范"
+  },
+  {
+    "id": "bbbb5af3-b5c7-4483-8251-009e85e53e24",
+    "name": "a18",
+    "publisher": "周夕",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 142,
+    "introduce": "这是一个用于网络安全领域会议的会务助手，需要为与会者提供各种信息和便利服务。"
+  },
+  {
+    "id": "0ce6e4e9-88c0-45b4-8fbb-c21b0a582fe8",
+    "name": "安全策略-版本区间对比-参数提取",
+    "publisher": "叶子律",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "安全策略-版本区间对比-参数提取"
+  },
+  {
+    "id": "a052a2b8-4e05-428f-b0a0-165b3fbb6747",
+    "name": "AVM-通报漏洞拆解智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 12,
+    "introduce": "针对通报的语焉不详的漏洞拆分漏洞查询关键字段"
+  },
+  {
+    "id": "e636a591-535d-4328-b48b-b1a141f2ef1e",
+    "name": "插件生成文件",
+    "publisher": "莉莉2",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 9,
+    "introduce": "awdawdawdawdwa"
+  },
+  {
+    "id": "367c9ee3-1e22-4f48-93e0-c5ce06bbab58",
+    "name": "查询测试",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 10,
+    "introduce": "漏洞类型匹配漏洞类型匹配"
+  },
+  {
+    "id": "0b76822d-19b2-45fe-88a0-ee6ce168489f",
+    "name": "合规测评项判定智能体",
+    "publisher": "jack",
+    "scene": [
+      "等保系列"
+    ],
+    "callNum": 1212,
+    "introduce": "根据测评项现状及测评项内容，自动研判测评项结论"
+  },
+  {
+    "id": "d3cd70dd-fa8c-47b1-8239-db7a61e97090",
+    "name": "hlj告警智能解读",
+    "publisher": "张劭华",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "安全运营查询智能体安全运营查询智能体"
+  },
+  {
+    "id": "11447379-8c7c-421e-9474-cd373c0af205",
+    "name": "v2-安服-数据安全合规评估助手",
+    "publisher": "钟晓骏",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "本智能体用作数据安全合规评估功能"
+  },
+  {
+    "id": "88a67a91-bf77-4fa8-ad1a-6b23c638c143",
+    "name": "钓鱼邮件识别智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 53,
+    "introduce": "基于DeepSeek适配的钓鱼邮件识别智能体"
+  },
+  {
+    "id": "92f90597-1e73-489e-985b-b14294075019",
+    "name": "安全规则编写智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 68,
+    "introduce": "基于DeepSeek的安全规则编写智能体"
+  },
+  {
+    "id": "38ebc341-a751-466b-a312-3c0c23e50c7d",
+    "name": "日志解读智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 62,
+    "introduce": " 基于DeepSeek适配的日志解读智能体"
+  },
+  {
+    "id": "b069d78f-d5cf-41f1-a6d5-4b26ebc1fb47",
+    "name": "大型赛事活动网络安全保障专家",
+    "publisher": "李伟伟",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 17,
+    "introduce": "为赛事活动提供专家级别的咨询建议、其特别擅长针对场馆的安全检查、攻防对抗方面的内容"
+  },
+  {
+    "id": "f2436c37-f52a-48ea-be35-c1abd17fc0db",
+    "name": "告警推理解析智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 39,
+    "introduce": " 基于DeepSeek适配的告警推理研判解读智能体"
+  },
+  {
+    "id": "fa8fe96f-6d74-44a2-9972-3f0f291442bd",
+    "name": "小恒智聊-DeepSeek版",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 21,
+    "introduce": "针对体验DeepSeek能力问答体验的助手"
+  },
+  {
+    "id": "04886601-ef1f-4749-a53e-ca396c8b3675",
+    "name": "网页漏洞信息提取智能体",
+    "publisher": "王骋傲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 54281,
+    "introduce": "本智能体用于漏洞原始信息结构化抽取。智能体基于输入的非结构化或半结构化漏洞原始数据，通过模型理解和信息抽取能力，将漏洞内容统一整理为标准化的漏洞数据结构，便于后"
+  },
+  {
+    "id": "0a176b60-3525-48db-b7c9-d836d57d2d1f",
+    "name": "组件资产名称匹配智能体",
+    "publisher": "王骋傲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 139762,
+    "introduce": "匹配两个软件是否同一个名称"
+  },
+  {
+    "id": "46fc647d-6fde-4726-b3d9-3c90190a6b35",
+    "name": "deepseek增智版-强制思考",
+    "publisher": "刘明嘉",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 117,
+    "introduce": "deepseek增智版-强制思考"
+  },
+  {
+    "id": "35e0da5e-1755-43cd-a4b4-fcfc3a9b6f1a",
+    "name": "威胁情报-新闻内容提取",
+    "publisher": "高润文",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 49,
+    "introduce": "输入新闻URL得到文章内容docx文档\n1、解析新闻内容。\n2、生成标准化格式文档。"
+  },
+  {
+    "id": "f16765f4-2831-4147-981d-cb81db86d9d8",
+    "name": "大模型内容安全评估",
+    "publisher": "张礼林",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 708,
+    "introduce": "大模型内容安全评估"
+  },
+  {
+    "id": "1075175f-0d29-432d-9af1-248eb31a6357",
+    "name": "AI编程",
+    "publisher": "刘光栋",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 13,
+    "introduce": "帮助用户进行AI编程，请输入是参考格式code代表编程语言，idea代表想要实现的想法"
+  },
+  {
+    "id": "b0e24ed8-3071-4c77-b8ef-d607282098fd",
+    "name": "教练_我想打CTF",
+    "publisher": "刘光栋",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 12,
+    "introduce": "本智能体致力于帮助CTF小白进行入门级别的训练，指导CTF学习方向，针对提出的问题进行启发式的回答"
+  },
+  {
+    "id": "4566a4cf-22bc-4108-8bf1-2f81287ae5b3",
+    "name": "webshell研判智能体",
+    "publisher": "陈圣鑫",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 16,
+    "introduce": "webshell，内存码专杀"
+  },
+  {
+    "id": "954e7a01-2f4d-4b51-88e6-47340570bc2f",
+    "name": "官网售前智能助手",
+    "publisher": "童丽燕",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": "这是一个官网售前智能助手"
+  },
+  {
+    "id": "1aac58bb-8f19-49b5-834a-223dabc3d156",
+    "name": "TGFW维护小助手",
+    "publisher": "韩思",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 32,
+    "introduce": "我是一名TGFW防火墙产品专家，精通TGFW防火墙各功能的技术原理、功能介绍、使用维护及问题排查，此外我还能联网提供安全行业的知识科普，帮助用户方便快捷地处理T"
+  },
+  {
+    "id": "f171cad0-26d0-40b3-bb54-7c37f77dae76",
+    "name": "DeepTest",
+    "publisher": "安天赤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 7,
+    "introduce": "你是一个网络安全行业的专家，可以深度理解网络安全的知识"
+  },
+  {
+    "id": "314e16cf-50a1-4d09-be45-c1f217f391ff",
+    "name": "Demo_交互节点_班级信息收集",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 17,
+    "introduce": "这是一个班级信息收集助手，可以不断引导用户输入班级需要的信息，最终完成收集后结束。"
+  },
+  {
+    "id": "de3def8a-e5f9-45e9-9a44-099e134971c6",
+    "name": "安全服务v01",
+    "publisher": "吕志远",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 13,
+    "introduce": "网络安全服务工程师。"
+  },
+  {
+    "id": "ea6f165f-b6d9-4422-bcc8-fc36af5c9d8f",
+    "name": "商密智能体文本模块",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "商密智能体测试版本"
+  },
+  {
+    "id": "15a8659f-8111-4b8f-91d7-0ef1717dcb9a",
+    "name": "商密智能体图片模块",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "商密智能体图片模块"
+  },
+  {
+    "id": "41757eac-47a1-44f9-be2e-59e608c5dc4e",
+    "name": "商密智能体补充模块v1",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "商密智能体补充模块"
+  },
+  {
+    "id": "228f4c2e-46d6-4514-9c66-f8617e219748",
+    "name": "网络安全事件报告",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 15,
+    "introduce": " 基于DeepSeek适配的网络安全事件报告智能体"
+  },
+  {
+    "id": "c35b871e-91c2-4289-9792-72520ffa509f",
+    "name": "代码风险审计智能体-20250724",
+    "publisher": "张月明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 224,
+    "introduce": " 基于DeepSeek适配的代码风险审计智能体"
+  },
+  {
+    "id": "0ee21f85-e525-4b50-9acf-e5c29eefcb26",
+    "name": "事件日志分析智能体",
+    "publisher": "张月明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 31,
+    "introduce": " 基于DeepSeek适配的事件日志分析智能体"
+  },
+  {
+    "id": "6159be76-4438-473f-a22e-fa591a14829e",
+    "name": "恶意脚本分析智能体",
+    "publisher": "张月明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 27,
+    "introduce": " 基于DeepSeek适配的恶意脚本分析智能体"
+  },
+  {
+    "id": "d62ea674-7f73-4ae2-8886-50e11cf1bea3",
+    "name": "网络安全调查智能体V1",
+    "publisher": "李伟伟",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "功能测试功能测试功能测试功能测试功能测试功能测试"
+  },
+  {
+    "id": "fba3bb21-3105-43ec-97e4-39e4ba71786c",
+    "name": "DeepSeek智聊",
+    "publisher": "张礼林",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "DeepSeek智聊，测试使用"
+  },
+  {
+    "id": "34b604e8-ce6a-4309-841c-fc6bb848858f",
+    "name": "网络安全周报生成-DeepSeek版",
+    "publisher": "甘彩坤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 23,
+    "introduce": "基于安全数据能力形成多维度、多主题的分析报告，如周报、月报等"
+  },
+  {
+    "id": "3bbc7f77-6081-4378-ac21-f9ba220db12f",
+    "name": "恶意IoC查询智能体-DeepSeek版",
+    "publisher": "甘彩坤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 81,
+    "introduce": "我是一个威胁情报专家，擅于从用户的输入中，提取关键IoC信息，并查询和总结出对应的威胁情报"
+  },
+  {
+    "id": "97c83b7d-850b-4b24-a27e-e7c5289622c7",
+    "name": "商密智能体V4",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "商密智能体测试版本"
+  },
+  {
+    "id": "7c3cea26-8fd6-4404-ad8f-bd3ef5eeb2e1",
+    "name": "商密智能体组合v1",
+    "publisher": "金逸扬",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "商密智能体组合测试"
+  },
+  {
+    "id": "23420d2e-c03e-4811-9296-2e9a2f0a4eab",
+    "name": "编码识别及解码智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 24,
+    "introduce": "基于DeepSeek适配的编码识别及解码智能体，根据编码识别编码算法，并写代码进行运行解码"
+  },
+  {
+    "id": "ac9b6f96-bc7e-455b-ac9f-3a630e9f9f26",
+    "name": "渗透测试指导智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 204,
+    "introduce": " 基于DeepSeek适配的渗透测试指导智能体"
+  },
+  {
+    "id": "f50c5b1b-5e02-4eb5-a728-b77b2a516f37",
+    "name": "反诈报案协助智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 19,
+    "introduce": " 基于DeepSeek适配的反诈报案协助智能体"
+  },
+  {
+    "id": "5186dc58-cb6f-425d-8ede-921b74a492bd",
+    "name": "反诈出题助手",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 24,
+    "introduce": " 基于DeepSeek适配的反诈出题助手"
+  },
+  {
+    "id": "8bd748b4-a32f-428c-8a52-b2cf7e2f4182",
+    "name": "信息安全解决方案专家",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 16,
+    "introduce": " 基于DeepSeek适配的信息安全解决方案专家"
+  },
+  {
+    "id": "8e572c7e-084c-453b-8da2-f1292c3306c6",
+    "name": "封禁任务构建智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 12,
+    "introduce": " 基于DeepSeek适配的封禁任务构建智能体"
+  },
+  {
+    "id": "6d299163-ffd0-44bb-8d4c-2b88d7918012",
+    "name": "渗透工具指导智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 22,
+    "introduce": " 基于DeepSeek适配的渗透工具指导智能体"
+  },
+  {
+    "id": "491195f6-fdda-43be-968e-37bff4a78bec",
+    "name": "安全测试报告智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": " 基于DeepSeek适配的安全测试报告智能体"
+  },
+  {
+    "id": "309a2822-b1f4-4e71-abb1-ceea816e346a",
+    "name": "钓鱼邮件编写智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 88,
+    "introduce": " 基于DeepSeek适配的钓鱼邮件编写智能体"
+  },
+  {
+    "id": "db1a7a28-7e16-457f-b45c-3fc2553bdd26",
+    "name": "混淆代码分析智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 8,
+    "introduce": " 基于DeepSeek适配的混淆代码分析智能体"
+  },
+  {
+    "id": "22ade708-fd27-401e-8915-62f78be0ea54",
+    "name": "API报文内容标签提取",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 9,
+    "introduce": "期望从API报文中，依据数据内容在报文中提取对应的报文标签信息（DeepSeek版本）"
+  },
+  {
+    "id": "12417903-4ced-4628-8cfa-b9e16f2dcb08",
+    "name": "慢SQL优化-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "慢SQL优化智能体是一款集成了先进算法和大数据技术的智能工具，专注于解决数据库中的慢查询问题。它具备强大的风险研判能力和丰富的优化策略，能够在复杂的数据库环境中"
+  },
+  {
+    "id": "661e95b1-47f8-4476-bb66-ad682be7be6d",
+    "name": "API接口聚合-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 106,
+    "introduce": "在智能体中聚合相同类型的API。V1.3.1"
+  },
+  {
+    "id": "af1c1c1c-586e-45c2-98d8-845ffce559cd",
+    "name": "数据分类分级-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 47,
+    "introduce": "在智能体中设置用户设定数据分级分类框架，用户依次输入分级分类原数据，给出相应级别标签。"
+  },
+  {
+    "id": "28c9e519-4cb4-495c-82b5-97ccdedc67d9",
+    "name": "API接口识别-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5751,
+    "introduce": "分析给定的HTTP请求和响应报文以判断它们是否代表一个API的使用"
+  },
+  {
+    "id": "fd65cbb7-b8b3-48a5-9435-8655ebac616b",
+    "name": "API接口打标智能体-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 791,
+    "introduce": "配置guided_json，在智能体中通过http报文对API打标签"
+  },
+  {
+    "id": "04bb1bda-a49f-4dec-8c7b-6af38811489f",
+    "name": "员工终端日志审计-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "通过对终端DLP产品产生的日志信息进行推理分析，对导致敏感信息泄露的行为进行总结和分析，给出员工的风险程度、描述、分发记录等信息。"
+  },
+  {
+    "id": "bd6cdd17-3485-4798-9654-a08776cdd448",
+    "name": "文件流转日志分析-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "分析文件流转日志中的风险行为"
+  },
+  {
+    "id": "fedc0b03-f67f-4deb-9b20-75475b48a3fe",
+    "name": "API接口风险研判-DS",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 240,
+    "introduce": "结合http请求报文和http响应报文研判是否符合指定的风险策略。"
+  },
+  {
+    "id": "72658230-f3e9-47c9-aa41-6c5e45e41b27",
+    "name": "事件研判智能体-DeepSeek版",
+    "publisher": "甘彩坤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "针对现网告警研判后的僵尸网络病毒攻击日志、木马攻击日志、蠕虫病毒攻击日志进行事件研判，并输出分析报告。"
+  },
+  {
+    "id": "52a68c37-1819-4d38-abb9-c15398e23fd1",
+    "name": "满血复活",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 88,
+    "introduce": "满血复活满血复活"
+  },
+  {
+    "id": "4f4603ca-6263-40b9-a2fe-981f7ec22234",
+    "name": "IoC拓线分析智能体-DeepSeek版",
+    "publisher": "甘彩坤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 36,
+    "introduce": "基于IoC开展智能化拓线分析，包括涵盖 IoC 威胁分析、攻击资源拓线分析以及告警数据关联分析、综合分析等多个维度等，最终形成完整分析报告导出。"
+  },
+  {
+    "id": "c895e4ed-3dbc-41aa-ad5d-eb22b21a7e60",
+    "name": "漏洞查询智能体-DeepSeek版",
+    "publisher": "左婵娟",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 192,
+    "introduce": "用于查询漏洞相关信息，包括单个漏洞信息、厂商、产品漏洞信息。"
+  },
+  {
+    "id": "d072e2eb-e157-47b1-bee0-d4533b96a2d3",
+    "name": "满血R1知识检索智能体",
+    "publisher": "张月明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 18,
+    "introduce": "对接满血版R1的知识检索RAG智能体"
+  },
+  {
+    "id": "490c740e-9944-4d89-986a-4130f53f6681",
+    "name": "恒脑知识检索智能体",
+    "publisher": "张月明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 17,
+    "introduce": "对接满血版R1的知识检索RAG智能体"
+  },
+  {
+    "id": "4a69fe3d-0852-4f2c-ad5f-3f918a180840",
+    "name": "满血DeepSeek知识检索智能体",
+    "publisher": "张月明",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 91,
+    "introduce": "对接满血版R1的知识检索RAG智能体"
+  },
+  {
+    "id": "cc6a8e49-299b-4c91-872e-20860e1055cb",
+    "name": "漏洞自动化预警",
+    "publisher": "金成强",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 240794,
+    "introduce": "我能够快速补全漏洞档案缺失的数据，对数据完整的漏洞进行漏洞危害研判，对满足漏洞预警标准的漏洞自动化生成漏洞预警报告。"
+  },
+  {
+    "id": "75bd97ae-447f-4b19-a13d-1daae9718e0f",
+    "name": "文档小助手",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 10,
+    "introduce": "文档小助手文档小助手11111"
+  },
+  {
+    "id": "43f6706a-5e5d-4934-a1f8-3c844c365c57",
+    "name": "数据安全评估文件处理智能体",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 3,
+    "introduce": "通用文件处理智能体"
+  },
+  {
+    "id": "232bae42-3bbf-48b5-8771-2abf29ef25cc",
+    "name": "测评智能体-deepseek",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "deepseek测评智能体，根据不同的输入进行不同维度的测评。"
+  },
+  {
+    "id": "9afe4b13-65c9-4a4d-b452-775a1c67b8b5",
+    "name": "图片敏感信息识别智能体",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6,
+    "introduce": "该智能体支持从图片中识别文件中包含的敏感信息"
+  },
+  {
+    "id": "57569e4b-c497-420a-b6cf-1eaf03f3593e",
+    "name": "文档敏感信息识别智能体",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 7,
+    "introduce": "支持从word文档中识别敏感信息"
+  },
+  {
+    "id": "c4c5215f-d6f4-447d-a29e-364709c04a80",
+    "name": "慢SQL优化",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1108,
+    "introduce": "慢SQL优化智能体是一款集成了先进算法和大数据技术的智能工具，专注于解决数据库中的慢查询问题。它具备强大的风险研判能力和丰富的优化策略，能够在复杂的数据库环境中"
+  },
+  {
+    "id": "8fc01c6b-14d5-4906-a3cf-05107741be3f",
+    "name": "数据库运维人员异常行为识别",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 111,
+    "introduce": "智能体结合运维人员行为的操作场景类别自动判别在一组会话中不应该出现在该场景的异常操作行为的SQL语句。"
+  },
+  {
+    "id": "71633f22-29e0-4ed7-be16-6aa6617a0ec8",
+    "name": "应用SQL语句转自然语言",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 63,
+    "introduce": "对于审计人员角色，从运维人员操作的数据库SQL语句中理解运维人员操作行为的难度会远大于理解自然语言，因此如果智能体能够将SQL语句翻译成自然语言将会大大降低对审"
+  },
+  {
+    "id": "f47c4724-4a48-46ec-9700-cdb45cdf2254",
+    "name": "Demo_交互节点_历史对话记录",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "用于指导使用交互节点功能，并且通过巧妙的参数设计，实现历史交互记录的累加和统计数据。\n该智能体能够累计和用户的交互内容并统计累计的字符数量和交互数量。"
+  },
+  {
+    "id": "4ee1df75-8938-459e-b3de-6506376c8ef7",
+    "name": "安全专家",
+    "publisher": "安恒信息",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 10,
+    "introduce": "基于DeepSeek-R1满血版的安全专家，可以结合RAG知识检索和云端大模型调用对专业问题进行深度思考和回答～"
+  },
+  {
+    "id": "99b9fbc7-099b-4305-b041-5c9ed7f0872e",
+    "name": "基线核查智能体",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "这是一个安全基线核查智能体，能够根据不同的输入进行不同维度的测评。"
+  },
+  {
+    "id": "866b714a-a46c-42f1-ba2e-0f3df4aebbf4",
+    "name": "安全基线核查测评-云环境",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "对等级保护的云环境进行测评。"
+  },
+  {
+    "id": "8fa8cbbd-d7a1-40ae-921b-919f80274e57",
+    "name": "告警处置建议",
+    "publisher": "刘德越",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "根据告警基本信息对告警信息进行分析并输出应对建议"
+  },
+  {
+    "id": "611c65c4-0ceb-4135-8cb2-4500671b68dd",
+    "name": "风险筛查通用对话交互智能体",
+    "publisher": "王骋傲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 41094,
+    "introduce": "你是一个资深的产品经理,能够回答关于产品相关的任何问题"
+  },
+  {
+    "id": "7288f9da-c63e-47d6-9e82-283e52dd1b15",
+    "name": "通用测评智能体-国信",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "这是一个通用制度智能体，能够根据不同的输入进行不同维度的测评。"
+  },
+  {
+    "id": "5420ed5a-2276-4a15-9515-69a28024019a",
+    "name": "等保安全管理文档",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "等保测评安全管理文档自学习"
+  },
+  {
+    "id": "f3ce19b0-de55-4c25-8e6d-24e1a52fcdee",
+    "name": "ailog智能日志解析MockTest",
+    "publisher": "谢智贤",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 6003,
+    "introduce": "ailog智能日志解析MockTest"
+  },
+  {
+    "id": "abe41a19-d725-4b6b-89ea-6b06d039a262",
+    "name": "日志分析助手",
+    "publisher": "郅帅杰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 52,
+    "introduce": "我是一名JAVA开发专家，可以对代码问题进行解析"
+  },
+  {
+    "id": "c355471d-a146-4c86-ab7d-e35309e21ab0",
+    "name": "安全策略-修复建议评审",
+    "publisher": "叶子律",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "评估同一漏洞的多个修复建议中哪个最准确，质量最高"
+  },
+  {
+    "id": "717f67f7-bc67-446b-af18-2fb8c9466262",
+    "name": "安全策略-修复建议生成",
+    "publisher": "叶子律",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 54168,
+    "introduce": "安全策略-修复建议生成"
+  },
+  {
+    "id": "083cc234-156d-4f33-8ecf-cfb12658d09c",
+    "name": "通知公告编写智能体",
+    "publisher": "左婵娟",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 7,
+    "introduce": "简单描述通知背景及主要通知内容，通过AI创作可以为你创作一份专业规范且完整的通知公告，从而有效地推动各项事务按照既定计划顺利开展。"
+  },
+  {
+    "id": "a95759d2-64d1-4a45-a7b6-15d2324d334b",
+    "name": "代码编写执行智能体",
+    "publisher": "黄巍峰",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 18,
+    "introduce": "基于DeepSeek适配的代码编写执行智能体，根据编码识别编码算法，并写代码进行运行解码"
+  },
+  {
+    "id": "d072b0c8-47e7-44cb-b250-dff3d26902f7",
+    "name": "A18会议助手V2-后置总结模型",
+    "publisher": "周夕",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 136,
+    "introduce": "A18会议助手V2-后置总结模型 是西湖论剑系列会议提供一站式的会议助理智能体应用V2的总结模型，作为V2架构的最后一步，后置总结模型负责将V2流程中由Spri"
+  },
+  {
+    "id": "35368718-d5d1-4bf1-b96b-9ab9d6e63a4b",
+    "name": "接口调用_信息提取-wx",
+    "publisher": "王旭",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "关基评估_资产管理手段"
+  },
+  {
+    "id": "8d147fe2-fffa-4ccb-b6f2-24a924f01bb7",
+    "name": "测试用例生成",
+    "publisher": "刘德越",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 15,
+    "introduce": "根据功能名称和功能描述生成功能的测试用例"
+  },
+  {
+    "id": "b5e27c7a-b1ca-4ace-83aa-1e978cd7fd04",
+    "name": "数据链路刻画-数管",
+    "publisher": "张磊",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "依据指定API的多组请求报文以及相关时间段的数审日志信息，刻画出指定API请求触发的相关的数据库SQL操作语句"
+  },
+  {
+    "id": "48a5cef1-02c2-4f70-a3d3-2a2fc717b059",
+    "name": "Demo_知识召回及总结智能体",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 15,
+    "introduce": "能够根据用户的提问，进行知识库检索，如果查询到相关知识，则结合知识库回答，如果未查询到相关内容，则自由回答。"
+  },
+  {
+    "id": "95467e88-0a0b-46e8-be85-5ef34b0d46db",
+    "name": "Demo_监管智能安全运营助手",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 13,
+    "introduce": "旨在通过分析用户输入的自然语言意图，转换为用户想要的接口调用指令，并执行对应操作。"
+  },
+  {
+    "id": "8faa552b-056b-42b8-9ee9-0cc68fe73418",
+    "name": "Demo_表格数据处理",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 18,
+    "introduce": "该智能体基于工时检查表格文件中“工时检查”sheet页的内容进行数据分析，根据其中各个“三级部门”团队成员在4天周期内的工时填写情况进行数据分析，输出满足率情况"
+  },
+  {
+    "id": "5eee4c10-40aa-4b4d-995e-7ac5d4e3d85d",
+    "name": "AILPHA_关基评估_资产管理工具检验",
+    "publisher": "王天铎",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "关基评估_资产管理手段"
+  },
+  {
+    "id": "d2d98ecb-c8c0-481e-8455-6244eaf03910",
+    "name": "AILPHA_接口调用_信息提取",
+    "publisher": "王天铎",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 7,
+    "introduce": "关基评估_资产管理手段"
+  },
+  {
+    "id": "3729184e-040e-4d6c-b2f3-1727f73899fa",
+    "name": "根据需求文档生成接口示例",
+    "publisher": "蒋廷金",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 2,
+    "introduce": "hi，我可以根据需求文档生成接口示例。"
+  },
+  {
+    "id": "2ab3a7ec-34b8-496e-86ec-0f5bb92e43ef",
+    "name": "低代码根据需求文档生成接口示例",
+    "publisher": "蒋廷金",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 4,
+    "introduce": "hi，我可以根据需求文档生成接口示例。"
+  },
+  {
+    "id": "3a6d45a6-894d-442c-af81-55eefd57585d",
+    "name": "Demo_自然语言转AIQL",
+    "publisher": "黄冲",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 15,
+    "introduce": "自然语言转AIQL，v1.0.020241018c40"
+  },
+  {
+    "id": "0546c17b-0f93-4be5-a270-fc2061fcca5a",
+    "name": "产品需求分类-AVM",
+    "publisher": "Bob",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 5,
+    "introduce": "产品需求分类归档"
+  },
+  {
+    "id": "d53f6689-66fd-4faa-b3df-d3f7f9f0ecdd",
+    "name": "DSMM成熟度评估智能-DS版报告自动化",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 0,
+    "introduce": "deepseek数据安全DSMM差距分析评估智能体组合"
+  },
+  {
+    "id": "402bbcb2-9941-4636-9a69-2a8e2cb7c097",
+    "name": "网信办数据安全评估智能体",
+    "publisher": "张永豪",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 1,
+    "introduce": "网信办数据安全评估智能体"
+  },
+  {
+    "id": "8c730c06-2500-472d-91e3-25bb026e6a5c",
+    "name": "全场景会议助手",
+    "publisher": "封羽",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 14,
+    "introduce": "简单问答简单问答"
+  },
+  {
+    "id": "8c7aad1e-7334-425f-af8c-590fb2b7834b",
+    "name": "Windows主机异常行为分析引擎",
+    "publisher": "李升烨",
+    "scene": [
+      "其他"
+    ],
+    "callNum": 11,
+    "introduce": "Windows主机异常行为分析引擎"
+  }
+]
