@@ -1,0 +1,244 @@
+{
+  "cot_version": "v2",
+  "eng_version": "v2.3.8",
+  "name": "网站安全智能巡检智能体",
+  "description": "对已授权网站开展周期性安全巡检，自动发现页面与资源，编排白名单安全工具完成漏洞、弱配置、敏感信息与篡改检测，形成可解释、可跟踪、可复测的风险闭环。",
+  "prologue": "本智能体仅对已授权目标执行非破坏性安全巡检，请先提供授权目标与巡检范围。",
+  "entry": "node0",
+  "uid": "",
+  "org": "",
+  "id": "78cf4727-150a-41ab-b40f-652278333e9b",
+  "type": 0,
+  "model": {
+    "model": "HengNao-v4",
+    "temperature": 0,
+    "top_p": 1,
+    "max_tokens": 4096,
+    "top_k": -1,
+    "reasoning": 1
+  },
+  "session_round": 10,
+  "input_parameters": [],
+  "output_parameters": [],
+  "output_expression": {
+    "type": "rendering",
+    "expr": "巡检完成，风险分级统计：\n{{$.node2.report_text}}"
+  },
+  "private_envs": [],
+  "public_envs": [],
+  "nodes": [
+    {
+      "id": "node0",
+      "name": "授权确认与巡检范围收集",
+      "description": "向用户确认授权目标与巡检范围，取得明确授权后开始巡检。",
+      "type": "act_interaction",
+      "input_parameters": [],
+      "output_parameters": [],
+      "result_key": "result_key",
+      "tools": [],
+      "mcps": [],
+      "agents": [],
+      "timeout": 300,
+      "max_retries": 3,
+      "max_working": 30,
+      "max_reflections": 5,
+      "use_memory": false,
+      "log_memory": false,
+      "iteration": false,
+      "iteration_values": [],
+      "on_error": 0,
+      "no_action": false,
+      "no_repeat": false,
+      "questions": [
+        {
+          "name": "target_url",
+          "type": "type_input",
+          "options": [],
+          "message": {
+            "type": "literal",
+            "expr": "请提供已授权巡检的目标地址（如 http://127.0.0.1:8080）与巡检范围说明："
+          },
+          "timeout": 60
+        },
+        {
+          "name": "authorize",
+          "type": "type_select",
+          "options": [
+            {
+              "name": "A",
+              "value": {
+                "type": "literal",
+                "expr": "确认授权，开始巡检"
+              }
+            },
+            {
+              "name": "B",
+              "value": {
+                "type": "literal",
+                "expr": "取消巡检"
+              }
+            }
+          ],
+          "message": {
+            "type": "literal",
+            "expr": "已记录授权目标，请确认是否对该目标发起非破坏性安全巡检？"
+          },
+          "timeout": 30
+        }
+      ],
+      "interactions": [
+        {
+          "from": "msg",
+          "stream": true,
+          "output_expression": {
+            "type": "rendering",
+            "expr": "收到授权目标：{{$.node0.target_url._answer}}\n授权确认：{{$.node0.authorize._answer}}"
+          },
+          "output_parameters": []
+        }
+      ]
+    },
+    {
+      "id": "node1",
+      "name": "自规划安全巡检执行",
+      "description": "调用白名单安全工具对授权目标执行页面发现、漏洞与配置检测。",
+      "type": "act_coding_agent",
+      "input_parameters": [
+        {
+          "name": "target_url",
+          "type": "string",
+          "value": {
+            "type": "reference",
+            "expr": "$.node0.target_url._answer"
+          }
+        },
+        {
+          "name": "authorize",
+          "type": "string",
+          "value": {
+            "type": "reference",
+            "expr": "$.node0.authorize._answer"
+          }
+        }
+      ],
+      "output_parameters": [],
+      "result_key": "result_key",
+      "tools": [],
+      "mcps": [
+        {
+          "id": "859c5d16-83f8-43c6-95b2-ddf36e2df3e5"
+        },
+        {
+          "id": "09e212eb-9241-4ef5-8788-02d3306a2e69"
+        },
+        {
+          "id": "0de71fa7-3b8b-4331-859b-8c1953e9066d"
+        },
+        {
+          "id": "b9f3ce4a-7287-4441-b225-d3f019a9041e"
+        },
+        {
+          "id": "047a309d-4be4-40a4-b163-8c46ad25ddb4"
+        },
+        {
+          "id": "78413ad0-85e3-4453-8c7b-21d99a4a2388"
+        }
+      ],
+      "agents": [],
+      "timeout": 300,
+      "max_retries": 3,
+      "max_working": 30,
+      "max_reflections": 5,
+      "use_memory": false,
+      "log_memory": false,
+      "iteration": false,
+      "iteration_values": [],
+      "on_error": 0,
+      "no_action": false,
+      "no_repeat": false,
+      "model": {
+        "model": "HengNao-v4",
+        "temperature": 0,
+        "top_p": 1,
+        "max_tokens": 4096,
+        "top_k": -1,
+        "reasoning": 1
+      },
+      "coding_agent_config": {
+        "name": "网站安全巡检执行",
+        "model": "GLM-5.1",
+        "prompt": "你是网站安全巡检执行智能体。任务：对授权目标执行非破坏性安全巡检。\n1) 先确认授权状态（authorize 必须为确认授权）；\n2) 使用 MCP 工具按顺序执行：页面/子域名发现 → SSL/TLS 检测 → Nuclei 漏洞扫描（仅非破坏模板）→ 证书透明查询；\n3) 严禁使用注入利用、暴力破解、破坏性操作；\n4) 每个发现记录 {url, type, level(high/medium/low/info), detail, evidence}；\n5) 输出 JSON：{\"findings\":[...], \"scan_summary\":\"...\"}。",
+        "skills": [
+          "a1b2fabb-6e0f-41f2-8540-de30f07f8106"
+        ]
+      }
+    },
+    {
+      "id": "node2",
+      "name": "巡检结果聚合与分级报告",
+      "description": "对检测结果去重、分级并生成可读的风险报告。",
+      "type": "act_interpreter",
+      "input_parameters": [
+        {
+          "name": "scan_result",
+          "type": "string",
+          "value": {
+            "type": "reference",
+            "expr": "$.node1.result_key"
+          }
+        }
+      ],
+      "output_parameters": [
+        {
+          "name": "report_text",
+          "type": "string",
+          "value": {
+            "type": "reference",
+            "expr": "$.result_key"
+          }
+        },
+        {
+          "name": "report_json",
+          "type": "string",
+          "value": {
+            "type": "jsonpath",
+            "expr": "$.result",
+            "text": {
+              "type": "reference",
+              "expr": "$.result_key"
+            }
+          }
+        }
+      ],
+      "result_key": "result_key",
+      "tools": [],
+      "mcps": [],
+      "agents": [],
+      "timeout": 300,
+      "max_retries": 3,
+      "max_working": 30,
+      "max_reflections": 5,
+      "use_memory": false,
+      "log_memory": false,
+      "iteration": false,
+      "iteration_values": [],
+      "on_error": 0,
+      "no_action": false,
+      "no_repeat": false,
+      "interpreter": {
+        "lang": "python",
+        "code": "import json\ndef handler(args):\n    raw = args.input.scan_result\n    try:\n        data = json.loads(raw) if isinstance(raw, str) else (raw or {})\n    except Exception:\n        data = {}\n    findings = data.get(\"findings\") or []\n    seen, uniq = set(), []\n    for f in findings:\n        key = str(f.get(\"type\")) + \"|\" + str(f.get(\"url\")) + \"|\" + str(f.get(\"detail\"))\n        if key not in seen:\n            seen.add(key)\n            uniq.append(f)\n    level_map = {\"high\": \"高危\", \"medium\": \"中危\", \"low\": \"低危\", \"info\": \"信息\"}\n    counts = {\"高危\": 0, \"中危\": 0, \"低危\": 0, \"信息\": 0}\n    for f in uniq:\n        lv = level_map.get(str(f.get(\"level\", \"info\")), \"信息\")\n        f[\"level_cn\"] = lv\n        counts[lv] = counts.get(lv, 0) + 1\n    report = {\"total\": len(uniq), \"counts\": counts, \"findings\": uniq}\n    return {\"result\": json.dumps(report, ensure_ascii=False, indent=2)}\n"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "src_node": "node0",
+      "dst_node": "node1"
+    },
+    {
+      "src_node": "node1",
+      "dst_node": "node2"
+    }
+  ]
+}
