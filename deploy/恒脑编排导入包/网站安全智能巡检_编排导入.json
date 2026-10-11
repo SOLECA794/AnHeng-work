@@ -7,7 +7,7 @@
   "entry": "node0",
   "uid": "",
   "org": "",
-  "id": "78cf4727-150a-41ab-b40f-652278333e9b",
+  "id": "e722a46e-7d3c-4beb-91a2-b580d18d63f4",
   "type": 0,
   "model": {
     "model": "HengNao-v4",
@@ -18,7 +18,13 @@
     "reasoning": 1
   },
   "session_round": 10,
-  "input_parameters": [],
+  "input_parameters": [
+    {
+      "name": "input",
+      "type": "string",
+      "description": "用户输入（可选，非必填）：巡检指令或补充说明"
+    }
+  ],
   "output_parameters": [],
   "output_expression": {
     "type": "rendering",
@@ -124,26 +130,7 @@
       "output_parameters": [],
       "result_key": "result_key",
       "tools": [],
-      "mcps": [
-        {
-          "id": "859c5d16-83f8-43c6-95b2-ddf36e2df3e5"
-        },
-        {
-          "id": "09e212eb-9241-4ef5-8788-02d3306a2e69"
-        },
-        {
-          "id": "0de71fa7-3b8b-4331-859b-8c1953e9066d"
-        },
-        {
-          "id": "b9f3ce4a-7287-4441-b225-d3f019a9041e"
-        },
-        {
-          "id": "047a309d-4be4-40a4-b163-8c46ad25ddb4"
-        },
-        {
-          "id": "78413ad0-85e3-4453-8c7b-21d99a4a2388"
-        }
-      ],
+      "mcps": [],
       "agents": [],
       "timeout": 300,
       "max_retries": 3,
@@ -168,6 +155,14 @@
         "name": "网站安全巡检执行",
         "model": "GLM-5.1",
         "prompt": "你是网站安全巡检执行智能体。任务：对授权目标执行非破坏性安全巡检。\n1) 先确认授权状态（authorize 必须为确认授权）；\n2) 使用 MCP 工具按顺序执行：页面/子域名发现 → SSL/TLS 检测 → Nuclei 漏洞扫描（仅非破坏模板）→ 证书透明查询；\n3) 严禁使用注入利用、暴力破解、破坏性操作；\n4) 每个发现记录 {url, type, level(high/medium/low/info), detail, evidence}；\n5) 输出 JSON：{\"findings\":[...], \"scan_summary\":\"...\"}。",
+        "mcps": [
+          "859c5d16-83f8-43c6-95b2-ddf36e2df3e5",
+          "09e212eb-9241-4ef5-8788-02d3306a2e69",
+          "0de71fa7-3b8b-4331-859b-8c1953e9066d",
+          "b9f3ce4a-7287-4441-b225-d3f019a9041e",
+          "047a309d-4be4-40a4-b163-8c46ad25ddb4",
+          "78413ad0-85e3-4453-8c7b-21d99a4a2388"
+        ],
         "skills": [
           "a1b2fabb-6e0f-41f2-8540-de30f07f8106"
         ]

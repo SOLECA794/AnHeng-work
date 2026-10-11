@@ -1,6 +1,6 @@
 # 恒脑平台智能体编排导入包
 
-> 状态：基线 v1.0（2026-10-11）
+> 状态：v1.1（2026-10-11，按平台导入格式答复修正）
 > 依据：恒脑技能包文档（`deploy/恒脑平台文档/hengnao_skill_docs/`）import-compatibility / json-patterns / node-types
 > 产物：网站安全智能巡检智能体（对齐 T27 编排设计方案）
 
@@ -23,7 +23,7 @@
 | 节点 | 类型 | 关键配置 |
 | --- | --- | --- |
 | node0 | act_interaction | 填空收集授权目标 URL + 单选授权确认（type_input/type_select） |
-| node1 | act_coding_agent | coding_agent_config(model=GLM-5.1, skills=安全审计工具包)；节点级 model=HengNao-v4；MCP= Nuclei/SSL-TLS/证书透明/子域名/时间感知/数据处理（均为白名单 ✅） |
+| node1 | act_coding_agent | coding_agent_config(model=GLM-5.1, **mcps=白名单 MCP 字符串数组**, skills=安全审计工具包)；节点级 model=HengNao-v4；MCP 绑定在 coding_agent_config.mcps（平台答复要求） |
 | node2 | act_interpreter | Python 聚合：去重、分级（高危/中危/低危/信息）、生成报告 JSON |
 
 ## 3. 导入方法
@@ -47,6 +47,14 @@
 - UI 仅提示"失败"时：浏览器 F12 → Network → 找到导入请求 → 看 Response 的 `message/error/detail` 原文；
 - 常见原因：描述长度 <8、重复键、model 写成字符串、tools[].id 非 catalog 真实 ID（本项目已用真实 ID，若平台 catalog 变更需同步更新）；
 - 增量排查：先导入单节点最小版验证格式，再逐步加节点。
+
+## 5.1 平台答复修正记录（2026-10-11）
+
+依据 `hengnao_import_format_answers.md`（平台专用 agent 答复）：
+1. **自规划节点 MCP 绑定位置**：写 `coding_agent_config.mcps: ["<server_id>", ...]`（字符串数组），节点级 `mcps` 清空——已修正；
+2. **根入参**：增加非必填 `input`（提升导入兼容性）——已修正；
+3. 版本头 v2.3.8/v2、节点类型、model 对象规则、skills 绑定、on_error 无需 setting——原方案已符合；
+4. **ZIP 结构**：平台只接受 zip，前端不暴露包内 manifest/目录规则，**建议以平台导出的 ZIP 为结构基准**——当前 zip 为单 JSON 打包，若导入失败，请在平台导出任一智能体 zip 作结构参照后重打包。
 
 ## 6. 变更记录
 
