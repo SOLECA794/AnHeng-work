@@ -16,7 +16,7 @@ python tests/fixtures/site_server.py
 | 靶标 | 用途 | 核心证据 |
 | --- | --- | --- |
 | A | 漏洞与弱配置 | `/search?q=...` 原样反射 HTML；`/listing/` 暴露目录列表。仅供本机测试，勿作为公共服务部署。 |
-| B | 可疑外链 | 首页含 `.invalid` 收集地址；`/about.html` 为负例。链接不会自动请求外网。 |
+| B | 可疑外链 + 挂马脚本 | 首页含 `.invalid` 收集地址；`/about.html` 为负例；`/hacked.html` 为合成挂马正例（混淆 atob/eval、外链 c2.example.invalid、注入 iframe）。链接不会自动请求外网。 |
 | C | 篡改 | 首页与 `baselines/c-index.html` 不同；`/baseline.html` 与基线相同。 |
 | D | 敏感信息 | 首页含合成联系方式与令牌，`/.env`、`/backup.bak` 为合成文件。 |
 | E | 正常站点 | 普通内容及安全响应头，用作误报基准。 |
