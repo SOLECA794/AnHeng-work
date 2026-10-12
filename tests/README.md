@@ -15,3 +15,5 @@ tests/
 约定：测试可重复执行；检测效果评估记录测试集版本与指标口径；结果汇总到 `reports/测试报告.md`。
 
 T40 的本机靶场、样例标签和验证方式见 [`dataset/README.md`](dataset/README.md)。
+
+T41 的 29 条功能用例和逐轮执行记录模板见 [`functional/T41-功能用例.md`](functional/T41-功能用例.md) 与 [`functional/T41-执行记录模板.md`](functional/T41-执行记录模板.md)。用例已编写，执行结果待系统功能就绪后填写。
