@@ -1,3 +1,4 @@
+import Assets from '../pages/Assets'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import type { ReactElement } from 'react'
 import Login from '../pages/Login'
@@ -12,7 +13,7 @@ function Placeholder({ name }: { name: string }) {
 }
 
 export const router = createBrowserRouter([
-  { path: '/login', element: <Login /> },
+  { path: '/login', element: <GuestGuard><Login /></GuestGuard> },
   {
     path: '/',
     element: (
@@ -22,7 +23,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="/assets" /> },
-      { path: 'assets', element: <Placeholder name="资产与规则管理" /> },
+      { path: 'assets', element: <Assets /> },
       { path: 'tasks', element: <Placeholder name="巡检与任务" /> },
       { path: 'findings', element: <Placeholder name="风险结果与可视化" /> },
       { path: 'alerts', element: <Placeholder name="告警与复测管理" /> },
@@ -31,3 +32,7 @@ export const router = createBrowserRouter([
     ],
   },
 ])
+
+function GuestGuard({ children }: { children: ReactElement }) {
+  return localStorage.getItem('token') ? <Navigate to="/" /> : children
+}
