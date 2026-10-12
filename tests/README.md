@@ -15,3 +15,15 @@ tests/
 约定：测试可重复执行；检测效果评估记录测试集版本与指标口径；结果汇总到 `reports/测试报告.md`。
 
 T40 的本机靶场、样例标签和验证方式见 [`dataset/README.md`](dataset/README.md)。
+
+## T20 离线检测验证
+
+在仓库根目录安装依赖后执行：
+
+```powershell
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests -p test_sensitive.py -v
+python scripts/verify_t20.py --output reports/t20-sensitive-offline-results.json
+```
+
+单元测试覆盖四类规则、规则配置、授权边界、脱敏和资源限制；验收脚本只读取 F 的 v1.0.0 固定本地样例，验证 D-01~D-03 与 E-04，不启动服务或请求站点。四条合成标签的通过率不能代表真实站点检测效果。详细接口与验收说明见 `docs/03-模块实现/T20-敏感信息离线引擎.md`。

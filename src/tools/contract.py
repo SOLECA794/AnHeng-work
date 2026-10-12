@@ -6,6 +6,7 @@ another adapter's implementation details.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import hashlib
 from typing import Any, Callable, Protocol
 from pydantic import BaseModel, Field
 
@@ -76,12 +77,20 @@ class ToolRegistry:
         if not adapter.non_destructive_check(target, params):
             return self._reject(tool_id, target, "non-destructive check failed")
         result = adapter.run(target, params)
-        self._audit.append({"tool_id": tool_id, "target": target, "status": result.status})
+        self._audit.append({"tool_id": tool_id, "target": self._audit_target(target), "status": result.status})
         return result
 
     def _reject(self, tool_id: str, target: str, reason: str) -> ToolResult:
-        self._audit.append({"tool_id": tool_id, "target": target, "status": "REJECTED", "reason": reason})
+        self._audit.append({"tool_id": tool_id, "target": self._audit_target(target), "status": "REJECTED", "reason": reason})
         return ToolResult(tool_id=tool_id, status="REJECTED", error=reason)
+
+    @staticmethod
+    def _audit_target(target: str) -> str:
+        # URLs may embed credentials, query tokens or sensitive path segments.
+        # A fingerprint preserves correlation without copying them into logs.
+        if not isinstance(target, str):
+            return "[INVALID_TARGET]"
+        return "sha256:" + hashlib.sha256(target.encode("utf-8")).hexdigest()
 
     def audit(self) -> list[dict[str, Any]]:
         return list(self._audit)
