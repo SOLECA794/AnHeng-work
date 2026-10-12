@@ -131,7 +131,7 @@
 | task_id | BIGINT | NOT NULL | 来源任务 |
 | page_id | BIGINT | 可空 | 关联页面 |
 | scope_id | BIGINT | NOT NULL | 关联资产 |
-| finding_type | VARCHAR(30) | NOT NULL | VULN / WEAK_CONFIG / MALICIOUS_LINK / MALICIOUS_SCRIPT / TAMPER / SENSITIVE |
+| finding_type | VARCHAR(30) | NOT NULL | VULN / WEAK_CONFIG / MALICIOUS_LINK / TAMPER / SENSITIVE |
 | severity | VARCHAR(10) | NOT NULL | CRITICAL / HIGH / MEDIUM / LOW / INFO |
 | title | VARCHAR(200) | NOT NULL | 标题 |
 | url | VARCHAR(500) | 可空 | 目标 URL |
@@ -259,4 +259,3 @@
 | 版本 | 日期 | 变更人 | 变更内容 | 影响范围 |
 | --- | --- | --- | --- | --- |
 | v1.0 | 2026-10-09 | 课题立项 | 基线发布（资产/任务/风险/告警/报告/审计模型） | 全量 |
-| v1.1 | 2026-10-12 | C 组（待评审） | `finding_type` 枚举补充 `MALICIOUS_SCRIPT`：挂马脚本类（混淆脚本、外部脚本、注入 iframe、外跳）与 `MALICIOUS_LINK`（页面指向外部的链接）分离。缘由：T40 样例集 v1.0.0 已按此口径标注（B-01/B-02 = MALICIOUS_LINK，B-03/B-04 = MALICIOUS_SCRIPT），原五类枚举无法表达；SRS-02 F3.3 与验收标准 §1 本就按「恶意外链 / 挂马」两项分别要求 | T19、T20、T42 检测效果统计口径 |
