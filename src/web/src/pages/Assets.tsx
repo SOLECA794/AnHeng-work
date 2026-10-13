@@ -1,3 +1,5 @@
+import { Tabs } from 'antd'
+import SensitiveRules from './SensitiveRules'
 import { useEffect, useState } from 'react'
 import { Table, Button, Space, Tag, Modal, Form, Input, Select, message, Popconfirm } from 'antd'
 import { listAssets, createAsset, updateAsset, disableAsset, enableAsset } from '../api/assets'
@@ -67,48 +69,60 @@ export default function Assets() {
   ]
 
   return (
-    <div>
-      <Space style={{ marginBottom: 16 }}>
-        <Select
-          placeholder="状态筛选" allowClear style={{ width: 140 }}
-          value={status} onChange={setStatus}
-          options={[{ value: 'ACTIVE', label: '启用' }, { value: 'DISABLED', label: '停用' }]}
-        />
-        <Button type="primary" onClick={openCreate}>新增资产</Button>
-      </Space>
+    <Tabs
+      defaultActiveKey="assets"
+      items={[
+        {
+          key: 'assets',
+          label: '授权资产',
+          children: (
+            <div>
+              <Space style={{ marginBottom: 16 }}>
+                <Select
+                  placeholder="状态筛选" allowClear style={{ width: 140 }}
+                  value={status} onChange={setStatus}
+                  options={[{ value: 'ACTIVE', label: '启用' }, { value: 'DISABLED', label: '停用' }]}
+                />
+                <Button type="primary" onClick={openCreate}>新增资产</Button>
+              </Space>
 
-      <Table
-        rowKey="id" loading={loading} columns={columns} dataSource={data}
-        pagination={{ current: page, pageSize: 10, total, onChange: setPage }}
-      />
+              <Table
+                rowKey="id" loading={loading} columns={columns} dataSource={data}
+                pagination={{ current: page, pageSize: 10, total, onChange: setPage }}
+              />
 
-      <Modal
-        title={editing ? '编辑资产' : '新增资产'}
-        open={open} onOk={onSubmit} onCancel={() => setOpen(false)}
-        destroyOnClose
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item name="domain" label="域名" rules={[{ required: true, message: '请输入域名' }]}>
-            <Input placeholder="例如 demo.example.com" />
-          </Form.Item>
-          <Form.Item name="scopeType" label="范围类型" rules={[{ required: true }]} initialValue="FULL">
-            <Select options={[
-              { value: 'FULL', label: '全站' },
-              { value: 'PATH', label: '指定路径' },
-              { value: 'SUBDOMAIN', label: '子域范围' },
-            ]} />
-          </Form.Item>
-          <Form.Item name="scopeValue" label="范围值">
-            <Input placeholder="PATH 时填 /app；SUBDOMAIN 时填子域" />
-          </Form.Item>
-          <Form.Item name="owner" label="归属部门">
-            <Input />
-          </Form.Item>
-          <Form.Item name="authNote" label="授权备注">
-            <Input.TextArea rows={2} />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
+              <Modal
+                title={editing ? '编辑资产' : '新增资产'}
+                open={open} onOk={onSubmit} onCancel={() => setOpen(false)}
+                destroyOnClose
+              >
+                <Form form={form} layout="vertical">
+                  <Form.Item name="domain" label="域名" rules={[{ required: true, message: '请输入域名' }]}>
+                    <Input placeholder="例如 demo.example.com" />
+                  </Form.Item>
+                  <Form.Item name="scopeType" label="范围类型" rules={[{ required: true }]} initialValue="FULL">
+                    <Select options={[
+                      { value: 'FULL', label: '全站' },
+                      { value: 'PATH', label: '指定路径' },
+                      { value: 'SUBDOMAIN', label: '子域范围' },
+                    ]} />
+                  </Form.Item>
+                  <Form.Item name="scopeValue" label="范围值">
+                    <Input placeholder="PATH 时填 /app；SUBDOMAIN 时填子域" />
+                  </Form.Item>
+                  <Form.Item name="owner" label="归属部门">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="authNote" label="授权备注">
+                    <Input.TextArea rows={2} />
+                  </Form.Item>
+                </Form>
+              </Modal>
+            </div>
+          ),
+        },
+        { key: 'rules', label: '敏感信息规则', children: <SensitiveRules /> },
+      ]}
+    />
   )
 }

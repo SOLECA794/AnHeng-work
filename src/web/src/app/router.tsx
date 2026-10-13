@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import type { ReactElement } from 'react'
 import Login from '../pages/Login'
 import AdminLayout from './AdminLayout'
+import Tasks from '../pages/Tasks'
 
 function Guard({ children }: { children: ReactElement }) {
   return localStorage.getItem('token') ? children : <Navigate to="/login" />
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/assets" /> },
       { path: 'assets', element: <Assets /> },
-      { path: 'tasks', element: <Placeholder name="巡检与任务" /> },
+      { path: 'tasks', element: <Tasks /> },
       { path: 'findings', element: <Placeholder name="风险结果与可视化" /> },
       { path: 'alerts', element: <Placeholder name="告警与复测管理" /> },
       { path: 'reports', element: <Placeholder name="报告" /> },
