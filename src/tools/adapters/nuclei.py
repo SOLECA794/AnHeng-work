@@ -24,6 +24,7 @@ import subprocess
 from typing import Any, Callable
 from urllib.parse import urlparse
 
+from src.tools.container import ContainerSpec, container_reachable_url, docker_run_command
 from src.tools.contract import RateLimit, ToolManifest, ToolResult
 
 TOOL_ID = "nuclei"
@@ -79,16 +80,18 @@ class NucleiAdapter:
         *,
         executor: Callable[[list[str], int], str] | None = None,
         binary: str = DEFAULT_BINARY,
+        container: ContainerSpec | None = None,
     ) -> None:
         self._binary = binary
         self._executor = executor or _subprocess_executor
+        self._container = container
         self.manifest = ToolManifest(
             id=TOOL_ID,
             name="Nuclei",
             description="模板化漏洞与弱配置检测；仅发送检测请求，不利用、不注入（非破坏）",
             version="0.1.0",
             categories=["VULN", "WEAK_CONFIG"],
-            execution_mode="local",
+            execution_mode="container" if container else "local",
             read_only=True,
             enabled=True,
             rate_limit=RateLimit(requests_per_minute=30, burst=1),
@@ -123,11 +126,16 @@ class NucleiAdapter:
     # ---- 命令构造 ----
 
     def build_command(self, target: str, params: dict[str, Any]) -> list[str]:
-        """构造 nuclei 调用命令；始终带非破坏与限速参数。"""
-        command = [
-            self._binary,
+        """构造 nuclei 调用命令；始终带非破坏与限速参数。
+
+        容器模式下：目标改写为容器可达地址，整条命令经 `docker run` 包裹。
+        """
+        effective_target = (
+            container_reachable_url(target) if self._container else target
+        )
+        args = [
             "-u",
-            target,
+            effective_target,
             "-jsonl",
             "-silent",
             "-no-interactsh",
@@ -139,8 +147,11 @@ class NucleiAdapter:
             str(params.get("per_request_timeout", 10)),
         ]
         for template in params.get("templates") or []:
-            command += ["-t", str(template)]
-        return command
+            args += ["-t", str(template)]
+
+        if self._container:
+            return docker_run_command(self._container, args)
+        return [self._binary, *args]
 
     # ---- 输出归一化（SDD-01 §5.5、SDD-02 §4.6） ----
 

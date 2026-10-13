@@ -23,6 +23,7 @@ from urllib.parse import urlparse
 
 import httpx
 
+from src.tools.container import container_reachable_url
 from src.tools.contract import RateLimit, ToolManifest, ToolResult
 
 TOOL_ID = "zap"
@@ -71,10 +72,13 @@ class ZapAdapter:
         base_url: str = DEFAULT_BASE_URL,
         http: Callable[[str, dict], dict] | None = None,
         api_key: str = "",
+        target_alias: str | None = None,
     ) -> None:
         self._base_url = base_url.rstrip("/")
         self._api_key = api_key
         self._http = http or self._default_http
+        # ZAP 会自己去取目标页面：ZAP 在容器内时，需把宿主机回环地址改写为容器可达别名
+        self._target_alias = target_alias
         self.manifest = ToolManifest(
             id=TOOL_ID,
             name="OWASP ZAP（被动扫描）",
@@ -182,10 +186,15 @@ class ZapAdapter:
                 tool_id=TOOL_ID, status="REJECTED", error="non-destructive check failed"
             )
 
+        zap_target = (
+            container_reachable_url(target, self._target_alias)
+            if self._target_alias
+            else target
+        )
         try:
             # 让 ZAP 自身访问目标一次（被动观察），再读取该目标的告警
-            self._http(ACCESS_URL_PATH, self._with_key({"url": target}))
-            payload = self._http(ALERTS_PATH, self._with_key({"baseurl": target}))
+            self._http(ACCESS_URL_PATH, self._with_key({"url": zap_target}))
+            payload = self._http(ALERTS_PATH, self._with_key({"baseurl": zap_target}))
         except TimeoutError:
             return ToolResult(
                 tool_id=TOOL_ID,

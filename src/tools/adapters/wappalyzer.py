@@ -21,6 +21,7 @@ import subprocess
 from typing import Any, Callable
 from urllib.parse import urlparse
 
+from src.tools.container import ContainerSpec, container_reachable_url, docker_run_command
 from src.tools.contract import RateLimit, ToolManifest, ToolResult
 
 TOOL_ID = "wappalyzer"
@@ -54,16 +55,18 @@ class WappalyzerAdapter:
         *,
         executor: Callable[[list[str], int], str] | None = None,
         binary: str = DEFAULT_BINARY,
+        container: ContainerSpec | None = None,
     ) -> None:
         self._binary = binary
         self._executor = executor or _subprocess_executor
+        self._container = container
         self.manifest = ToolManifest(
             id=TOOL_ID,
             name="Wappalyzer",
             description="技术栈指纹识别（组件/版本）；只读解析响应，无写操作",
             version="0.1.0",
             categories=["FINGERPRINT"],
-            execution_mode="local",
+            execution_mode="container" if container else "local",
             read_only=True,
             enabled=True,
             rate_limit=RateLimit(requests_per_minute=30, burst=1),
@@ -89,7 +92,11 @@ class WappalyzerAdapter:
     # ---- 命令构造（CLI 方式待实测校正） ----
 
     def build_command(self, target: str, params: dict[str, Any]) -> list[str]:
-        return [self._binary, target]
+        """构造调用命令；容器模式下改写目标并经 `docker run` 包裹。"""
+        effective_target = container_reachable_url(target) if self._container else target
+        if self._container:
+            return docker_run_command(self._container, [effective_target])
+        return [self._binary, effective_target]
 
     # ---- 输出归一化（SDD-01 §5.5） ----
 
