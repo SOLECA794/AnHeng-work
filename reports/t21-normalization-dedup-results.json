@@ -1,0 +1,610 @@
+{
+  "task": "T21",
+  "fixture_version": "t21-synthetic-v1",
+  "mode": "offline pure functions; no database/network",
+  "clock": "explicit fixed Asia/Shanghai timestamps; no runtime clock",
+  "deduplication_unit": "scope_id plus dedup_key; occurrence counts distinct inspection task IDs",
+  "scenarios": [
+    {
+      "name": "same risk across two inspection rounds",
+      "passed": true,
+      "records": [
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 10:00:00",
+          "occurrence": 2,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              },
+              {
+                "task_id": 12,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 10:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "same task retries are idempotent",
+      "passed": true,
+      "records": [
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 10:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 10:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "cross-tool shared evidence feature",
+      "passed": true,
+      "records": [
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              },
+              {
+                "task_id": 11,
+                "tool_name": "zap",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "canonical URL equivalence",
+      "passed": true,
+      "records": [
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "67076feacc0f5cd539be136fde123f3b",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "c6cb28d7c2590f6cac56844915516b9c87002ffa7d16e0773b7816e5dab4bc7f",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "9ee1dd87c5d54032942b4bf7c59133b9d8f2deb34d032ce45d7a2a247e33f30c",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "37c308045133ac150ffd07e3139f9e5e1cba58c83ecb471c01e66975f7f06546"
+              },
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "9ee1dd87c5d54032942b4bf7c59133b9d8f2deb34d032ce45d7a2a247e33f30c"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "different features categories and query values remain distinct",
+      "passed": true,
+      "records": [
+        {
+          "type": "VULN",
+          "severity": "MEDIUM",
+          "title": "漏洞规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "10af77659e1859dc03d33151c882db2c",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "416eb4d1aafda726c675117019d2cf3b12a3235fad99c03fe9f1b4083769efad",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "416eb4d1aafda726c675117019d2cf3b12a3235fad99c03fe9f1b4083769efad"
+              }
+            ]
+          }
+        },
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        },
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=4d356c3cb7f405d2922e7ba29ff1d5cbfe5c78b705975a493d2d336e57df6ee9)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "6025ea9ccd614c21018fb44b9ca99a29",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "4d356c3cb7f405d2922e7ba29ff1d5cbfe5c78b705975a493d2d336e57df6ee9"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        },
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "768d8e76e4be1b0eefa43ff7213c5511",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "c2f17b281f43dbd7a0742b29176a726a029ea5974a295a50cc8b858a48c023dd",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "4fc1a948876d71f9873e69a04547cf4f70f21c142d74c47f8bd1480bd052161b",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "4fc1a948876d71f9873e69a04547cf4f70f21c142d74c47f8bd1480bd052161b"
+              }
+            ]
+          }
+        },
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "8665dc87ca61b41527ce43912f8857ba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "fbe3b83f075b63eeb5af6426f681d80236045329de45c37a6f53c1d35faf8e0d",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "e67e02f754cec12442a37e7f493f2fc4a4b5d36f1f5c2926bf632c847bbe1bb0",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "e67e02f754cec12442a37e7f493f2fc4a4b5d36f1f5c2926bf632c847bbe1bb0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "scope separation",
+      "passed": true,
+      "records": [
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        },
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 22,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T20 opaque target identities prevent redacted URL collisions",
+      "passed": true,
+      "records": [
+        {
+          "type": "SENSITIVE",
+          "severity": "MEDIUM",
+          "title": "敏感信息规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "139eb98b68a7abd3818e886a48cf49b4",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "794d2c98690bbe5aa18b73e7279c1553d7f80d4d2505bfbe8a5b111eb51f27bf",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "671234c601b05c9ac4456284cf141851204f7e67c7d0d627ecfcb96eaa77d178",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "671234c601b05c9ac4456284cf141851204f7e67c7d0d627ecfcb96eaa77d178"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SENSITIVE",
+          "severity": "MEDIUM",
+          "title": "敏感信息规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "f1a64551a56ea17904c3051eaabb080f",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "9f447b1b473d359884f2b8541a1ad0b7d194ed59b79e8eee48047ec4830564fd",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "f6a1118699bf3cd60e89c36cb7cd192ee30f8c08a0cf194c60fa100f51f2dc3a",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "f6a1118699bf3cd60e89c36cb7cd192ee30f8c08a0cf194c60fa100f51f2dc3a"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "preserve existing confirmed status and immutable inputs",
+      "passed": true,
+      "records": [
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "CONFIRMED",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 10:00:00",
+          "occurrence": 2,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "b9e1f8c4d98396db12efbd92daeecc35dd68b48e0e5b9d80aecdc94f70119c78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "b9e1f8c4d98396db12efbd92daeecc35dd68b48e0e5b9d80aecdc94f70119c78"
+              },
+              {
+                "task_id": 12,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 10:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "SDD-02 ORM field names and datetime conversion",
+      "passed": true,
+      "records": [
+        {
+          "type": "WEAK_CONFIG",
+          "severity": "MEDIUM",
+          "title": "弱配置规则命中",
+          "url": "http://fixture.invalid/[REDACTED_PATH]",
+          "evidence": "[REDACTED] (sha256=d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061)",
+          "impact": "该规则命中提示可能存在安全风险，需结合资产与业务场景复核。",
+          "suggestion": "核对命中规则和授权资源，确认后修复相应内容或配置并复测。",
+          "tool_name": "nuclei",
+          "status": "OPEN",
+          "task_id": 11,
+          "scope_id": 21,
+          "page_id": null,
+          "dedup_key": "45df6e8e203a899a23b9e92e0ef83cba",
+          "first_seen": "2026-10-13 09:00:00",
+          "last_seen": "2026-10-13 09:00:00",
+          "occurrence": 1,
+          "raw": {
+            "identity": {
+              "target_sha256": "a65b8e14a8e5a7d553362a84f5eb429996a57cf7f600c3b8afe80842a6ca6686",
+              "feature_sha256": "d9052f9d8f9dd57f87fa910c72fb238e056f3bb76c1c5d8f16d79b1add609061"
+            },
+            "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78",
+            "observations": [
+              {
+                "task_id": 11,
+                "tool_name": "nuclei",
+                "page_id": null,
+                "seen_at": "2026-10-13 09:00:00",
+                "source_sha256": "ee95f232728bd64a08ff89ff35917095bcba066aa209c53cac97ea354ef40e78"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "untrusted free text is absent from exported records",
+      "passed": true,
+      "records": []
+    }
+  ],
+  "passed_checks": 10,
+  "total_checks": 10,
+  "passed": true,
+  "limitations": "Pure transformation acceptance only; no database persistence, live tool execution or T22 status transitions."
+}
