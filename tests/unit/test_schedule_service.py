@@ -237,8 +237,11 @@ class ScheduleDeleteTest(_Base):
         super().setUp()
         self.record = self.service.create({"name": "每日巡检", "scope_id": self.scope_id})
 
-    def test_delete_marks_deleted(self):
-        self.assertTrue(self.service.delete(self.record.id).deleted)
+    def test_delete_returns_the_removed_schedule(self):
+        # schedule 表没有 deleted 列（SDD-02 §4.4），删除是**真删除**而非逻辑删除
+        removed = self.service.delete(self.record.id)
+        self.assertEqual(removed.id, self.record.id)
+        self.assertEqual(removed.name, "每日巡检")
 
     def test_deleted_schedule_is_not_found_afterwards(self):
         self.service.delete(self.record.id)

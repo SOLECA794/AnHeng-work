@@ -56,7 +56,6 @@ class ScheduleRecord:
     enabled: bool = True
     last_run_at: datetime | None = None
     next_run_at: datetime | None = None
-    deleted: bool = False
     created_at: datetime | None = None
     updated_at: datetime | None = None
 
@@ -66,8 +65,9 @@ class ScheduleRepository(Protocol):
 
     def add(self, record: ScheduleRecord) -> ScheduleRecord: ...
     def get(self, schedule_id: int) -> ScheduleRecord | None: ...
-    def list(self, *, include_deleted: bool = False) -> list[ScheduleRecord]: ...
+    def list(self) -> list[ScheduleRecord]: ...
     def save(self, record: ScheduleRecord) -> ScheduleRecord: ...
+    def remove(self, schedule_id: int) -> None: ...
 
 
 class InMemoryScheduleRepository:
@@ -86,16 +86,15 @@ class InMemoryScheduleRepository:
     def get(self, schedule_id: int) -> ScheduleRecord | None:
         return self._items.get(schedule_id)
 
-    def list(self, *, include_deleted: bool = False) -> list[ScheduleRecord]:
-        return [
-            record
-            for record in self._items.values()
-            if include_deleted or not record.deleted
-        ]
+    def list(self) -> list[ScheduleRecord]:
+        return list(self._items.values())
 
     def save(self, record: ScheduleRecord) -> ScheduleRecord:
         self._items[record.id] = record
         return record
+
+    def remove(self, schedule_id: int) -> None:
+        self._items.pop(schedule_id, None)
 
 
 class ScheduleService:
@@ -179,15 +178,16 @@ class ScheduleService:
         return self._repository.save(updated)
 
     def delete(self, schedule_id: int) -> ScheduleRecord:
+        """删除计划（SDD-03 §4.3 DELETE）。
+
+        注意：`schedule` 表**没有 `deleted` 列**（SDD-02 §4.4 未设计逻辑删除），
+        因此这里是**真删除**，与资产的「停用（逻辑删除）」不同。
+        曾按逻辑删除实现，导致经 SQL 仓储时 `deleted` 无法持久化、计划会「复活」并继续被
+        `due()` 取到触发巡检——属实现与 schema 不符，已修正。
+        """
         record = self._require(schedule_id)
-        deleted = replace(
-            record,
-            deleted=True,
-            enabled=False,
-            next_run_at=None,
-            updated_at=self._now(),
-        )
-        return self._repository.save(deleted)
+        self._repository.remove(schedule_id)
+        return record
 
     # ---- 查询（SDD-03 §4.3） ----
 
@@ -240,7 +240,7 @@ class ScheduleService:
 
     def _require(self, schedule_id: int) -> ScheduleRecord:
         record = self._repository.get(schedule_id)
-        if record is None or record.deleted:
+        if record is None:
             raise ServiceError(ErrorCode.NOT_FOUND, f"巡检计划不存在：{schedule_id}")
         return record
 
