@@ -6,18 +6,20 @@
 - SDD-01 §5.1 检测流水线「指纹识别」阶段、§5.4
 - 工具清单 §2.1：Wappalyzer **只读分析**、「仅解析响应，无写操作」
 
-⚠️ 待决事项（详见 docs/01-项目治理/04-C组对SDD-04工具注册表契约的核对反馈.md）：
-  1. `FINGERPRINT` 不在 SDD-02 的 `finding_type` 枚举内——指纹不是风险项，本适配器
-     以 `severity=INFO` 输出，是否入库为 Finding 需口径确认；
-  2. npm 上的 `wappalyzer` CLI 已废弃，命令行调用方式需在装好后实测确认。
+实现变更（2026-10-14）：由「调用 wappalyzer CLI」改为**进程内调用 python-Wappalyzer**
+（Wappalyzer 规则的 Python 实现）。原因：npm 上的 wappalyzer CLI 已废弃，且进程内调用
+可测、无外部二进制依赖。该库自带抓取（`WebPage.new_from_url`），只读 GET。
+
+⚠️ 待决：`FINGERPRINT` 不在 SDD-02 的 `finding_type` 枚举内。指纹本身不是风险项，
+本适配器统一以 `severity=INFO` 输出，是否落库为 Finding 需口径确认。
 
 运行：python tests/unit/test_wappalyzer_adapter.py -v
 """
 
-import json
+import http.server
 import pathlib
-import subprocess
 import sys
+import threading
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -29,43 +31,42 @@ from src.tools.contract import ToolRegistry  # noqa: E402
 
 TARGET = "http://127.0.0.1:8080/"
 
-# 真实形态的 Wappalyzer CLI JSON 输出
-WAPPALYZER_JSON = json.dumps(
-    {
-        "urls": {
-            TARGET: {
-                "applications": [
-                    {
-                        "name": "Nginx",
-                        "version": "1.18.0",
-                        "confidence": 100,
-                        "categories": [{"name": "Web servers"}],
-                    },
-                    {
-                        "name": "PHP",
-                        "version": "",
-                        "confidence": 90,
-                        "categories": [{"name": "Programming languages"}],
-                    },
-                ]
-            }
-        }
-    }
-)
+# 真实形态的 python-Wappalyzer 输出（对 DVWA 实测所得）
+DETECTED = {
+    "Debian": {"versions": [], "categories": ["Operating systems"]},
+    "Apache": {"versions": ["2.4.25"], "categories": ["Web servers"]},
+}
+
+FAKE_HTML = b"<html><head><title>fixture</title></head><body>ok</body></html>"
 
 
-def _executor_returning(raw):
-    def _run(command, timeout_seconds):
-        return raw
+def _analyzer_returning(detected):
+    def _analyze(url):
+        return detected
 
-    return _run
+    return _analyze
 
 
-def _executor_raising(exc):
-    def _run(command, timeout_seconds):
+def _analyzer_raising(exc):
+    def _analyze(url):
         raise exc
 
-    return _run
+    return _analyze
+
+
+class _FixtureHandler(http.server.BaseHTTPRequestHandler):
+    """本地夹具：带 nginx 标识的响应，用于验证真实库调用链。"""
+
+    def do_GET(self):  # noqa: N802
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Server", "nginx/1.24.0")
+        self.send_header("Content-Length", str(len(FAKE_HTML)))
+        self.end_headers()
+        self.wfile.write(FAKE_HTML)
+
+    def log_message(self, *args):
+        pass
 
 
 class WappalyzerManifestTest(unittest.TestCase):
@@ -104,75 +105,112 @@ class WappalyzerNonDestructiveTest(unittest.TestCase):
                 self.assertFalse(self.adapter.non_destructive_check(TARGET, {key: "x"}))
 
 
-class WappalyzerCommandTest(unittest.TestCase):
-    def test_command_targets_the_url(self):
-        command = WappalyzerAdapter().build_command(TARGET, {})
-        self.assertEqual(command[0], "wappalyzer")
-        self.assertIn(TARGET, command)
-
-
 class WappalyzerParseTest(unittest.TestCase):
     def setUp(self):
-        self.findings = WappalyzerAdapter().parse_output(WAPPALYZER_JSON)
+        self.findings = WappalyzerAdapter().parse_detected(DETECTED, TARGET)
 
-    def test_maps_applications_to_fingerprint_findings(self):
+    def test_maps_each_technology_to_a_fingerprint_finding(self):
         self.assertEqual(len(self.findings), 2)
-        finding = self.findings[0]
-        self.assertEqual(finding["type"], "FINGERPRINT")
-        self.assertEqual(finding["severity"], "INFO")  # 指纹不是风险项
-        self.assertEqual(finding["title"], "Nginx 1.18.0")
-        self.assertEqual(finding["url"], TARGET)
-        self.assertEqual(finding["tool_name"], "wappalyzer")
+        by_title = {f["title"]: f for f in self.findings}
+        self.assertIn("Apache 2.4.25", by_title)
+        self.assertIn("Debian", by_title)
 
-    def test_handles_application_without_version(self):
-        self.assertEqual(self.findings[1]["title"], "PHP")
-        self.assertIn("未知", self.findings[1]["evidence"])
+    def test_uses_fingerprint_type_and_info_severity(self):
+        # 指纹不是风险项：统一 INFO，避免进入告警链路
+        for finding in self.findings:
+            self.assertEqual(finding["type"], "FINGERPRINT")
+            self.assertEqual(finding["severity"], "INFO")
+            self.assertEqual(finding["tool_name"], "wappalyzer")
+            self.assertEqual(finding["url"], TARGET)
 
-    def test_records_category_and_confidence_in_evidence(self):
-        evidence = self.findings[0]["evidence"]
-        self.assertIn("Web servers", evidence)
-        self.assertIn("100", evidence)
+    def test_omits_version_when_unknown(self):
+        debian = next(f for f in self.findings if f["title"] == "Debian")
+        self.assertIn("未知", debian["evidence"])
+        self.assertIn("Operating systems", debian["evidence"])
 
-    def test_returns_empty_for_empty_output(self):
-        self.assertEqual(WappalyzerAdapter().parse_output(""), [])
+    def test_records_version_and_category_in_evidence(self):
+        apache = next(f for f in self.findings if f["title"].startswith("Apache"))
+        self.assertIn("2.4.25", apache["evidence"])
+        self.assertIn("Web servers", apache["evidence"])
 
-    def test_returns_empty_for_malformed_json(self):
-        self.assertEqual(WappalyzerAdapter().parse_output("{not json}"), [])
+    def test_returns_empty_for_no_detection(self):
+        self.assertEqual(WappalyzerAdapter().parse_detected({}, TARGET), [])
 
-    def test_skips_url_entries_without_applications(self):
-        payload = json.dumps({"urls": {TARGET: {}, "http://x.test/": "junk"}})
-        self.assertEqual(WappalyzerAdapter().parse_output(payload), [])
+    def test_tolerates_missing_inner_fields(self):
+        findings = WappalyzerAdapter().parse_detected({"Nginx": {}}, TARGET)
+        self.assertEqual(findings[0]["title"], "Nginx")
 
 
 class WappalyzerRunTest(unittest.TestCase):
     def test_returns_success_with_fingerprints(self):
-        result = WappalyzerAdapter(executor=_executor_returning(WAPPALYZER_JSON)).run(TARGET, {})
+        result = WappalyzerAdapter(analyzer=_analyzer_returning(DETECTED)).run(TARGET, {})
         self.assertEqual(result.status, "SUCCESS")
         self.assertEqual(result.tool_id, "wappalyzer")
         self.assertEqual(len(result.findings), 2)
 
-    def test_reports_failed_when_binary_missing(self):
-        adapter = WappalyzerAdapter(executor=_executor_raising(FileNotFoundError("wappalyzer")))
-        result = adapter.run(TARGET, {})
-        self.assertEqual(result.status, "FAILED")
-        self.assertIn("wappalyzer", result.error)
+    def test_returns_rejected_on_unsafe_params(self):
+        adapter = WappalyzerAdapter(analyzer=_analyzer_returning(DETECTED))
+        self.assertEqual(adapter.run(TARGET, {"post_data": "x"}).status, "REJECTED")
 
     def test_reports_timeout_status(self):
-        adapter = WappalyzerAdapter(
-            executor=_executor_raising(subprocess.TimeoutExpired(cmd="wappalyzer", timeout=30))
-        )
+        adapter = WappalyzerAdapter(analyzer=_analyzer_raising(TimeoutError("slow")))
         self.assertEqual(adapter.run(TARGET, {}).status, "TIMEOUT")
 
-    def test_returns_rejected_on_unsafe_params(self):
-        adapter = WappalyzerAdapter(executor=_executor_returning(WAPPALYZER_JSON))
-        self.assertEqual(adapter.run(TARGET, {"post_data": "x"}).status, "REJECTED")
+    def test_reports_failed_on_connection_error(self):
+        adapter = WappalyzerAdapter(analyzer=_analyzer_raising(ConnectionError("refused")))
+        result = adapter.run(TARGET, {})
+        self.assertEqual(result.status, "FAILED")
+        self.assertTrue(result.error)
+
+    def test_reports_missing_library_clearly(self):
+        # 库未安装时应给出可操作的提示，而不是堆栈
+        adapter = WappalyzerAdapter(
+            analyzer=_analyzer_raising(ImportError("No module named 'Wappalyzer'"))
+        )
+        result = adapter.run(TARGET, {})
+        self.assertEqual(result.status, "FAILED")
+        self.assertIn("python-Wappalyzer", result.error)
 
     def test_registry_execute_path_returns_result(self):
         registry = ToolRegistry()
-        registry.register(WappalyzerAdapter(executor=_executor_returning(WAPPALYZER_JSON)))
+        registry.register(WappalyzerAdapter(analyzer=_analyzer_returning(DETECTED)))
         result = registry.execute("wappalyzer", TARGET, {})
         self.assertEqual(result.status, "SUCCESS")
         self.assertEqual(len(registry.audit()), 1)
+
+
+class WappalyzerRealLibraryTest(unittest.TestCase):
+    """真实库调用链验证：不注入 analyzer，走 python-Wappalyzer 抓取 + 分析。
+
+    夹具是进程内真实 HTTP 服务（非 mock），因此不需要 Docker 或外部靶场。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _FixtureHandler)
+        cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
+        cls.thread.start()
+        host, port = cls.server.server_address
+        cls.url = f"http://{host}:{port}/"
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.shutdown()
+        cls.server.server_close()
+
+    def test_detects_technology_from_a_real_response(self):
+        result = WappalyzerAdapter().run(self.url, {})
+        self.assertEqual(result.status, "SUCCESS", msg=result.error)
+        titles = [f["title"] for f in result.findings]
+        self.assertTrue(
+            any("nginx" in t.lower() for t in titles),
+            f"响应带 Server: nginx/1.24.0，应检出 nginx；实际检出：{titles}",
+        )
+
+    def test_real_detection_carries_version_when_available(self):
+        result = WappalyzerAdapter().run(self.url, {})
+        nginx = next(f for f in result.findings if "nginx" in f["title"].lower())
+        self.assertIn("1.24.0", nginx["evidence"])
 
 
 if __name__ == "__main__":

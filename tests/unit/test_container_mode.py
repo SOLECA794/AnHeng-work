@@ -146,20 +146,15 @@ class NucleiContainerModeTest(unittest.TestCase):
         self.assertEqual(killed, [])
 
 
-class WappalyzerContainerModeTest(unittest.TestCase):
-    def test_manifest_switches_to_container_execution_mode(self):
-        adapter = WappalyzerAdapter(container=ContainerSpec(image="wappalyzer:latest"))
-        self.assertEqual(adapter.manifest.execution_mode, "container")
+class WappalyzerInProcessNote(unittest.TestCase):
+    """Wappalyzer 已改为**进程内**调用 python-Wappalyzer（见其适配器文档），
+    不再有 subprocess/容器模式——容器模式对它已无意义。"""
 
-    def test_command_is_wrapped_and_target_rewritten(self):
-        adapter = WappalyzerAdapter(container=ContainerSpec(image="wappalyzer:latest"))
-        command = adapter.build_command(TARGET, {})
-        self.assertEqual(command[:3], ["docker", "run", "--rm"])
-        self.assertIn(REWRITTEN, command)
-        self.assertNotIn(TARGET, command)
+    def test_wappalyzer_has_no_container_parameter(self):
+        import inspect
 
-    def test_local_mode_unchanged(self):
-        self.assertEqual(WappalyzerAdapter().build_command(TARGET, [])[0], "wappalyzer")
+        params = inspect.signature(WappalyzerAdapter.__init__).parameters
+        self.assertNotIn("container", params)
 
 
 class ZapContainerModeTest(unittest.TestCase):

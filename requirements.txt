@@ -1,3 +1,10 @@
 fastapi>=0.115,<1
 uvicorn[standard]>=0.30,<1
 pydantic-settings>=2.6,<3
+
+# T17 Wappalyzer 指纹识别：Wappalyzer 规则的 Python 实现（npm CLI 已废弃）
+# 注：python-Wappalyzer 声明的 httpretty / aioresponses 仅测试用，但其源码包在部分网络下
+#     无法构建（拉不到 setuptools）。装不上时用：
+#       pip install python-Wappalyzer --no-deps && pip install aiohttp
+python-Wappalyzer>=0.3.1,<1
+aiohttp>=3.9,<4
