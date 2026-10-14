@@ -10,8 +10,11 @@
 """
 
 import pathlib
+import subprocess
 import sys
 import tempfile
+import threading
+import time
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -22,6 +25,27 @@ from src.tools.execution import make_subprocess_executor  # noqa: E402
 
 # 真实子进程：分别向 stdout / stderr 写内容
 PRINTER = [sys.executable, "-c", "import sys; print('OUT-LINE'); print('ERR-LINE', file=sys.stderr)"]
+
+# 分两段写 stderr，中间停顿——用于验证「进程未结束时日志已可见」
+STREAMING_PRINTER = [
+    sys.executable,
+    "-u",
+    "-c",
+    "import sys, time\n"
+    "print('FIRST-CHUNK', file=sys.stderr, flush=True)\n"
+    "time.sleep(4)\n"
+    "print('SECOND-CHUNK', file=sys.stderr, flush=True)\n",
+]
+
+# 写完一行后长时间挂起——用于验证超时后仍保留已产出的 stderr
+HANGING_PRINTER = [
+    sys.executable,
+    "-u",
+    "-c",
+    "import sys, time\n"
+    "print('BEFORE-HANG', file=sys.stderr, flush=True)\n"
+    "time.sleep(30)\n",
+]
 
 
 class SubprocessExecutorTest(unittest.TestCase):
@@ -75,6 +99,46 @@ class SubprocessExecutorTest(unittest.TestCase):
     def test_still_returns_stdout_when_command_fails(self):
         failing = [sys.executable, "-c", "import sys; print('PARTIAL'); sys.exit(3)"]
         self.assertIn("PARTIAL", make_subprocess_executor()(failing, 30))
+
+    # ---- 实时性：stderr 必须边跑边落盘，而不是等进程结束 ----
+
+    def test_stderr_is_visible_while_the_command_is_still_running(self):
+        log = self.tmpdir / "nuclei.log"
+        executor = make_subprocess_executor(stderr_log=log)
+        worker = threading.Thread(
+            target=executor, args=(STREAMING_PRINTER, 30), daemon=True
+        )
+        worker.start()
+        try:
+            deadline = time.time() + 15
+            while time.time() < deadline:
+                if log.exists() and "FIRST-CHUNK" in log.read_text(encoding="utf-8"):
+                    break
+                time.sleep(0.1)
+            content = log.read_text(encoding="utf-8") if log.exists() else ""
+            # 按整行精确匹配：日志头记录的命令行里也含这些字面量（-c 源码），子串匹配会误判
+            lines = [line.strip() for line in content.splitlines()]
+            self.assertIn(
+                "FIRST-CHUNK", lines, "进程未结束时日志就应已可见（用于 tail -f 观察长任务）"
+            )
+            self.assertIn("$ ", content, "命令行头也应在开跑前写入，便于确认在跑哪个命令")
+            self.assertNotIn(
+                "SECOND-CHUNK", lines, "进程仍在运行时不应已有后半段输出（说明是流式而非缓冲）"
+            )
+        finally:
+            worker.join(timeout=20)
+
+    def test_stderr_is_preserved_when_the_command_times_out(self):
+        """超时是最需要诊断的场景：老实现在超时时连日志文件都不会创建，导致零证据。"""
+        log = self.tmpdir / "nuclei.log"
+        with self.assertRaises(subprocess.TimeoutExpired):
+            make_subprocess_executor(stderr_log=log)(HANGING_PRINTER, 2)
+        self.assertTrue(log.exists(), "超时也必须留下日志文件")
+        lines = [
+            line.strip()
+            for line in log.read_text(encoding="utf-8").splitlines()
+        ]
+        self.assertIn("BEFORE-HANG", lines, "超时前已产出的 stderr 必须保留")
 
 
 if __name__ == "__main__":
