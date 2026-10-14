@@ -1,0 +1,349 @@
+{
+  "task": "T22",
+  "fixture_version": "t22-sqlite-v1",
+  "fixed_time": "2026-10-14 09:00:00",
+  "execution": "SQLite-compatible isolated ORM fixture + in-process FastAPI TestClient",
+  "checks": [
+    {
+      "name": "manual confirmation persists status and success audit",
+      "passed": true,
+      "evidence": {
+        "receipt": {
+          "findingId": 101,
+          "scopeId": 1,
+          "taskId": 1,
+          "status": "CONFIRMED",
+          "verification": {
+            "finding_id": 101,
+            "scope_id": 1,
+            "task_id": 1,
+            "actor_id": 1,
+            "from_status": "OPEN",
+            "to_status": "CONFIRMED",
+            "method": "MANUAL",
+            "reason_code": "EVIDENCE_REVIEWED",
+            "reason": "已核对证据并确认风险",
+            "at": "2026-10-14 09:00:00",
+            "note_sha256": "c09eb36fcc6af7593256999af93603a1ea47c204fdbbc1631bf97bc7257af66f",
+            "review_sha256": null,
+            "result": "SUCCESS",
+            "error_code": 0
+          }
+        },
+        "database": {
+          "findingId": 101,
+          "status": "CONFIRMED",
+          "auditResults": [
+            "SUCCESS"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rule administrator can query verification trail",
+      "passed": true,
+      "evidence": {
+        "findingId": 101,
+        "scopeId": 1,
+        "taskId": 1,
+        "status": "CONFIRMED",
+        "trail": [
+          {
+            "finding_id": 101,
+            "scope_id": 1,
+            "from_status": "OPEN",
+            "to_status": "CONFIRMED",
+            "method": "MANUAL",
+            "reason_code": "EVIDENCE_REVIEWED",
+            "note_sha256": "c09eb36fcc6af7593256999af93603a1ea47c204fdbbc1631bf97bc7257af66f",
+            "review_sha256": null,
+            "error_code": 0,
+            "actor_id": 1,
+            "task_id": 1,
+            "result": "SUCCESS",
+            "at": "2026-10-14 09:00:00",
+            "reason": "已核对证据并确认风险"
+          }
+        ]
+      }
+    },
+    {
+      "name": "repeat verification rejects stale OPEN",
+      "passed": true,
+      "evidence": {
+        "code": 40902,
+        "database": {
+          "findingId": 101,
+          "status": "CONFIRMED",
+          "auditResults": [
+            "SUCCESS",
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "manual false positive persists",
+      "passed": true,
+      "evidence": {
+        "findingId": 102,
+        "scopeId": 1,
+        "taskId": 1,
+        "status": "FALSE_POSITIVE",
+        "verification": {
+          "finding_id": 102,
+          "scope_id": 1,
+          "task_id": 1,
+          "actor_id": 1,
+          "from_status": "OPEN",
+          "to_status": "FALSE_POSITIVE",
+          "method": "MANUAL",
+          "reason_code": "EXPECTED_PUBLIC_CONTENT",
+          "reason": "内容已获批准公开，不属于泄露",
+          "at": "2026-10-14 09:00:00",
+          "note_sha256": null,
+          "review_sha256": null,
+          "result": "SUCCESS",
+          "error_code": 0
+        }
+      }
+    },
+    {
+      "name": "rule review MATCH",
+      "passed": true,
+      "evidence": {
+        "findingId": 101,
+        "scopeId": 1,
+        "taskId": 1,
+        "status": "CONFIRMED",
+        "verification": {
+          "finding_id": 101,
+          "scope_id": 1,
+          "task_id": 1,
+          "actor_id": 1,
+          "from_status": "OPEN",
+          "to_status": "CONFIRMED",
+          "method": "RULE_REVIEW",
+          "reason_code": "RULE_REVIEW_MATCH",
+          "reason": "同源证据按指定规则版本复核仍命中",
+          "at": "2026-10-14 09:00:00",
+          "note_sha256": null,
+          "review_sha256": "ed855c118e153f67fbfe5d9764c0f94cfca54bf14060f079bc01063432e7fade",
+          "result": "SUCCESS",
+          "error_code": 0
+        }
+      }
+    },
+    {
+      "name": "rule review FALSE_MATCH",
+      "passed": true,
+      "evidence": {
+        "findingId": 101,
+        "scopeId": 1,
+        "taskId": 1,
+        "status": "FALSE_POSITIVE",
+        "verification": {
+          "finding_id": 101,
+          "scope_id": 1,
+          "task_id": 1,
+          "actor_id": 1,
+          "from_status": "OPEN",
+          "to_status": "FALSE_POSITIVE",
+          "method": "RULE_REVIEW",
+          "reason_code": "RULE_REVIEW_FALSE_MATCH",
+          "reason": "同源证据复核确认原规则错误匹配",
+          "at": "2026-10-14 09:00:00",
+          "note_sha256": null,
+          "review_sha256": "441a9efeab57fb53523e9de3b959d251f3d0f55e63b47090598c65aa3e517b59",
+          "result": "SUCCESS",
+          "error_code": 0
+        }
+      }
+    },
+    {
+      "name": "inconclusive review keeps OPEN and records BLOCKED",
+      "passed": true,
+      "evidence": {
+        "code": 40903,
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": [
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "source snapshot mismatch keeps OPEN and records BLOCKED",
+      "passed": true,
+      "evidence": {
+        "code": 40903,
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": [
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "reviewed snapshot mismatch keeps OPEN and records BLOCKED",
+      "passed": true,
+      "evidence": {
+        "code": 40903,
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": [
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "no principal",
+      "passed": true,
+      "evidence": {
+        "code": 40100,
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": [
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "administrator has no implicit write permission",
+      "passed": true,
+      "evidence": {
+        "code": 40300,
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": [
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "asset outside granted scopes",
+      "passed": true,
+      "evidence": {
+        "code": 40310,
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": [
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "audit failure rolls back state update",
+      "passed": true,
+      "evidence": {
+        "code": 50000,
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": []
+        }
+      }
+    },
+    {
+      "name": "opt-in API updates and reads real fixture state",
+      "passed": true,
+      "evidence": {
+        "patch": {
+          "code": 0,
+          "message": "ok",
+          "data": {
+            "findingId": 101,
+            "scopeId": 1,
+            "taskId": 1,
+            "status": "CONFIRMED",
+            "verification": {
+              "finding_id": 101,
+              "scope_id": 1,
+              "task_id": 1,
+              "actor_id": 1,
+              "from_status": "OPEN",
+              "to_status": "CONFIRMED",
+              "method": "MANUAL",
+              "reason_code": "EVIDENCE_REVIEWED",
+              "reason": "已核对证据并确认风险",
+              "at": "2026-10-14 09:00:00",
+              "note_sha256": null,
+              "review_sha256": null,
+              "result": "SUCCESS",
+              "error_code": 0
+            }
+          }
+        },
+        "get": {
+          "code": 0,
+          "message": "ok",
+          "data": {
+            "findingId": 101,
+            "scopeId": 1,
+            "taskId": 1,
+            "status": "CONFIRMED",
+            "trail": [
+              {
+                "finding_id": 101,
+                "scope_id": 1,
+                "from_status": "OPEN",
+                "to_status": "CONFIRMED",
+                "method": "MANUAL",
+                "reason_code": "EVIDENCE_REVIEWED",
+                "note_sha256": null,
+                "review_sha256": null,
+                "error_code": 0,
+                "actor_id": 1,
+                "task_id": 1,
+                "result": "SUCCESS",
+                "at": "2026-10-14 09:00:00",
+                "reason": "已核对证据并确认风险"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "default principal rejects fabricated authorization headers",
+      "passed": true,
+      "evidence": {
+        "response": {
+          "code": 40100,
+          "message": "身份缺失或无效",
+          "data": null
+        },
+        "database": {
+          "findingId": 101,
+          "status": "OPEN",
+          "auditResults": [
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "receipts audits and API responses contain no raw note or fixture evidence",
+      "passed": true,
+      "evidence": {
+        "note_sha256": "c09eb36fcc6af7593256999af93603a1ea47c204fdbbc1631bf97bc7257af66f"
+      }
+    }
+  ],
+  "passed_checks": 16,
+  "total_checks": 16,
+  "passed": true,
+  "limitations": "No PostgreSQL, real JWT, deployed HTTP server, external scanner, or production database was used."
+}
