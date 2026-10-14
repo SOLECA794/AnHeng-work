@@ -154,36 +154,42 @@ class NucleiCommandTest(unittest.TestCase):
         for tag in ("fuzz", "intrusive", "dos"):
             self.assertIn(tag, excluded)
 
-    def test_applies_manifest_rate_limit(self):
-        # manifest 声明的是「每分钟」，而 nuclei 的 -rate-limit 单位是「每秒」，
-        # 直接透传会放大 60 倍（实测 DVWA 被打到无响应）。必须换算。
-        self.assertIn("-rate-limit", self.command)
-        per_second = int(self.command[self.command.index("-rate-limit") + 1])
-        duration = self.command[self.command.index("-rate-limit-duration") + 1]
-        effective_per_minute = per_second * 60 / float(duration.rstrip("s"))
+    @staticmethod
+    def _target_rate_per_minute(command) -> float:
+        per_second = int(command[command.index("-rate-limit") + 1])
+        duration = float(command[command.index("-rate-limit-duration") + 1].rstrip("s"))
+        return per_second * 60 / duration
+
+    def test_applies_target_rate_limit_from_params(self):
+        # 发往**目标站**的请求速率来自 target_rate_limit，单位「每分钟」；
+        # nuclei 的 -rate-limit 单位是「每秒」，直接透传会放大 60 倍。
+        for declared in (6, 30, 60, 120, 300, 1800):
+            with self.subTest(target_rate_limit=declared):
+                command = self.adapter.build_command(
+                    TARGET, {"target_rate_limit": declared}
+                )
+                self.assertAlmostEqual(
+                    self._target_rate_per_minute(command), declared, places=6
+                )
+
+    def test_uses_conservative_default_target_rate(self):
+        from src.tools.adapters.nuclei import DEFAULT_TARGET_RATE_PER_MINUTE
+
+        command = self.adapter.build_command(TARGET, {})
         self.assertAlmostEqual(
-            effective_per_minute,
-            self.adapter.manifest.rate_limit.requests_per_minute,
+            self._target_rate_per_minute(command),
+            DEFAULT_TARGET_RATE_PER_MINUTE,
             places=6,
         )
 
-    def test_rate_limit_never_exceeds_declared_per_minute(self):
-        declared = self.adapter.manifest.rate_limit.requests_per_minute
-        command = self.adapter.build_command(TARGET, {})
-        per_second = int(command[command.index("-rate-limit") + 1])
-        duration = float(command[command.index("-rate-limit-duration") + 1].rstrip("s"))
-        self.assertLessEqual(per_second * 60 / duration, declared)
-
-    def test_rate_limit_converts_explicit_per_minute_param(self):
-        # 断言需求本身（实际速率 == 声明速率），而非某个具体参数编码
-        for declared in (6, 30, 60, 120, 300):
-            with self.subTest(requests_per_minute=declared):
-                command = self.adapter.build_command(TARGET, {"rate_limit": declared})
-                per_second = int(command[command.index("-rate-limit") + 1])
-                duration = float(
-                    command[command.index("-rate-limit-duration") + 1].rstrip("s")
-                )
-                self.assertAlmostEqual(per_second * 60 / duration, declared, places=6)
+    def test_tool_invocation_limit_does_not_change_target_load(self):
+        """SDD-04 §5 的 `rate_limit` 是**工具调用**速率（保护服务），与发往目标的请求速率
+        是两回事。调高工具调用配额**不得**让目标承受更高负载——否则「目标负载受控」
+        （验收标准 §4）会被一个服务侧旋钮悄悄控制。"""
+        before = self._target_rate_per_minute(self.adapter.build_command(TARGET, {}))
+        self.adapter.manifest.rate_limit.requests_per_minute = 6000
+        after = self._target_rate_per_minute(self.adapter.build_command(TARGET, {}))
+        self.assertEqual(before, after)
 
     def test_honours_explicit_template_list(self):
         command = self.adapter.build_command(TARGET, {"templates": ["http/cves/2021/x.yaml"]})

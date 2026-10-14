@@ -34,6 +34,11 @@ from src.tools.execution import make_subprocess_executor
 TOOL_ID = "nuclei"
 DEFAULT_BINARY = "nuclei"
 
+# 发往**目标站**的默认请求速率（每分钟）。这是目标侧负载控制（验收标准 §4），
+# 与 SDD-04 §5 的 manifest.rate_limit（工具**调用**速率，保护服务）是两个独立旋钮。
+# 取值保守：1 次/秒。需要更快时由调用方按站点通过 params["target_rate_limit"] 显式提高。
+DEFAULT_TARGET_RATE_PER_MINUTE = 60
+
 # 仅允许 http/https 单目标
 _ALLOWED_SCHEMES = frozenset({"http", "https"})
 # 破坏性/越权参数：出现即拒绝（工具清单 §2.3 禁止项）
@@ -63,19 +68,33 @@ _SEVERITY_MAP = {
 
 
 def rate_limit_args(requests_per_minute: int) -> list[str]:
-    """把「每分钟请求数」换算为 nuclei 的限速参数。
+    """把**发往目标站**的请求速率（每分钟）换算为 nuclei 的限速参数。
 
-    nuclei 的 `-rate-limit` 单位是**每秒**（默认 150），而 `ToolManifest.rate_limit`
-    声明的是**每分钟**。直接透传会把实际速率放大 60 倍（实测把 DVWA 靶场打到无响应），
-    因此统一用 `-rate-limit 1 -rate-limit-duration <秒>s` 表达每分钟速率，保证精确且不超限。
+    两个易混点，都在注释里钉住：
+
+    1. **单位**：nuclei 的 `-rate-limit` 是**每秒**（默认 150），而我们要表达的是每分钟。
+       直接透传会把速率放大 60 倍（实测把 DVWA 打到无响应）。这里统一用
+       `-rate-limit 1 -rate-limit-duration <秒>s` 精确表达每分钟速率。
+    2. **语义**：本参数是**目标侧负载控制**（验收标准 §4「目标负载受控」），
+       与 SDD-04 §5 的 `manifest.rate_limit` **不是同一个东西**——后者是
+       **工具调用**速率（`ToolRegistry` 的令牌桶，保护服务自身）。
+       两者必须来自不同的旋钮，否则调高工具调用配额会顺带把目标打爆。
     """
     if requests_per_minute <= 0:
         raise ValueError("requests_per_minute 必须为正数")
+    if requests_per_minute % 60 == 0:
+        # 能被 60 整除时用整数倍秒速率：精确且可读（如 1800/分钟 → 30 次/秒）
+        return [
+            "-rate-limit",
+            str(requests_per_minute // 60),
+            "-rate-limit-duration",
+            "1s",
+        ]
     return [
         "-rate-limit",
         "1",
         "-rate-limit-duration",
-        f"{60 / requests_per_minute:g}s",
+        f"{60 / requests_per_minute:.12g}s",
     ]
 
 
@@ -164,7 +183,7 @@ class NucleiAdapter:
             "-etags",
             _EXCLUDED_TAGS,
             *rate_limit_args(
-                int(params.get("rate_limit", self.manifest.rate_limit.requests_per_minute))
+                int(params.get("target_rate_limit", DEFAULT_TARGET_RATE_PER_MINUTE))
             ),
             "-timeout",
             str(params.get("per_request_timeout", 10)),
