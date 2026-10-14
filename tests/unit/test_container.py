@@ -89,6 +89,17 @@ class DockerRunCommandTest(unittest.TestCase):
         command = docker_run_command(ContainerSpec(image="x", remove=False), [])
         self.assertNotIn("--rm", command)
 
+    def test_includes_container_name_when_given(self):
+        # 命名是「超时后能把它杀掉」的前提
+        spec = ContainerSpec(image="x", name="anheng-nuclei-abc123")
+        command = docker_run_command(spec, [])
+        self.assertIn("--name", command)
+        self.assertEqual(command[command.index("--name") + 1], "anheng-nuclei-abc123")
+        self.assertLess(command.index("--name"), command.index(spec.image))
+
+    def test_omits_name_when_not_given(self):
+        self.assertNotIn("--name", docker_run_command(ContainerSpec(image="x"), []))
+
     def test_appends_tool_args_after_image(self):
         spec = ContainerSpec(image="projectdiscovery/nuclei")
         command = docker_run_command(spec, ["-u", "http://host.docker.internal:8080/"])

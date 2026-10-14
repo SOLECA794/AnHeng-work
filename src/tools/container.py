@@ -33,6 +33,7 @@ class ContainerSpec:
     mounts: tuple[str, ...] = ()   # -v 参数，如 ("C:\\tpl:/root/nuclei-templates",)
     options: tuple[str, ...] = ()  # 其他 docker run 选项，如 ("--user", "1000:1000")
     remove: bool = True            # 是否加 --rm
+    name: str | None = None        # --name；超时后据此终止容器（否则「已放弃」的扫描仍在打目标）
 
 
 def container_reachable_url(url: str, alias: str = DEFAULT_HOST_ALIAS) -> str:
@@ -45,10 +46,12 @@ def container_reachable_url(url: str, alias: str = DEFAULT_HOST_ALIAS) -> str:
 
 
 def docker_run_command(spec: ContainerSpec, args: Sequence[str]) -> list[str]:
-    """构造 `docker run` 命令：`docker run [--rm] [-v ...] [options] <image> <args...>`。"""
+    """构造 `docker run` 命令：`docker run [--rm] [--name n] [-v ...] [options] <image> <args...>`。"""
     command = ["docker", "run"]
     if spec.remove:
         command.append("--rm")
+    if spec.name:
+        command += ["--name", spec.name]
     for mount in spec.mounts:
         command += ["-v", mount]
     command += list(spec.options)

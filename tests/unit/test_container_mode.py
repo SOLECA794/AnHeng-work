@@ -39,6 +39,13 @@ def _executor_capturing(sink):
     return _run
 
 
+def _executor_raising(exc):
+    def _run(command, timeout_seconds):
+        raise exc
+
+    return _run
+
+
 class NucleiContainerModeTest(unittest.TestCase):
     def test_manifest_switches_to_container_execution_mode(self):
         self.assertEqual(
@@ -83,6 +90,60 @@ class NucleiContainerModeTest(unittest.TestCase):
         )
         self.assertEqual(adapter.run("file:///etc/passwd", {}).status, "REJECTED")
         self.assertEqual(captured, [])
+
+    # ---- 超时/异常时必须终止容器，否则「已放弃」的扫描仍在打目标（违反「目标负载受控」） ----
+
+    def test_run_names_the_container_so_it_can_be_terminated(self):
+        captured: list[str] = []
+        adapter = NucleiAdapter(
+            container=NUCLEI_SPEC, executor=_executor_capturing(captured)
+        )
+        adapter.run(TARGET, {})
+        self.assertIn("--name", captured)
+        name = captured[captured.index("--name") + 1]
+        self.assertTrue(name.startswith("anheng-nuclei-"), f"容器名应带工具前缀：{name}")
+
+    def test_kills_container_on_timeout(self):
+        import subprocess as _sp
+
+        killed: list[str] = []
+        adapter = NucleiAdapter(
+            container=NUCLEI_SPEC,
+            executor=_executor_raising(_sp.TimeoutExpired(cmd="docker", timeout=1)),
+            container_terminator=killed.append,
+        )
+        result = adapter.run(TARGET, {})
+        self.assertEqual(result.status, "TIMEOUT")
+        self.assertEqual(len(killed), 1, "超时必须杀掉容器，否则扫描会继续对目标发请求")
+        self.assertTrue(killed[0].startswith("anheng-nuclei-"))
+
+    def test_kills_container_on_unexpected_error(self):
+        killed: list[str] = []
+        adapter = NucleiAdapter(
+            container=NUCLEI_SPEC,
+            executor=_executor_raising(RuntimeError("boom")),
+            container_terminator=killed.append,
+        )
+        self.assertEqual(adapter.run(TARGET, {}).status, "FAILED")
+        self.assertEqual(len(killed), 1)
+
+    def test_does_not_kill_on_success(self):
+        killed: list[str] = []
+        adapter = NucleiAdapter(
+            container=NUCLEI_SPEC,
+            executor=_executor_capturing([]),
+            container_terminator=killed.append,
+        )
+        adapter.run(TARGET, {})
+        self.assertEqual(killed, [], "成功时不该额外去 kill（--rm 会自行清理）")
+
+    def test_local_mode_never_kills_containers(self):
+        killed: list[str] = []
+        adapter = NucleiAdapter(
+            executor=_executor_capturing([]), container_terminator=killed.append
+        )
+        adapter.run(TARGET, {})
+        self.assertEqual(killed, [])
 
 
 class WappalyzerContainerModeTest(unittest.TestCase):

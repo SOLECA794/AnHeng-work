@@ -22,6 +22,8 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import uuid
+from dataclasses import replace
 from typing import Any, Callable
 from urllib.parse import urlparse
 
@@ -77,6 +79,16 @@ def rate_limit_args(requests_per_minute: int) -> list[str]:
     ]
 
 
+def _docker_kill(container_name: str) -> None:
+    """尽力终止指定容器；不等待、不抛错（清理属尽力而为）。"""
+    subprocess.run(
+        ["docker", "kill", container_name],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
 class NucleiAdapter:
     """Nuclei 工具适配器，实现 SDD-04 契约的 `manifest` / `non_destructive_check` / `run`。"""
 
@@ -87,10 +99,12 @@ class NucleiAdapter:
         binary: str = DEFAULT_BINARY,
         container: ContainerSpec | None = None,
         stderr_log=None,
+        container_terminator: Callable[[str], None] | None = None,
     ) -> None:
         self._binary = binary
         self._executor = executor or make_subprocess_executor(stderr_log=stderr_log)
         self._container = container
+        self._terminate = container_terminator or _docker_kill
         self.manifest = ToolManifest(
             id=TOOL_ID,
             name="Nuclei",
@@ -131,14 +145,16 @@ class NucleiAdapter:
 
     # ---- 命令构造 ----
 
-    def build_command(self, target: str, params: dict[str, Any]) -> list[str]:
+    def build_command(
+        self, target: str, params: dict[str, Any], *, spec: ContainerSpec | None = None
+    ) -> list[str]:
         """构造 nuclei 调用命令；始终带非破坏与限速参数。
 
         容器模式下：目标改写为容器可达地址，整条命令经 `docker run` 包裹。
+        `spec` 用于按次覆盖容器参数（`run()` 借此注入唯一容器名以便超时后终止）。
         """
-        effective_target = (
-            container_reachable_url(target) if self._container else target
-        )
+        container_spec = spec if spec is not None else self._container
+        effective_target = container_reachable_url(target) if container_spec else target
         args = ["-u", effective_target, "-jsonl"]
         if params.get("silent", True):
             # 诊断时可传 silent=False：nuclei 的 INFO/WRN 走 stderr，stdout 仍是纯 JSONL
@@ -156,8 +172,8 @@ class NucleiAdapter:
         for template in params.get("templates") or []:
             args += ["-t", str(template)]
 
-        if self._container:
-            return docker_run_command(self._container, args)
+        if container_spec:
+            return docker_run_command(container_spec, args)
         return [self._binary, *args]
 
     # ---- 输出归一化（SDD-01 §5.5、SDD-02 §4.6） ----
@@ -210,24 +226,45 @@ class NucleiAdapter:
                 tool_id=TOOL_ID, status="REJECTED", error="non-destructive check failed"
             )
 
-        command = self.build_command(target, params)
+        # 容器模式：给本次运行一个唯一容器名，超时/异常时据此终止它
+        container_name = None
+        container_spec = self._container
+        if container_spec is not None:
+            container_name = f"anheng-{TOOL_ID}-{uuid.uuid4().hex[:12]}"
+            container_spec = replace(container_spec, name=container_name)
+
+        command = self.build_command(target, params, spec=container_spec)
         try:
             raw = self._executor(command, self.manifest.timeout_seconds)
-        except FileNotFoundError:
             return ToolResult(
+                tool_id=TOOL_ID, status="SUCCESS", findings=self.parse_jsonl(raw)
+            )
+        except FileNotFoundError:
+            failure = ToolResult(
                 tool_id=TOOL_ID,
                 status="FAILED",
                 error=f"未找到可执行文件：{self._binary}，请先安装 {self.manifest.name}",
             )
         except subprocess.TimeoutExpired:
-            return ToolResult(
+            failure = ToolResult(
                 tool_id=TOOL_ID,
                 status="TIMEOUT",
                 error=f"执行超时（{self.manifest.timeout_seconds}s）",
             )
         except OSError as exc:
-            return ToolResult(tool_id=TOOL_ID, status="FAILED", error=f"执行失败：{exc}")
+            failure = ToolResult(tool_id=TOOL_ID, status="FAILED", error=f"执行失败：{exc}")
         except Exception as exc:  # 兜底：工具异常不得冒泡打断流水线（SDD-01 §5.1 降级）
-            return ToolResult(tool_id=TOOL_ID, status="FAILED", error=str(exc))
+            failure = ToolResult(tool_id=TOOL_ID, status="FAILED", error=str(exc))
 
-        return ToolResult(tool_id=TOOL_ID, status="SUCCESS", findings=self.parse_jsonl(raw))
+        # 未跑成功即确保容器被终止：否则客户端放弃后，容器里的扫描仍在持续请求目标
+        # （违反验收标准 §4「目标负载受控」）。成功路径不必处理——`--rm` 会自行清理。
+        self._terminate_quietly(container_name)
+        return failure
+
+    def _terminate_quietly(self, container_name: str | None) -> None:
+        if not container_name:
+            return
+        try:
+            self._terminate(container_name)
+        except Exception:  # 尽力而为：清理失败不得影响结果返回
+            pass
