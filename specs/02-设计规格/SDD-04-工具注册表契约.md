@@ -37,3 +37,10 @@ class ToolAdapter(Protocol):
 ## 4. C 组接入约定
 
 C 在 `src/tools/adapters/` 实现适配器，导出 `manifest`、`non_destructive_check`、`run`，并在启动装配时调用 `registry.register(adapter)`。适配器不得修改 `ToolManifest` 字段语义；新增字段须先更新本契约版本。
+
+## 5. 限速与超时运行时语义
+
+- `rate_limit.requests_per_minute` 使用每工具独立的令牌桶补充速率（每分钟允许的请求数）；`burst` 是初始及最大令牌数。
+- 执行前消耗一个令牌；无令牌时不调用适配器，返回 `ToolResult.status=REJECTED`，错误为 `rate limit exceeded`，审计状态为 `RATE_LIMITED`。
+- `timeout_seconds` 是单次 `run` 的硬等待上限。超时返回 `ToolResult.status=TIMEOUT` 并记录审计；取消底层任务为尽力而为，适配器应自行支持取消或子进程超时。
+- 适配器抛出异常时返回 `FAILED`，异常文本只用于内部审计和调试，不得把凭据或未脱敏响应写入 `evidence`。
