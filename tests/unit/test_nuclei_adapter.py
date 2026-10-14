@@ -139,6 +139,15 @@ class NucleiCommandTest(unittest.TestCase):
     def test_disables_out_of_band_interaction(self):
         self.assertIn("-no-interactsh", self.command)
 
+    def test_silent_is_enabled_by_default(self):
+        self.assertIn("-silent", self.command)
+
+    def test_silent_can_be_disabled_for_diagnostics(self):
+        # 排查扫描异常时需要看到 nuclei 的 INFO/WRN（走 stderr，不影响 stdout 的 JSONL）
+        command = self.adapter.build_command(TARGET, {"silent": False})
+        self.assertNotIn("-silent", command)
+        self.assertIn("-jsonl", command)
+
     def test_excludes_intrusive_template_tags(self):
         self.assertIn("-etags", self.command)
         excluded = self.command[self.command.index("-etags") + 1]
@@ -146,9 +155,35 @@ class NucleiCommandTest(unittest.TestCase):
             self.assertIn(tag, excluded)
 
     def test_applies_manifest_rate_limit(self):
+        # manifest 声明的是「每分钟」，而 nuclei 的 -rate-limit 单位是「每秒」，
+        # 直接透传会放大 60 倍（实测 DVWA 被打到无响应）。必须换算。
         self.assertIn("-rate-limit", self.command)
-        value = self.command[self.command.index("-rate-limit") + 1]
-        self.assertEqual(int(value), self.adapter.manifest.rate_limit.requests_per_minute)
+        per_second = int(self.command[self.command.index("-rate-limit") + 1])
+        duration = self.command[self.command.index("-rate-limit-duration") + 1]
+        effective_per_minute = per_second * 60 / float(duration.rstrip("s"))
+        self.assertAlmostEqual(
+            effective_per_minute,
+            self.adapter.manifest.rate_limit.requests_per_minute,
+            places=6,
+        )
+
+    def test_rate_limit_never_exceeds_declared_per_minute(self):
+        declared = self.adapter.manifest.rate_limit.requests_per_minute
+        command = self.adapter.build_command(TARGET, {})
+        per_second = int(command[command.index("-rate-limit") + 1])
+        duration = float(command[command.index("-rate-limit-duration") + 1].rstrip("s"))
+        self.assertLessEqual(per_second * 60 / duration, declared)
+
+    def test_rate_limit_converts_explicit_per_minute_param(self):
+        # 断言需求本身（实际速率 == 声明速率），而非某个具体参数编码
+        for declared in (6, 30, 60, 120, 300):
+            with self.subTest(requests_per_minute=declared):
+                command = self.adapter.build_command(TARGET, {"rate_limit": declared})
+                per_second = int(command[command.index("-rate-limit") + 1])
+                duration = float(
+                    command[command.index("-rate-limit-duration") + 1].rstrip("s")
+                )
+                self.assertAlmostEqual(per_second * 60 / duration, declared, places=6)
 
     def test_honours_explicit_template_list(self):
         command = self.adapter.build_command(TARGET, {"templates": ["http/cves/2021/x.yaml"]})

@@ -1,3 +1,4 @@
+
 """Nuclei 适配器（T15）。
 
 依据：
@@ -26,6 +27,7 @@ from urllib.parse import urlparse
 
 from src.tools.container import ContainerSpec, container_reachable_url, docker_run_command
 from src.tools.contract import RateLimit, ToolManifest, ToolResult
+from src.tools.execution import make_subprocess_executor
 
 TOOL_ID = "nuclei"
 DEFAULT_BINARY = "nuclei"
@@ -58,18 +60,21 @@ _SEVERITY_MAP = {
 }
 
 
-def _subprocess_executor(command: list[str], timeout_seconds: int) -> str:
-    """默认执行器：调用本机 nuclei 二进制，返回 stdout。"""
-    completed = subprocess.run(
-        command,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        timeout=timeout_seconds,
-        check=False,
-    )
-    return completed.stdout
+def rate_limit_args(requests_per_minute: int) -> list[str]:
+    """把「每分钟请求数」换算为 nuclei 的限速参数。
+
+    nuclei 的 `-rate-limit` 单位是**每秒**（默认 150），而 `ToolManifest.rate_limit`
+    声明的是**每分钟**。直接透传会把实际速率放大 60 倍（实测把 DVWA 靶场打到无响应），
+    因此统一用 `-rate-limit 1 -rate-limit-duration <秒>s` 表达每分钟速率，保证精确且不超限。
+    """
+    if requests_per_minute <= 0:
+        raise ValueError("requests_per_minute 必须为正数")
+    return [
+        "-rate-limit",
+        "1",
+        "-rate-limit-duration",
+        f"{60 / requests_per_minute:g}s",
+    ]
 
 
 class NucleiAdapter:
@@ -81,9 +86,10 @@ class NucleiAdapter:
         executor: Callable[[list[str], int], str] | None = None,
         binary: str = DEFAULT_BINARY,
         container: ContainerSpec | None = None,
+        stderr_log=None,
     ) -> None:
         self._binary = binary
-        self._executor = executor or _subprocess_executor
+        self._executor = executor or make_subprocess_executor(stderr_log=stderr_log)
         self._container = container
         self.manifest = ToolManifest(
             id=TOOL_ID,
@@ -133,16 +139,17 @@ class NucleiAdapter:
         effective_target = (
             container_reachable_url(target) if self._container else target
         )
-        args = [
-            "-u",
-            effective_target,
-            "-jsonl",
-            "-silent",
+        args = ["-u", effective_target, "-jsonl"]
+        if params.get("silent", True):
+            # 诊断时可传 silent=False：nuclei 的 INFO/WRN 走 stderr，stdout 仍是纯 JSONL
+            args.append("-silent")
+        args += [
             "-no-interactsh",
             "-etags",
             _EXCLUDED_TAGS,
-            "-rate-limit",
-            str(params.get("rate_limit", self.manifest.rate_limit.requests_per_minute)),
+            *rate_limit_args(
+                int(params.get("rate_limit", self.manifest.rate_limit.requests_per_minute))
+            ),
             "-timeout",
             str(params.get("per_request_timeout", 10)),
         ]
