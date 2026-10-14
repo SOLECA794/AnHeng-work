@@ -1,0 +1,16 @@
+{
+  "Apache": {
+    "versions": [
+      "2.4.25"
+    ],
+    "categories": [
+      "Web servers"
+    ]
+  },
+  "Debian": {
+    "versions": [],
+    "categories": [
+      "Operating systems"
+    ]
+  }
+}

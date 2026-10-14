@@ -63,7 +63,17 @@ class DockerRunCommandTest(unittest.TestCase):
     def test_builds_minimal_command(self):
         command = docker_run_command(ContainerSpec(image="projectdiscovery/nuclei"), ["-u", "x"])
         self.assertEqual(
-            command, ["docker", "run", "--rm", "projectdiscovery/nuclei", "-u", "x"]
+            command,
+            [
+                "docker",
+                "run",
+                "--rm",
+                "--add-host",
+                f"{DEFAULT_HOST_ALIAS}:host-gateway",
+                "projectdiscovery/nuclei",
+                "-u",
+                "x",
+            ],
         )
 
     def test_includes_mounts_before_image(self):
@@ -99,6 +109,20 @@ class DockerRunCommandTest(unittest.TestCase):
 
     def test_omits_name_when_not_given(self):
         self.assertNotIn("--name", docker_run_command(ContainerSpec(image="x"), []))
+
+    def test_maps_host_gateway_so_the_rewritten_alias_resolves(self):
+        """真机实测：Docker Desktop 的内部 DNS 会**间歇性**解析不了 `host.docker.internal`
+        （同一命令时而成功、时而 "no address found for host"），届时整个扫描会被跳过、0 命中。
+        显式 `--add-host` 映射宿主网关，让改写后的地址始终可解析。"""
+        command = docker_run_command(ContainerSpec(image="x"), [])
+        self.assertIn("--add-host", command)
+        mapping = command[command.index("--add-host") + 1]
+        self.assertEqual(mapping, f"{DEFAULT_HOST_ALIAS}:host-gateway")
+        self.assertLess(command.index("--add-host"), command.index("x"))
+
+    def test_can_disable_host_gateway_mapping(self):
+        command = docker_run_command(ContainerSpec(image="x", host_alias=None), [])
+        self.assertNotIn("--add-host", command)
 
     def test_appends_tool_args_after_image(self):
         spec = ContainerSpec(image="projectdiscovery/nuclei")

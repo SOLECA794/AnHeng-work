@@ -34,6 +34,10 @@ class ContainerSpec:
     options: tuple[str, ...] = ()  # 其他 docker run 选项，如 ("--user", "1000:1000")
     remove: bool = True            # 是否加 --rm
     name: str | None = None        # --name；超时后据此终止容器（否则「已放弃」的扫描仍在打目标）
+    # 把 host.docker.internal 显式映射到宿主网关。Docker Desktop 的内部 DNS 会**间歇性**
+    # 解析失败（真机实测：同一命令时而成功、时而 "no address found for host"，导致扫描被
+    # 整体跳过、0 命中）。显式映射让改写后的地址始终可解析。设为 None 可关闭。
+    host_alias: str | None = DEFAULT_HOST_ALIAS
 
 
 def container_reachable_url(url: str, alias: str = DEFAULT_HOST_ALIAS) -> str:
@@ -52,6 +56,8 @@ def docker_run_command(spec: ContainerSpec, args: Sequence[str]) -> list[str]:
         command.append("--rm")
     if spec.name:
         command += ["--name", spec.name]
+    if spec.host_alias:
+        command += ["--add-host", f"{spec.host_alias}:host-gateway"]
     for mount in spec.mounts:
         command += ["-v", mount]
     command += list(spec.options)
