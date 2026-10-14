@@ -55,18 +55,47 @@ ALERTS_PAYLOAD = {
 }
 
 
-class _FakeZap:
-    """记录调用并按端点返回的假 ZAP REST 客户端。"""
+class _FakeClock:
+    """可推进的假时钟，配合 sleeper 让「等待预算」类断言确定化。"""
 
-    def __init__(self, alerts=None, error=None):
+    def __init__(self):
+        self.now = 0.0
+
+    def __call__(self) -> float:
+        return self.now
+
+    def sleep(self, seconds: float) -> None:
+        self.now += seconds
+
+
+class _FakeZap:
+    """记录调用并按端点返回的假 ZAP REST 客户端。
+
+    :param pending_sequence: `/recordsToScan/` 的依次返回值；耗尽后重复最后一个。
+                             为 None 时表示队列已空（返回 0）。
+    """
+
+    def __init__(self, alerts=None, error=None, pending_sequence=None):
         self.calls: list[tuple[str, dict]] = []
         self._alerts = ALERTS_PAYLOAD if alerts is None else alerts
         self._error = error
+        self._pending = list(pending_sequence) if pending_sequence is not None else [0]
+
+    def pending_calls(self) -> int:
+        return sum(1 for path, _ in self.calls if path.endswith("/recordsToScan/"))
+
+    def alerts_call_index(self) -> int:
+        return next(
+            i for i, (path, _) in enumerate(self.calls) if path.endswith("/alerts/")
+        )
 
     def __call__(self, path: str, params: dict | None = None) -> dict:
         self.calls.append((path, dict(params or {})))
         if self._error is not None:
             raise self._error
+        if path.endswith("/recordsToScan/"):
+            value = self._pending.pop(0) if len(self._pending) > 1 else self._pending[0]
+            return {"recordsToScan": str(value)}
         if path.endswith("/alerts/"):
             return self._alerts
         return {"Result": "OK"}
@@ -121,7 +150,7 @@ class ZapRunTest(unittest.TestCase):
     def test_fetches_alerts_for_the_target(self):
         fake = _FakeZap()
         ZapAdapter(http=fake).run(TARGET, {})
-        path, params = fake.calls[1]
+        path, params = fake.calls[fake.alerts_call_index()]
         self.assertTrue(path.endswith("/alerts/"))
         self.assertEqual(params["baseurl"], TARGET)
 
@@ -182,6 +211,50 @@ class ZapRunTest(unittest.TestCase):
         result = ZapAdapter(http=_FakeZap(alerts=payload)).run(TARGET, {})
         self.assertEqual(result.status, "SUCCESS")
         self.assertEqual(len(result.findings), 1)
+
+
+class ZapPassiveScanWaitTest(unittest.TestCase):
+    """真机实测：ZAP 被动扫描是**异步**的——`accessUrl` 返回时记录还在队列里，
+    立刻读告警会得到 0 条（实测读到 recordsToScan=2、告警 0 条；队列排空后出现 6 条）。
+    适配器必须等队列排空再取告警。"""
+
+    def test_waits_until_passive_queue_drains_before_reading_alerts(self):
+        fake = _FakeZap(pending_sequence=[2, 1, 0])
+        result = ZapAdapter(http=fake, sleeper=lambda _: None).run(TARGET, {})
+        self.assertEqual(result.status, "SUCCESS")
+        self.assertGreaterEqual(fake.pending_calls(), 3, "应反复查询队列直到排空")
+        self.assertGreater(
+            fake.alerts_call_index(),
+            max(i for i, (p, _) in enumerate(fake.calls) if p.endswith("/recordsToScan/")),
+            "取告警必须发生在队列排空之后",
+        )
+
+    def test_does_not_poll_when_queue_already_empty(self):
+        fake = _FakeZap(pending_sequence=[0])
+        ZapAdapter(http=fake, sleeper=lambda _: None).run(TARGET, {})
+        self.assertEqual(fake.pending_calls(), 1, "队列已空就不该反复轮询")
+
+    def test_gives_up_after_budget_when_queue_never_drains(self):
+        # 队列长期不排空时不得无限阻塞：超出预算即返回已产出的告警。
+        # 用假时钟使断言确定化——真实时钟下一个空转的 sleeper 会瞬间轮询上万次。
+        clock = _FakeClock()
+        fake = _FakeZap(pending_sequence=[9])
+        result = ZapAdapter(
+            http=fake,
+            sleeper=clock.sleep,
+            clock=clock,
+            passive_wait_seconds=3.0,
+            passive_poll_interval=1.0,
+        ).run(TARGET, {})
+        self.assertEqual(result.status, "SUCCESS")
+        self.assertEqual(len(result.findings), len(ALERTS_PAYLOAD["alerts"]))
+        self.assertEqual(fake.pending_calls(), 4, "3 次等待后到达预算上限即停止")
+
+    def test_sleeps_between_polls(self):
+        slept: list[float] = []
+        fake = _FakeZap(pending_sequence=[2, 0])
+        ZapAdapter(http=fake, sleeper=slept.append).run(TARGET, {})
+        self.assertTrue(slept, "轮询之间应有等待，避免打爆 ZAP API")
 
 
 class ZapRegistryTest(unittest.TestCase):

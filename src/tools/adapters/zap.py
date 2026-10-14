@@ -18,6 +18,7 @@ category 口径按 SDD-02（`VULN` / `WEAK_CONFIG`），与 SDD-04 §1 词表的
 from __future__ import annotations
 
 import re
+import time
 from typing import Any, Callable
 from urllib.parse import urlparse
 
@@ -31,6 +32,7 @@ DEFAULT_BASE_URL = "http://127.0.0.1:8090"
 
 ACCESS_URL_PATH = "/JSON/core/action/accessUrl/"
 ALERTS_PATH = "/JSON/core/view/alerts/"
+PSCAN_QUEUE_PATH = "/JSON/pscan/view/recordsToScan/"
 
 _ALLOWED_SCHEMES = frozenset({"http", "https"})
 # 主动扫描/攻击类参数：出现即拒绝（工具清单 §2.1 仅限被动模式）
@@ -73,12 +75,21 @@ class ZapAdapter:
         http: Callable[[str, dict], dict] | None = None,
         api_key: str = "",
         target_alias: str | None = None,
+        sleeper: Callable[[float], None] | None = None,
+        clock: Callable[[], float] | None = None,
+        passive_wait_seconds: float = 30.0,
+        passive_poll_interval: float = 0.5,
     ) -> None:
         self._base_url = base_url.rstrip("/")
         self._api_key = api_key
         self._http = http or self._default_http
         # ZAP 会自己去取目标页面：ZAP 在容器内时，需把宿主机回环地址改写为容器可达别名
         self._target_alias = target_alias
+        # 被动扫描是异步的，需等队列排空后再取告警（见 _wait_for_passive_scan）
+        self._sleep = sleeper or time.sleep
+        self._clock = clock or time.monotonic
+        self._passive_wait_seconds = passive_wait_seconds
+        self._passive_poll_interval = passive_poll_interval
         self.manifest = ToolManifest(
             id=TOOL_ID,
             name="OWASP ZAP（被动扫描）",
@@ -126,6 +137,30 @@ class ZapAdapter:
         if _FORBIDDEN_PARAMS & {str(key).lower() for key in params}:
             return False
         return True
+
+    # ---- 被动扫描同步 ----
+
+    def _pending_passive_records(self) -> int:
+        payload = self._http(PSCAN_QUEUE_PATH, self._with_key({}))
+        try:
+            return int((payload or {}).get("recordsToScan", 0))
+        except (TypeError, ValueError):
+            return 0
+
+    def _wait_for_passive_scan(self) -> None:
+        """等待 ZAP 被动扫描队列排空后再取告警。
+
+        ZAP 的被动扫描是**异步**的：`accessUrl` 返回时记录往往仍在队列中，
+        此时立刻读告警会得到空结果。真机实测：`recordsToScan=2` 时读到 **0 条**告警，
+        队列排空后同一目标出现 **6 条**——不等待会漏报全部被动扫描结果。
+
+        超出预算则不阻塞整体，返回当前已产出的告警（宁可少报，不可长时间挂住流水线）。
+        """
+        deadline = self._clock() + self._passive_wait_seconds
+        while self._pending_passive_records() > 0:
+            if self._clock() >= deadline:
+                return
+            self._sleep(self._passive_poll_interval)
 
     # ---- 输出归一化（SDD-01 §5.5、SDD-02 §4.6） ----
 
@@ -192,8 +227,9 @@ class ZapAdapter:
             else target
         )
         try:
-            # 让 ZAP 自身访问目标一次（被动观察），再读取该目标的告警
+            # 让 ZAP 自身访问目标一次（被动观察），等被动队列排空后再读取该目标的告警
             self._http(ACCESS_URL_PATH, self._with_key({"url": zap_target}))
+            self._wait_for_passive_scan()
             payload = self._http(ALERTS_PATH, self._with_key({"baseurl": zap_target}))
         except TimeoutError:
             return ToolResult(
