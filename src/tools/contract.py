@@ -55,8 +55,8 @@ class _TokenBucket:
     lock: Lock = field(default_factory=Lock)
 
     def take(self) -> bool:
-        now = monotonic()
         with self.lock:
+            now = monotonic()
             elapsed = max(0.0, now - self.updated_at)
             self.tokens = min(self.capacity, self.tokens + elapsed * self.refill_per_second)
             self.updated_at = now
@@ -68,11 +68,12 @@ class _TokenBucket:
 
 @dataclass
 class ToolRegistry:
-    """In-memory registry with per-tool token-bucket limiting and hard timeouts."""
+    """In-memory registry with per-tool token-bucket limiting and caller wait timeouts."""
 
     _entries: dict[str, ToolAdapter] = field(default_factory=dict)
     _audit: list[dict[str, Any]] = field(default_factory=list)
     _buckets: dict[str, _TokenBucket] = field(default_factory=dict)
+    _running: dict[str, Lock] = field(default_factory=dict)
 
     def register(self, adapter: ToolAdapter) -> None:
         manifest = adapter.manifest
@@ -81,6 +82,7 @@ class ToolRegistry:
         if manifest.id in self._entries:
             raise ValueError(f"tool already registered: {manifest.id}")
         self._entries[manifest.id] = adapter
+        self._running[manifest.id] = Lock()
         self._buckets[manifest.id] = _TokenBucket(
             capacity=manifest.rate_limit.burst,
             refill_per_second=manifest.rate_limit.requests_per_minute / 60.0,
@@ -97,28 +99,49 @@ class ToolRegistry:
         return [adapter.manifest for adapter in self._entries.values()]
 
     def execute(self, tool_id: str, target: str, params: dict[str, Any] | None = None) -> ToolResult:
-        adapter = self.get(tool_id)
+        try:
+            adapter = self.get(tool_id)
+        except KeyError:
+            return self._reject(tool_id, target, "tool not registered")
         params = params or {}
         manifest = adapter.manifest
         if not manifest.enabled:
             return self._reject(tool_id, target, "tool disabled")
-        if not adapter.non_destructive_check(target, params):
+        if not manifest.read_only:
+            return self._reject(tool_id, target, "tool is not read-only")
+        try:
+            safe = adapter.non_destructive_check(target, params)
+        except Exception:
             return self._reject(tool_id, target, "non-destructive check failed")
+        if not safe:
+            return self._reject(tool_id, target, "non-destructive check failed")
+        gate = self._running[tool_id]
+        if not gate.acquire(blocking=False):
+            return self._reject(tool_id, target, "tool still running")
         if not self._buckets[tool_id].take():
+            gate.release()
             return self._reject(tool_id, target, "rate limit exceeded", audit_status="RATE_LIMITED")
 
-        # Run the adapter in a worker so a hung tool cannot block the API caller.
+        # Keep the gate until actual completion, including after caller timeout.
         executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"tool-{tool_id}")
-        future = executor.submit(adapter.run, target, params)
+        try:
+            future = executor.submit(adapter.run, target, params)
+        except Exception:
+            gate.release()
+            executor.shutdown(wait=False)
+            return self._reject(tool_id, target, "worker unavailable")
+        future.add_done_callback(lambda _: gate.release())
         try:
             result = future.result(timeout=manifest.timeout_seconds)
+            if not isinstance(result, ToolResult) or result.tool_id != tool_id:
+                raise ValueError("invalid adapter result")
         except FutureTimeoutError:
             future.cancel()
             self._audit.append({"tool_id": tool_id, "target": target, "status": "TIMEOUT", "timeout_seconds": manifest.timeout_seconds})
             return ToolResult(tool_id=tool_id, status="TIMEOUT", error=f"execution exceeded {manifest.timeout_seconds}s")
         except Exception as exc:
-            self._audit.append({"tool_id": tool_id, "target": target, "status": "FAILED", "error": str(exc)})
-            return ToolResult(tool_id=tool_id, status="FAILED", error=str(exc))
+            self._audit.append({"tool_id": tool_id, "target": target, "status": "FAILED", "error": type(exc).__name__})
+            return ToolResult(tool_id=tool_id, status="FAILED", error="tool execution failed")
         finally:
             # Do not wait for a timed-out worker; cancellation is best effort.
             executor.shutdown(wait=False, cancel_futures=True)

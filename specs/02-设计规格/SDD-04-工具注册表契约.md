@@ -42,5 +42,15 @@ C 在 `src/tools/adapters/` 实现适配器，导出 `manifest`、`non_destructi
 
 - `rate_limit.requests_per_minute` 使用每工具独立的令牌桶补充速率（每分钟允许的请求数）；`burst` 是初始及最大令牌数。
 - 执行前消耗一个令牌；无令牌时不调用适配器，返回 `ToolResult.status=REJECTED`，错误为 `rate limit exceeded`，审计状态为 `RATE_LIMITED`。
-- `timeout_seconds` 是单次 `run` 的硬等待上限。超时返回 `ToolResult.status=TIMEOUT` 并记录审计；取消底层任务为尽力而为，适配器应自行支持取消或子进程超时。
+- `timeout_seconds` 是单次 `run` 的调用方等待上限。超时返回 `ToolResult.status=TIMEOUT` 并记录审计；取消底层任务为尽力而为，适配器应自行支持取消或子进程超时。
 - 适配器抛出异常时返回 `FAILED`，异常文本只用于内部审计和调试，不得把凭据或未脱敏响应写入 `evidence`。
+
+
+## 6. 2026-10-14 运行时加固
+
+- 每个注册表实例内，同一工具最多有一次实际执行；超时后后台执行未结束时，新调用返回 REJECTED（tool still running）。这避免重复创建挂起线程。
+- Python 线程无法强制终止。TIMEOUT 只表示调用方等待超时；底层 HTTP、子进程或容器必须自行实现超时和资源清理。当前实现不是进程隔离，挂死线程也可能影响进程退出。
+- 限速为每注册表实例的调用次数限速，不是扫描工具内部 HTTP 请求速率；多进程部署需要共享限流存储。
+- 执行时重新检查 read_only；未注册、校验异常均拒绝并记录。工具异常不返回原始异常文本，避免携带凭证；返回对象必须为同一 tool_id 的 ToolResult。
+- 注册在启动阶段完成；运行期间不支持并发注册或动态修改限速配置，需要重建注册表。
+- 验收命令：python -m unittest discover -s tests/unit -p test_registry_controls.py -v
