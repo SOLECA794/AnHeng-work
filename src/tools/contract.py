@@ -6,7 +6,10 @@ another adapter's implementation details.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Protocol
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+from threading import Lock
+from time import monotonic
+from typing import Any, Protocol
 from pydantic import BaseModel, Field
 
 
@@ -44,11 +47,32 @@ class ToolAdapter(Protocol):
 
 
 @dataclass
+class _TokenBucket:
+    capacity: int
+    refill_per_second: float
+    tokens: float
+    updated_at: float = field(default_factory=monotonic)
+    lock: Lock = field(default_factory=Lock)
+
+    def take(self) -> bool:
+        now = monotonic()
+        with self.lock:
+            elapsed = max(0.0, now - self.updated_at)
+            self.tokens = min(self.capacity, self.tokens + elapsed * self.refill_per_second)
+            self.updated_at = now
+            if self.tokens < 1.0:
+                return False
+            self.tokens -= 1.0
+            return True
+
+
+@dataclass
 class ToolRegistry:
-    """In-memory reference registry; persistence can be added behind this API."""
+    """In-memory registry with per-tool token-bucket limiting and hard timeouts."""
 
     _entries: dict[str, ToolAdapter] = field(default_factory=dict)
     _audit: list[dict[str, Any]] = field(default_factory=list)
+    _buckets: dict[str, _TokenBucket] = field(default_factory=dict)
 
     def register(self, adapter: ToolAdapter) -> None:
         manifest = adapter.manifest
@@ -57,6 +81,11 @@ class ToolRegistry:
         if manifest.id in self._entries:
             raise ValueError(f"tool already registered: {manifest.id}")
         self._entries[manifest.id] = adapter
+        self._buckets[manifest.id] = _TokenBucket(
+            capacity=manifest.rate_limit.burst,
+            refill_per_second=manifest.rate_limit.requests_per_minute / 60.0,
+            tokens=float(manifest.rate_limit.burst),
+        )
 
     def get(self, tool_id: str) -> ToolAdapter:
         try:
@@ -75,12 +104,30 @@ class ToolRegistry:
             return self._reject(tool_id, target, "tool disabled")
         if not adapter.non_destructive_check(target, params):
             return self._reject(tool_id, target, "non-destructive check failed")
-        result = adapter.run(target, params)
+        if not self._buckets[tool_id].take():
+            return self._reject(tool_id, target, "rate limit exceeded", audit_status="RATE_LIMITED")
+
+        # Run the adapter in a worker so a hung tool cannot block the API caller.
+        executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"tool-{tool_id}")
+        future = executor.submit(adapter.run, target, params)
+        try:
+            result = future.result(timeout=manifest.timeout_seconds)
+        except FutureTimeoutError:
+            future.cancel()
+            self._audit.append({"tool_id": tool_id, "target": target, "status": "TIMEOUT", "timeout_seconds": manifest.timeout_seconds})
+            return ToolResult(tool_id=tool_id, status="TIMEOUT", error=f"execution exceeded {manifest.timeout_seconds}s")
+        except Exception as exc:
+            self._audit.append({"tool_id": tool_id, "target": target, "status": "FAILED", "error": str(exc)})
+            return ToolResult(tool_id=tool_id, status="FAILED", error=str(exc))
+        finally:
+            # Do not wait for a timed-out worker; cancellation is best effort.
+            executor.shutdown(wait=False, cancel_futures=True)
+
         self._audit.append({"tool_id": tool_id, "target": target, "status": result.status})
         return result
 
-    def _reject(self, tool_id: str, target: str, reason: str) -> ToolResult:
-        self._audit.append({"tool_id": tool_id, "target": target, "status": "REJECTED", "reason": reason})
+    def _reject(self, tool_id: str, target: str, reason: str, audit_status: str = "REJECTED") -> ToolResult:
+        self._audit.append({"tool_id": tool_id, "target": target, "status": audit_status, "reason": reason})
         return ToolResult(tool_id=tool_id, status="REJECTED", error=reason)
 
     def audit(self) -> list[dict[str, Any]]:
