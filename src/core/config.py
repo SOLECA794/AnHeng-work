@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     hengan_app_secret: str = ""
     hengan_agent_id: str = ""
     jwt_secret_key: str = "change-me-in-development"
+    dev_admin_password: str = "change-me-admin-password"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", case_sensitive=False, extra="ignore")
 
