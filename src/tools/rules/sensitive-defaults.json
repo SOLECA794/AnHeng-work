@@ -1,0 +1,8 @@
+[
+  {"id": "fixture-token", "name": "合成令牌标记", "rule_type": "KEYWORD", "pattern": "DEMO_ACCESS_TOKEN", "severity": "HIGH"},
+  {"id": "phone", "name": "手机号", "rule_type": "REGEX", "pattern": "(?<!\\d)1[3-9]\\d{9}(?!\\d)", "severity": "MEDIUM"},
+  {"id": "email", "name": "邮箱", "rule_type": "REGEX", "pattern": "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", "severity": "LOW"},
+  {"id": "env-file", "name": "环境配置文件", "rule_type": "FILETYPE", "pattern": ".env", "severity": "HIGH"},
+  {"id": "backup-file", "name": "备份文件", "rule_type": "FILETYPE", "pattern": ".bak", "severity": "MEDIUM"},
+  {"id": "token-sample", "name": "合成令牌样例", "rule_type": "SAMPLE", "pattern": "fixture-only-token", "severity": "HIGH"}
+]

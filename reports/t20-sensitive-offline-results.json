@@ -1,0 +1,378 @@
+{
+  "task": "T20",
+  "mode": "offline; fixed local fixtures; no network access",
+  "dataset_version": "1.0.0",
+  "dataset_path": "tests/dataset/v1.0.0.json",
+  "dataset_sha256": "adef16c9bd731631a4fde31a421624606a9a514cc1fc53e4c503ed4b196be23a",
+  "rules_path": "src/tools/rules/sensitive-defaults.json",
+  "rules_sha256": "ceab8379ad5ea5fca6700b14d6385889aad3e959ac3c25829ae357883c8d7d63",
+  "regex_version": "2024.11.6",
+  "configuration": {
+    "regex_timeout_seconds": 0.05,
+    "max_content_chars": 1000000,
+    "max_findings": 1000
+  },
+  "metric_unit": "labeled URL case; multiple findings count once; errors excluded from metrics",
+  "cases": [
+    {
+      "case_id": "D-01",
+      "source_file": "tests/fixtures/sites/d/index.html",
+      "source_sha256": "0e59116ccaab42173ffd1a36c3386cf5b138578e92f74ced47dca1d7a8277e01",
+      "labeled_url": "http://127.0.0.1:18084/",
+      "expected_positive": true,
+      "detected": true,
+      "passed": true,
+      "rule_types": [
+        "KEYWORD",
+        "REGEX",
+        "SAMPLE"
+      ],
+      "findings": [
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "HIGH",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/",
+          "scope_id": "D",
+          "rule_id": "fixture-token",
+          "rule_type": "KEYWORD",
+          "location": {
+            "source": "body",
+            "start": 178,
+            "end": 195
+          },
+          "evidence": "[REDACTED] (length=17)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "fixture-token",
+            "rule_type": "KEYWORD",
+            "location": {
+              "source": "body",
+              "start": 178,
+              "end": 195
+            },
+            "sample": "[REDACTED]",
+            "match_length": 17,
+            "target_sha256": "629d2afbf1992dee1771b36ec35d417f9b22889bbb724472b2336508f2643c80"
+          }
+        },
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "MEDIUM",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/",
+          "scope_id": "D",
+          "rule_id": "phone",
+          "rule_type": "REGEX",
+          "location": {
+            "source": "body",
+            "start": 143,
+            "end": 154
+          },
+          "evidence": "[REDACTED] (length=11)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "phone",
+            "rule_type": "REGEX",
+            "location": {
+              "source": "body",
+              "start": 143,
+              "end": 154
+            },
+            "sample": "[REDACTED]",
+            "match_length": 11,
+            "target_sha256": "629d2afbf1992dee1771b36ec35d417f9b22889bbb724472b2336508f2643c80"
+          }
+        },
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "LOW",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/",
+          "scope_id": "D",
+          "rule_id": "email",
+          "rule_type": "REGEX",
+          "location": {
+            "source": "body",
+            "start": 113,
+            "end": 136
+          },
+          "evidence": "[REDACTED] (length=23)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "email",
+            "rule_type": "REGEX",
+            "location": {
+              "source": "body",
+              "start": 113,
+              "end": 136
+            },
+            "sample": "[REDACTED]",
+            "match_length": 23,
+            "target_sha256": "629d2afbf1992dee1771b36ec35d417f9b22889bbb724472b2336508f2643c80"
+          }
+        },
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "HIGH",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/",
+          "scope_id": "D",
+          "rule_id": "token-sample",
+          "rule_type": "SAMPLE",
+          "location": {
+            "source": "body",
+            "start": 196,
+            "end": 214
+          },
+          "evidence": "[REDACTED] (length=18)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "token-sample",
+            "rule_type": "SAMPLE",
+            "location": {
+              "source": "body",
+              "start": 196,
+              "end": 214
+            },
+            "sample": "[REDACTED]",
+            "match_length": 18,
+            "target_sha256": "629d2afbf1992dee1771b36ec35d417f9b22889bbb724472b2336508f2643c80"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "D-02",
+      "source_file": "tests/fixtures/sites/d/synthetic-env.txt",
+      "source_sha256": "9dda081b603185decc291e1ffa34316d0c436712b07b8f8a92f9e265e016994a",
+      "labeled_url": "http://127.0.0.1:18084/.env",
+      "expected_positive": true,
+      "detected": true,
+      "passed": true,
+      "rule_types": [
+        "FILETYPE",
+        "KEYWORD",
+        "REGEX",
+        "SAMPLE"
+      ],
+      "findings": [
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "HIGH",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/.env",
+          "scope_id": "D",
+          "rule_id": "fixture-token",
+          "rule_type": "KEYWORD",
+          "location": {
+            "source": "body",
+            "start": 0,
+            "end": 17
+          },
+          "evidence": "[REDACTED] (length=17)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "fixture-token",
+            "rule_type": "KEYWORD",
+            "location": {
+              "source": "body",
+              "start": 0,
+              "end": 17
+            },
+            "sample": "[REDACTED]",
+            "match_length": 17,
+            "target_sha256": "b374964b0205e339356ae847442e5095cf17767501562e69b1d9fc6f66167e86"
+          }
+        },
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "LOW",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/.env",
+          "scope_id": "D",
+          "rule_id": "email",
+          "rule_type": "REGEX",
+          "location": {
+            "source": "body",
+            "start": 52,
+            "end": 75
+          },
+          "evidence": "[REDACTED] (length=23)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "email",
+            "rule_type": "REGEX",
+            "location": {
+              "source": "body",
+              "start": 52,
+              "end": 75
+            },
+            "sample": "[REDACTED]",
+            "match_length": 23,
+            "target_sha256": "b374964b0205e339356ae847442e5095cf17767501562e69b1d9fc6f66167e86"
+          }
+        },
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "HIGH",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/.env",
+          "scope_id": "D",
+          "rule_id": "env-file",
+          "rule_type": "FILETYPE",
+          "location": {
+            "source": "url_path",
+            "start": 1,
+            "end": 5
+          },
+          "evidence": "[REDACTED] (length=4)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "env-file",
+            "rule_type": "FILETYPE",
+            "location": {
+              "source": "url_path",
+              "start": 1,
+              "end": 5
+            },
+            "sample": "[REDACTED]",
+            "match_length": 4,
+            "target_sha256": "b374964b0205e339356ae847442e5095cf17767501562e69b1d9fc6f66167e86"
+          }
+        },
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "HIGH",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/.env",
+          "scope_id": "D",
+          "rule_id": "token-sample",
+          "rule_type": "SAMPLE",
+          "location": {
+            "source": "body",
+            "start": 18,
+            "end": 36
+          },
+          "evidence": "[REDACTED] (length=18)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "token-sample",
+            "rule_type": "SAMPLE",
+            "location": {
+              "source": "body",
+              "start": 18,
+              "end": 36
+            },
+            "sample": "[REDACTED]",
+            "match_length": 18,
+            "target_sha256": "b374964b0205e339356ae847442e5095cf17767501562e69b1d9fc6f66167e86"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "D-03",
+      "source_file": "tests/fixtures/sites/d/synthetic-backup.txt",
+      "source_sha256": "7470f186af291afee8a04308ac7c3bcd3e2410d7cf9258c0e3050230dc253d1d",
+      "labeled_url": "http://127.0.0.1:18084/backup.bak",
+      "expected_positive": true,
+      "detected": true,
+      "passed": true,
+      "rule_types": [
+        "FILETYPE"
+      ],
+      "findings": [
+        {
+          "finding_type": "SENSITIVE",
+          "severity": "MEDIUM",
+          "title": "敏感信息规则命中",
+          "url": "http://127.0.0.1:18084/backup.bak",
+          "scope_id": "D",
+          "rule_id": "backup-file",
+          "rule_type": "FILETYPE",
+          "location": {
+            "source": "url_path",
+            "start": 7,
+            "end": 11
+          },
+          "evidence": "[REDACTED] (length=4)",
+          "impact": "公开内容可能暴露单位定义的敏感信息。",
+          "suggestion": "移除公开敏感内容，限制资源访问；涉及凭据时及时轮换。",
+          "tool_name": "sensitive-scanner",
+          "status": "OPEN",
+          "raw_data": {
+            "rule_id": "backup-file",
+            "rule_type": "FILETYPE",
+            "location": {
+              "source": "url_path",
+              "start": 7,
+              "end": 11
+            },
+            "sample": "[REDACTED]",
+            "match_length": 4,
+            "target_sha256": "bf7a6643c0b3bcfc32538ed738664d9d0710fdab3745b55e338d4743530105f0"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "E-04",
+      "source_file": "tests/fixtures/sites/e/index.html",
+      "source_sha256": "e25040a80d84ba90ce6c7fa06ce380f1170c44649f2333b1adb2a34edfb1427f",
+      "labeled_url": "http://127.0.0.1:18085/",
+      "expected_positive": false,
+      "detected": false,
+      "passed": true,
+      "rule_types": [],
+      "findings": []
+    }
+  ],
+  "rule_types": [
+    "FILETYPE",
+    "KEYWORD",
+    "REGEX",
+    "SAMPLE"
+  ],
+  "four_rule_types_covered": true,
+  "confusion_matrix": {
+    "TP": 3,
+    "FN": 0,
+    "TN": 1,
+    "FP": 0
+  },
+  "metrics": {
+    "recall": 1.0,
+    "precision": 1.0,
+    "accuracy": 1.0,
+    "false_positive_rate": 0.0
+  },
+  "evaluated_cases": 4,
+  "error_cases": 0,
+  "passed": true,
+  "limitations": "Three synthetic positive URLs and one negative URL; this is fixture acceptance, not a production accuracy estimate or an HTTP crawling test."
+}

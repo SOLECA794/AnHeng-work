@@ -5,11 +5,13 @@ another adapter's implementation details.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import hashlib
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+from dataclasses import dataclass, field
 from threading import Lock
 from time import monotonic
 from typing import Any, Protocol
+
 from pydantic import BaseModel, Field
 
 
@@ -28,7 +30,7 @@ class ToolManifest(BaseModel):
     read_only: bool = True
     enabled: bool = True
     rate_limit: RateLimit = Field(default_factory=RateLimit)
-    timeout_seconds: int = Field(default=30, ge=1, le=300)
+    timeout_seconds: int = Field(default=30, ge=1, le=1800)
 
 
 class ToolResult(BaseModel):
@@ -150,8 +152,16 @@ class ToolRegistry:
         return result
 
     def _reject(self, tool_id: str, target: str, reason: str, audit_status: str = "REJECTED") -> ToolResult:
-        self._audit.append({"tool_id": tool_id, "target": target, "status": audit_status, "reason": reason})
+        self._audit.append({"tool_id": tool_id, "target": self._audit_target(target), "status": audit_status, "reason": reason})
         return ToolResult(tool_id=tool_id, status="REJECTED", error=reason)
+
+    @staticmethod
+    def _audit_target(target: str) -> str:
+        # URLs may embed credentials, query tokens or sensitive path segments.
+        # A fingerprint preserves correlation without copying them into logs.
+        if not isinstance(target, str):
+            return "[INVALID_TARGET]"
+        return "sha256:" + hashlib.sha256(target.encode("utf-8")).hexdigest()
 
     def audit(self) -> list[dict[str, Any]]:
         return list(self._audit)
