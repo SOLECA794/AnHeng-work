@@ -1,0 +1,39 @@
+import Assets from '../pages/Assets'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
+import type { ReactElement } from 'react'
+import Login from '../pages/Login'
+import AdminLayout from './AdminLayout'
+import Tasks from '../pages/Tasks'
+
+function Guard({ children }: { children: ReactElement }) {
+  return localStorage.getItem('token') ? children : <Navigate to="/login" />
+}
+
+function Placeholder({ name }: { name: string }) {
+  return <div>{name} - 待开发</div>
+}
+
+export const router = createBrowserRouter([
+  { path: '/login', element: <GuestGuard><Login /></GuestGuard> },
+  {
+    path: '/',
+    element: (
+      <Guard>
+        <AdminLayout />
+      </Guard>
+    ),
+    children: [
+      { index: true, element: <Navigate to="/assets" /> },
+      { path: 'assets', element: <Assets /> },
+      { path: 'tasks', element: <Tasks /> },
+      { path: 'findings', element: <Placeholder name="风险结果与可视化" /> },
+      { path: 'alerts', element: <Placeholder name="告警与复测管理" /> },
+      { path: 'reports', element: <Placeholder name="报告" /> },
+      { path: 'system', element: <Placeholder name="审计与系统配置" /> },
+    ],
+  },
+])
+
+function GuestGuard({ children }: { children: ReactElement }) {
+  return localStorage.getItem('token') ? <Navigate to="/" /> : children
+}
