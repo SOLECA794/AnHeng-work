@@ -38,3 +38,16 @@ python scripts/verify_t21.py --output reports/t21-normalization-dedup-results.js
 ```
 
 专项测试覆盖现有检测器字段/数据类适配、稳定身份、URL 等价、跨轮次与多工具归并、重试幂等、资产隔离、历史状态与来源追溯，以及非法历史数据拒绝。验收脚本使用固定合成记录和显式时间，输出脱敏 JSON 报告，不执行真实扫描或数据库读写。实现契约见 `specs/02-设计规格/SDD-05-结果归一化与去重契约.md`，复现与集成边界见 `docs/03-模块实现/T21-结果归一化与去重.md`。
+
+## T22 结果验证与状态流转
+
+在仓库根目录运行：
+
+```powershell
+python -m pip install -r requirements-test.txt
+python -m unittest discover -s tests/unit -p test_finding_verification.py -v
+python -m unittest discover -s tests/integration -p "test_finding_verification*.py" -v
+python scripts/verify_t22.py --output reports/t22-verification-results.json
+```
+
+SQL/API 测试使用 `tests/support/verification_db.py` 创建的独立内存 SQLite 夹具，仅在克隆的测试 DDL 中替换 PostgreSQL JSONB 与自增主键类型；生产 ORM、配置数据库及迁移不受影响。覆盖成功持久化与重新查询、审计失败回滚、状态/来源 CAS、角色与资产权限、同源规则复核和默认拒绝的 API 工厂。契约及接入边界见 `specs/02-设计规格/SDD-06-结果验证与状态流转契约.md`、`docs/03-模块实现/T22-结果验证与状态流转.md`。
