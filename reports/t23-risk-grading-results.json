@@ -1,0 +1,885 @@
+{
+  "task": "T23",
+  "fixture_version": "t23-offline-v1",
+  "fixed_time": "2026-10-15 09:00:00",
+  "mode": "offline pure grading and local detector fixtures; no network or production database",
+  "policy_version": "t23-v1.0.0",
+  "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+  "dataset_version": "1.0.0",
+  "dataset_sha256": "adef16c9bd731631a4fde31a421624606a9a514cc1fc53e4c503ed4b196be23a",
+  "checks": [
+    {
+      "name": "CVSS v3.1 severity boundaries",
+      "passed": true,
+      "evidence": [
+        {
+          "score": 0,
+          "expected": "INFO",
+          "actual": "INFO"
+        },
+        {
+          "score": 0.1,
+          "expected": "LOW",
+          "actual": "LOW"
+        },
+        {
+          "score": 3.9,
+          "expected": "LOW",
+          "actual": "LOW"
+        },
+        {
+          "score": 4,
+          "expected": "MEDIUM",
+          "actual": "MEDIUM"
+        },
+        {
+          "score": 6.9,
+          "expected": "MEDIUM",
+          "actual": "MEDIUM"
+        },
+        {
+          "score": 7,
+          "expected": "HIGH",
+          "actual": "HIGH"
+        },
+        {
+          "score": 8.9,
+          "expected": "HIGH",
+          "actual": "HIGH"
+        },
+        {
+          "score": 9,
+          "expected": "CRITICAL",
+          "actual": "CRITICAL"
+        },
+        {
+          "score": 10,
+          "expected": "CRITICAL",
+          "actual": "CRITICAL"
+        }
+      ]
+    },
+    {
+      "name": "missing CVSS explicitly falls back to detector severity",
+      "passed": true,
+      "evidence": {
+        "severity": "HIGH",
+        "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+        "impact": "漏洞规则命中可能影响相关组件的机密性、完整性或可用性，具体利用条件需复核。影响面：页面重要性未知，暴露范围未知。",
+        "suggestion": "核实漏洞编号、受影响版本与利用条件；升级到修复版本或实施厂商缓解措施，再复测。",
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "DETECTOR_SEVERITY",
+          "base_severity": "HIGH",
+          "severity": "HIGH",
+          "page_importance": "UNKNOWN",
+          "exposure": "UNKNOWN",
+          "cvss_score": null,
+          "rule_sha256": null,
+          "reason_codes": [
+            "CVSS_MISSING_FALLBACK",
+            "PAGE_UNKNOWN",
+            "EXPOSURE_UNKNOWN"
+          ]
+        }
+      }
+    },
+    {
+      "name": "CVSS zero remains information despite exposure",
+      "passed": true,
+      "evidence": {
+        "severity": "INFO",
+        "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+        "impact": "当前规则等级为信息提示，不代表已确认存在可利用风险；仍需结合证据复核。影响面：核心路径，互联网暴露。",
+        "suggestion": "核实漏洞编号、受影响版本与利用条件；升级到修复版本或实施厂商缓解措施，再复测。",
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "CVSS_3_1",
+          "base_severity": "INFO",
+          "severity": "INFO",
+          "page_importance": "CORE",
+          "exposure": "INTERNET",
+          "cvss_score": 0.0,
+          "rule_sha256": null,
+          "reason_codes": [
+            "CVSS_MAPPED",
+            "INFO_PRESERVED"
+          ]
+        }
+      }
+    },
+    {
+      "name": "provided CVSS takes priority over detector grade",
+      "passed": true,
+      "evidence": {
+        "severity": "MEDIUM",
+        "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+        "impact": "漏洞规则命中可能影响相关组件的机密性、完整性或可用性，具体利用条件需复核。影响面：页面重要性未知，暴露范围未知。",
+        "suggestion": "核实漏洞编号、受影响版本与利用条件；升级到修复版本或实施厂商缓解措施，再复测。",
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "CVSS_3_1",
+          "base_severity": "MEDIUM",
+          "severity": "MEDIUM",
+          "page_importance": "UNKNOWN",
+          "exposure": "UNKNOWN",
+          "cvss_score": 4.0,
+          "rule_sha256": null,
+          "reason_codes": [
+            "CVSS_MAPPED",
+            "PAGE_UNKNOWN",
+            "EXPOSURE_UNKNOWN"
+          ]
+        }
+      }
+    },
+    {
+      "name": "important page floors",
+      "passed": true,
+      "evidence": [
+        {
+          "severity": "HIGH",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：首页，暴露范围未知。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "HIGH",
+            "page_importance": "HOME",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "IMPORTANT_PAGE_FLOOR",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "HIGH",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：登录页，暴露范围未知。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "HIGH",
+            "page_importance": "LOGIN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "IMPORTANT_PAGE_FLOOR",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "HIGH",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：核心路径，暴露范围未知。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "HIGH",
+            "page_importance": "CORE",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "IMPORTANT_PAGE_FLOOR",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Internet exposure floor",
+      "passed": true,
+      "evidence": {
+        "severity": "HIGH",
+        "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+        "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+        "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "DETECTOR_SEVERITY",
+          "base_severity": "MEDIUM",
+          "severity": "HIGH",
+          "page_importance": "UNKNOWN",
+          "exposure": "INTERNET",
+          "cvss_score": null,
+          "rule_sha256": null,
+          "reason_codes": [
+            "DETECTOR_FALLBACK",
+            "EXPOSURE_FLOOR",
+            "PAGE_UNKNOWN"
+          ]
+        }
+      }
+    },
+    {
+      "name": "ordinary internal and restricted findings keep base severity",
+      "passed": true,
+      "evidence": [
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：普通页面，内网范围。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "NORMAL",
+            "exposure": "INTERNAL",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK"
+            ]
+          }
+        },
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：普通页面，受限访问范围。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "NORMAL",
+            "exposure": "RESTRICTED",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "impact factors take maximum without additive escalation",
+      "passed": true,
+      "evidence": {
+        "severity": "HIGH",
+        "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+        "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：登录页，互联网暴露。",
+        "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "DETECTOR_SEVERITY",
+          "base_severity": "MEDIUM",
+          "severity": "HIGH",
+          "page_importance": "LOGIN",
+          "exposure": "INTERNET",
+          "cvss_score": null,
+          "rule_sha256": null,
+          "reason_codes": [
+            "DETECTOR_FALLBACK",
+            "IMPORTANT_PAGE_FLOOR",
+            "EXPOSURE_FLOOR"
+          ]
+        }
+      }
+    },
+    {
+      "name": "existing critical severity never downgraded by floors",
+      "passed": true,
+      "evidence": {
+        "severity": "CRITICAL",
+        "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+        "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+        "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "DETECTOR_SEVERITY",
+          "base_severity": "CRITICAL",
+          "severity": "CRITICAL",
+          "page_importance": "UNKNOWN",
+          "exposure": "INTERNET",
+          "cvss_score": null,
+          "rule_sha256": null,
+          "reason_codes": [
+            "DETECTOR_FALLBACK",
+            "EXPOSURE_FLOOR",
+            "PAGE_UNKNOWN"
+          ]
+        }
+      }
+    },
+    {
+      "name": "unknown context is explicit",
+      "passed": true,
+      "evidence": {
+        "severity": "MEDIUM",
+        "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+        "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，暴露范围未知。",
+        "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "DETECTOR_SEVERITY",
+          "base_severity": "MEDIUM",
+          "severity": "MEDIUM",
+          "page_importance": "UNKNOWN",
+          "exposure": "UNKNOWN",
+          "cvss_score": null,
+          "rule_sha256": null,
+          "reason_codes": [
+            "DETECTOR_FALLBACK",
+            "PAGE_UNKNOWN",
+            "EXPOSURE_UNKNOWN"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rule override is configured and tool-isolated",
+      "passed": true,
+      "evidence": [
+        {
+          "severity": "CRITICAL",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "7307468ea8fd8f14a37dca555f34d8ef28c8d7bfa036a001f5b3d56ae27136a2",
+            "base_source": "RULE_OVERRIDE",
+            "base_severity": "CRITICAL",
+            "severity": "CRITICAL",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": "aec0664b7244ecd6b5b8b9deb7a6ea8748dc60172d85d641c5dbc7449ec0bdf8",
+            "reason_codes": [
+              "RULE_MATCHED",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "7307468ea8fd8f14a37dca555f34d8ef28c8d7bfa036a001f5b3d56ae27136a2",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": "aec0664b7244ecd6b5b8b9deb7a6ea8748dc60172d85d641c5dbc7449ec0bdf8",
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "asset context mismatch rejected",
+      "passed": true,
+      "evidence": {
+        "rejected": true
+      }
+    },
+    {
+      "name": "dedup then grade preserves state identity evidence and inputs",
+      "passed": true,
+      "evidence": {
+        "status": "CONFIRMED",
+        "dedup_key": "9b97d14867f2178617242827a8eeecf2",
+        "occurrence": 1,
+        "grading": {
+          "policy_version": "t23-v1.0.0",
+          "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+          "base_source": "DETECTOR_SEVERITY",
+          "base_severity": "MEDIUM",
+          "severity": "HIGH",
+          "page_importance": "CORE",
+          "exposure": "UNKNOWN",
+          "cvss_score": null,
+          "rule_sha256": null,
+          "reason_codes": [
+            "DETECTOR_FALLBACK",
+            "IMPORTANT_PAGE_FLOOR",
+            "EXPOSURE_UNKNOWN"
+          ]
+        }
+      }
+    },
+    {
+      "name": "all risk categories have redacted evidence and useful fallback text",
+      "passed": true,
+      "evidence": [
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+          "impact": "漏洞规则命中可能影响相关组件的机密性、完整性或可用性，具体利用条件需复核。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "核实漏洞编号、受影响版本与利用条件；升级到修复版本或实施厂商缓解措施，再复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "CVSS_MISSING_FALLBACK",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+          "impact": "弱配置可能扩大信息暴露或访问边界，需核实业务必要性。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "核实命中的配置项；关闭不必要功能、限制访问或补齐安全配置，再复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+          "impact": "可疑外链可能将访问者导向不可信内容，需核实链接来源及业务用途。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "复核外链与信誉命中依据；移除未经授权的链接，排查模板或内容发布入口，再复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+          "impact": "可疑脚本、框架或跳转可能影响访问者会话与页面行为，需复核是否为授权内容。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "定位并核实脚本、框架及跳转来源；移除未经授权的引用，排查注入入口，涉及凭据时轮换并复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=b1ad8ff3029724d49881c16487d5991f112aaa37c0431e7929e645cbec92b723)",
+          "impact": "页面与基线不一致可能影响内容可信度，需核实是否为授权发布。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "比对差异与发布记录；确认非授权变更后恢复可信内容，排查变更入口并重新复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        },
+        {
+          "severity": "MEDIUM",
+          "evidence": "[REDACTED] (sha256=43b23c5f0ad7be404c9a487dd15986f9f3bf6963bdb65cfa4dd1de50d73e396b)",
+          "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，暴露范围未知。",
+          "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "MEDIUM",
+            "severity": "MEDIUM",
+            "page_importance": "UNKNOWN",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "PAGE_UNKNOWN",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "F v1.0.0 sensitive positives and negative pass through T20 T21 T23",
+      "passed": true,
+      "evidence": [
+        {
+          "case_id": "D-01",
+          "expected_positive": true,
+          "finding_count": 4,
+          "passed": true,
+          "grades": [
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=f2be852250a2ce1bf42d793ae6b5c7acdbfea14424554e74f2252aa3e51611bc)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "HIGH",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "d07f963c2bb7a3cc74a910e51ca0075b194da412a93737881f105a55156a988f",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            },
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=d19d4fa20dbad4865accbebbf29c196b0534e07096a9b051ec109d77f8261baf)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "MEDIUM",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "45569da57f4b7bf472d7a864ef4781451cae6383fee9fb0ae40c59aa1ce475b7",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            },
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=130eb44a93b2a40913cfbde72deda31b6f79b7656cb28872192a2e02ef62e257)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "LOW",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "82244417f956ac7c599f191593f7e441a4fafa20a4158fd52e154f1dc4c8ed92",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            },
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=02ed9c54e75295fa7f659ca002163fd7aee452d4d1ee33988706a7cf5ea436e1)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "HIGH",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "1fd52519454a8dc19da50859bdb4d9c03a3362f3ef44314e7dba3c5e6591a8b1",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "case_id": "D-02",
+          "expected_positive": true,
+          "finding_count": 4,
+          "passed": true,
+          "grades": [
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=957d78cbe82f1897253fe4320c83bf670c623a95340475ffcb313202b18541a2)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "HIGH",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "d07f963c2bb7a3cc74a910e51ca0075b194da412a93737881f105a55156a988f",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            },
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=eaa3a18da8caf4665df1cb2e2368f588b438155234512b6362e31d6e1bb37e8f)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "LOW",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "82244417f956ac7c599f191593f7e441a4fafa20a4158fd52e154f1dc4c8ed92",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            },
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=e1c3776ae274e19130dc76d25e0bd4860899a24c9454b7c70cb83139a3ee5953)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "HIGH",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "f210684f1f71890f3601eeadabc7e631cd311b241399abc3c49bb068ed7daf5a",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            },
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=f0d100b52899c68deaa50767ae9c9f10950cc06459e29e4371e9819d4681816b)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "HIGH",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "1fd52519454a8dc19da50859bdb4d9c03a3362f3ef44314e7dba3c5e6591a8b1",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "case_id": "D-03",
+          "expected_positive": true,
+          "finding_count": 1,
+          "passed": true,
+          "grades": [
+            {
+              "severity": "HIGH",
+              "evidence": "[REDACTED] (sha256=99a4fbb405121e840f9451812468c4bd737a670e35910215894da1fd7d4b3260)",
+              "impact": "敏感信息规则命中可能暴露内部资料或凭据，需核实信息性质及可访问范围。影响面：页面重要性未知，互联网暴露。",
+              "suggestion": "定位并移除公开敏感内容、限制资源访问；涉及凭据时及时轮换，清理缓存与副本后复测。",
+              "grading": {
+                "policy_version": "t23-v1.0.0",
+                "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+                "base_source": "DETECTOR_SEVERITY",
+                "base_severity": "MEDIUM",
+                "severity": "HIGH",
+                "page_importance": "UNKNOWN",
+                "exposure": "INTERNET",
+                "cvss_score": null,
+                "rule_sha256": "c7761cf27c156a205f7169a86812933a3f4d42e6a22d1e294815a466b9b5afea",
+                "reason_codes": [
+                  "DETECTOR_FALLBACK",
+                  "EXPOSURE_FLOOR",
+                  "PAGE_UNKNOWN"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "case_id": "E-04",
+          "expected_positive": false,
+          "finding_count": 0,
+          "passed": true,
+          "grades": []
+        }
+      ]
+    },
+    {
+      "name": "T18 dataclass output integrates through T21 into T23",
+      "passed": true,
+      "evidence": [
+        {
+          "severity": "HIGH",
+          "evidence": "[REDACTED] (sha256=eea17fa3ebb5129294c328e71c38492bf5818edd89b78015a5c50ae0d302ef6f)",
+          "impact": "页面与基线不一致可能影响内容可信度，需核实是否为授权发布。影响面：首页，暴露范围未知。",
+          "suggestion": "比对差异与发布记录；确认非授权变更后恢复可信内容，排查变更入口并重新复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "DETECTOR_SEVERITY",
+            "base_severity": "HIGH",
+            "severity": "HIGH",
+            "page_importance": "HOME",
+            "exposure": "UNKNOWN",
+            "cvss_score": null,
+            "rule_sha256": null,
+            "reason_codes": [
+              "DETECTOR_FALLBACK",
+              "IMPORTANT_PAGE_FLOOR",
+              "EXPOSURE_UNKNOWN"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T19 malicious script uses configured rule grading",
+      "passed": true,
+      "evidence": [
+        {
+          "severity": "HIGH",
+          "evidence": "[REDACTED] (sha256=37b7c836e91ca074c70a5196737a8cdec53da26edf3c459ab2a4d503cd7ec860)",
+          "impact": "可疑脚本、框架或跳转可能影响访问者会话与页面行为，需复核是否为授权内容。影响面：首页，互联网暴露。",
+          "suggestion": "定位并核实脚本、框架及跳转来源；移除未经授权的引用，排查注入入口，涉及凭据时轮换并复测。",
+          "grading": {
+            "policy_version": "t23-v1.0.0",
+            "policy_sha256": "86ae27c3e96d4ef766de1568bccf52839213217b8925235fda2372de632954fc",
+            "base_source": "RULE_OVERRIDE",
+            "base_severity": "HIGH",
+            "severity": "HIGH",
+            "page_importance": "HOME",
+            "exposure": "INTERNET",
+            "cvss_score": null,
+            "rule_sha256": "50ccb9ce5934acf5e9ec26df3989f3c5ee2635be6508b75b78c4fde663454f68",
+            "reason_codes": [
+              "RULE_MATCHED",
+              "IMPORTANT_PAGE_FLOOR",
+              "EXPOSURE_FLOOR"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "export excludes synthetic raw secret and URL path",
+      "passed": true,
+      "evidence": {
+        "raw_secret_absent": true,
+        "raw_path_absent": true
+      }
+    }
+  ],
+  "passed_checks": 18,
+  "total_checks": 18,
+  "passed": true,
+  "limitations": "No CVSS vector calculation, live Hengnao generation, production persistence, or online pipeline integration was performed."
+}
