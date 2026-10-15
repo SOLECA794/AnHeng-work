@@ -19,3 +19,12 @@ uvicorn src.main:app --reload
 - `src/models/`：SQLAlchemy 2 ORM 模型，映射 SDD-02 的 11 张表；`Base.metadata` 是模型事实源。
 - `db/schema.sql`：由 ORM 元数据生成的 PostgreSQL 16 幂等建表脚本。
 - 运行时依赖已加入 `requirements.txt`：`SQLAlchemy>=2.0,<3`。
+
+
+## T09/T10 当前接口
+
+- `POST /api/auth/login`：请求 `{"username": "admin", "password": "..."}`，返回 Bearer JWT。
+- `GET /api/auth/me`：携带 `Authorization: Bearer <token>` 获取当前用户。
+- `POST /api/auth/logout`：吊销当前 JWT。开发期用户存于内存，持久化替换点为 `AuthService` 的 `InMemoryUserStore`。
+- `src/agent/provider.py`：平台无关的 `AgentProvider`、SSE 事件解析与分片聚合。
+- `src/agent/hengan.py`：恒脑签名、execute 流式、异步任务、resume、文件接口和错误码映射。真实 `HENGAN_AGENT_ID` 由 A 提供后再联调。
