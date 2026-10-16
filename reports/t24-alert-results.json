@@ -1,0 +1,360 @@
+{
+  "task": "T24",
+  "fixture_version": "t24-sqlite-v1",
+  "fixed_time": "2026-10-16 09:00:00",
+  "policy_version": "t24-v1.0.0",
+  "policy_sha256": "2d5c59e21620e59acaf637e38fd099ab99918466ff16043fc48d3d2dcacabd93",
+  "mode": "private SQLite transactions and local samples; in-app inbox persistence only",
+  "checks": [
+    {
+      "name": "first hit persists one linked in-app notification",
+      "passed": true,
+      "evidence": {
+        "receipt": {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": "IN_APP"
+        },
+        "inbox": {
+          "items": [
+            {
+              "id": 1,
+              "findingId": 101,
+              "scopeId": 1,
+              "severity": "MEDIUM",
+              "title": "敏感信息告警",
+              "content": "风险 #101，级别 MEDIUM；请核对脱敏证据并处理。",
+              "status": "NEW",
+              "readStatus": 0,
+              "createdAt": "2026-10-16 09:00:00"
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "pageSize": 20
+        }
+      }
+    },
+    {
+      "name": "same finding retry does not duplicate",
+      "passed": true,
+      "evidence": [
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": "IN_APP"
+        },
+        {
+          "outcome": "DUPLICATE",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": null
+        }
+      ]
+    },
+    {
+      "name": "distinct keys and assets remain independent",
+      "passed": true,
+      "evidence": [
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": "IN_APP"
+        },
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 102,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 2,
+          "notification": "IN_APP"
+        },
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 103,
+          "scopeId": 2,
+          "cycle": 1,
+          "alertId": 3,
+          "notification": "IN_APP"
+        }
+      ]
+    },
+    {
+      "name": "threshold and later high severity upgrade",
+      "passed": true,
+      "evidence": [
+        {
+          "outcome": "BELOW_THRESHOLD",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": null,
+          "notification": null
+        },
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": "IN_APP"
+        }
+      ]
+    },
+    {
+      "name": "tamper and sensitive types trigger below severity threshold",
+      "passed": true,
+      "evidence": [
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": "IN_APP"
+        },
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 102,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 2,
+          "notification": "IN_APP"
+        }
+      ]
+    },
+    {
+      "name": "false positives and informational findings never notify",
+      "passed": true,
+      "evidence": [
+        {
+          "outcome": "SUPPRESSED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": null,
+          "notification": null
+        },
+        {
+          "outcome": "BELOW_THRESHOLD",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": null,
+          "notification": null
+        }
+      ]
+    },
+    {
+      "name": "disabled policy produces no in-app notification",
+      "passed": true,
+      "evidence": {
+        "outcome": "DISABLED",
+        "findingId": 101,
+        "scopeId": 1,
+        "cycle": 1,
+        "alertId": null,
+        "notification": null
+      }
+    },
+    {
+      "name": "read handled and closed do not reopen notification cycle",
+      "passed": true,
+      "evidence": {
+        "receipt": {
+          "outcome": "DUPLICATE",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": null
+        },
+        "inbox": {
+          "items": [
+            {
+              "id": 1,
+              "findingId": 101,
+              "scopeId": 1,
+              "severity": "MEDIUM",
+              "title": "敏感信息告警",
+              "content": "风险 #101，级别 MEDIUM；请核对脱敏证据并处理。",
+              "status": "CLOSED",
+              "readStatus": 1,
+              "createdAt": "2026-10-16 09:00:00"
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "pageSize": 20
+        }
+      }
+    },
+    {
+      "name": "persisted repair followed by fresh detection creates new cycle",
+      "passed": true,
+      "evidence": [
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": "IN_APP"
+        },
+        {
+          "outcome": "RESOLVED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": null
+        },
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 2,
+          "alertId": 2,
+          "notification": "IN_APP"
+        }
+      ]
+    },
+    {
+      "name": "old observations cannot reopen repaired risk",
+      "passed": true,
+      "evidence": {
+        "outcome": "STALE",
+        "findingId": 101,
+        "scopeId": 1,
+        "cycle": 1,
+        "alertId": 1,
+        "notification": null
+      }
+    },
+    {
+      "name": "audit failure rolls back both inbox and lifecycle state",
+      "passed": true,
+      "evidence": {
+        "sanitized_error": true,
+        "alert_count": 0,
+        "state_present": false
+      }
+    },
+    {
+      "name": "explicit scope and role permissions protect inbox",
+      "passed": true,
+      "evidence": {
+        "rule_admin_read": 1,
+        "rule_admin_write_denied": true,
+        "other_scope_count": 0
+      }
+    },
+    {
+      "name": "read is idempotent and closed alerts cannot reopen",
+      "passed": true,
+      "evidence": {
+        "idempotent_read": true,
+        "reopen_rejected": true
+      }
+    },
+    {
+      "name": "legacy closed alerts bootstrap dedup and redact display text",
+      "passed": true,
+      "evidence": {
+        "receipt": {
+          "outcome": "DUPLICATE",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": null
+        },
+        "inbox": {
+          "items": [
+            {
+              "id": 1,
+              "findingId": 101,
+              "scopeId": 1,
+              "severity": "HIGH",
+              "title": "敏感信息告警",
+              "content": "风险 #101，级别 HIGH；请核对脱敏证据并处理。",
+              "status": "CLOSED",
+              "readStatus": 1,
+              "createdAt": "2026-10-16 09:00:00"
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "pageSize": 20
+        }
+      }
+    },
+    {
+      "name": "F positive and negative samples pass through T20 T21 persistence and T24",
+      "passed": true,
+      "evidence": [
+        {
+          "case_id": "D-01",
+          "expected_positive": true,
+          "finding_count": 4,
+          "alert_count": 4,
+          "passed": true
+        },
+        {
+          "case_id": "D-02",
+          "expected_positive": true,
+          "finding_count": 4,
+          "alert_count": 4,
+          "passed": true
+        },
+        {
+          "case_id": "D-03",
+          "expected_positive": true,
+          "finding_count": 1,
+          "alert_count": 1,
+          "passed": true
+        },
+        {
+          "case_id": "E-04",
+          "expected_positive": false,
+          "finding_count": 0,
+          "alert_count": 0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "independent SQLite connections serialize simultaneous creation",
+      "passed": true,
+      "evidence": {
+        "outcomes": [
+          "ALERT_CREATED",
+          "DUPLICATE"
+        ],
+        "alert_count": 1
+      }
+    },
+    {
+      "name": "report exports no raw synthetic secret",
+      "passed": true,
+      "evidence": {
+        "raw_secret_absent": true
+      }
+    }
+  ],
+  "passed_checks": 17,
+  "total_checks": 17,
+  "passed": true,
+  "limitations": "No live PostgreSQL, real JWT, mounted production API, email delivery or external target scan was performed."
+}
