@@ -51,3 +51,15 @@ python scripts/verify_t22.py --output reports/t22-verification-results.json
 ```
 
 SQL/API 测试使用 `tests/support/verification_db.py` 创建的独立内存 SQLite 夹具，仅在克隆的测试 DDL 中替换 PostgreSQL JSONB 与自增主键类型；生产 ORM、配置数据库及迁移不受影响。覆盖成功持久化与重新查询、审计失败回滚、状态/来源 CAS、角色与资产权限、同源规则复核和默认拒绝的 API 工厂。契约及接入边界见 `specs/02-设计规格/SDD-06-结果验证与状态流转契约.md`、`docs/03-模块实现/T22-结果验证与状态流转.md`。
+
+## T24 告警与站内通知
+
+```powershell
+python -m pip install -r requirements-test.txt
+python -m unittest discover -s tests/unit -p test_alert_policy.py -v
+python -m unittest discover -s tests/integration -p "test_alerts*.py" -v
+python scripts/verify_t24.py --output reports/t24-alert-results.json
+python -m unittest discover -s tests/unit -t tests/unit -q
+```
+
+41 项专项测试包含 8 项规则配置、24 项生命周期/事务/并发和 9 项 API 测试；17 个验收场景包括 F 正负样例接入、站内收件箱、跨任务去重、关闭不重发、修复后复现、权限、回滚及脱敏。并发使用临时 SQLite 文件的独立连接；复用的 verification_database 默认仍是内存数据库，可选 sqlite_file 只用于测试。未连接生产数据库或外发邮件。Windows 受限环境可能需要允许测试的本机通信与临时文件访问。说明见 `docs/03-模块实现/T24-告警规则与通知.md` 与 `specs/02-设计规格/SDD-09-告警契约.md`。
