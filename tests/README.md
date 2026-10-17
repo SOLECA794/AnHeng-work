@@ -63,3 +63,14 @@ python -m unittest discover -s tests/unit -t tests/unit -q
 ```
 
 41 项专项测试包含 8 项规则配置、24 项生命周期/事务/并发和 9 项 API 测试；17 个验收场景包括 F 正负样例接入、站内收件箱、跨任务去重、关闭不重发、修复后复现、权限、回滚及脱敏。并发使用临时 SQLite 文件的独立连接；复用的 verification_database 默认仍是内存数据库，可选 sqlite_file 只用于测试。未连接生产数据库或外发邮件。Windows 受限环境可能需要允许测试的本机通信与临时文件访问。说明见 `docs/03-模块实现/T24-告警规则与通知.md` 与 `specs/02-设计规格/SDD-09-告警契约.md`。
+
+## T25 复测闭环
+
+```powershell
+python -m unittest discover -s tests/unit -p test_retesting.py -v
+python -m unittest discover -s tests/integration -p "test_retesting*.py" -v
+python scripts/verify_t25.py --output reports/t25-retest-results.json
+python -m unittest discover -s tests/unit -t tests/unit -q
+```
+
+8 项契约单元、28 项执行/事务/并发及 9 项 API，共 45 项专项；17 个确定性验收场景。覆盖真实 T20 原规则重新执行、修复与复现、不确定结果不修复、历史/当前状态区分、幂等与过期回收、旧结果晚到、业务/规则/绑定变化、权限、事务回滚及同事务告警周期。仅使用私有 SQLite、合成内容和进程内 HTTP 客户端。分支依赖 T24；契约与集成边界见 `specs/02-设计规格/SDD-10-复测闭环契约.md`、`docs/03-模块实现/T25-复测闭环.md`。
