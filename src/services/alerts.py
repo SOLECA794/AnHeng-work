@@ -143,60 +143,67 @@ class AlertService:
         at = _timestamp(observed_at)
         try:
             with self.repository.transaction() as tx:
-                scope, finding, anchor = tx.lock_risk(finding_id)
-                _scope(principal, scope)
-                _enum(finding.finding_type, TITLES)
-                _enum(finding.severity, LEVELS)
-                _enum(finding.status, ("OPEN", "CONFIRMED", "FALSE_POSITIVE", "FIXED", "RETESTED"))
-                raw = dict(anchor.raw_data or {})
-                state = raw.get("alerting")
-                source_time = finding.updated_at if finding.status in {"FIXED", "RETESTED", "FALSE_POSITIVE"} else finding.last_seen
-                if not isinstance(source_time, datetime):
-                    raise AlertError(50000, "风险来源时间不合法")
-                timestamp = _timestamp(source_time)
-                if "alerting" in raw:
-                    _validate_state(state)
-                    state = dict(state)
-                    if state["alert_id"] is not None and not tx.alert_belongs(state["alert_id"], scope.id, finding.dedup_key):
-                        raise AlertError(50000, "告警关联不一致")
-                else:
-                    previous = tx.latest_alert(scope.id, finding.dedup_key)
-                    state = dict(version=1, phase="ACTIVE", cycle=1, watermark=timestamp,
-                                 alert_id=previous.id if previous else None)
-
-                alert = None
-                if finding.status == "FALSE_POSITIVE":
-                    outcome = "SUPPRESSED"
-                elif timestamp < state["watermark"] or (state["phase"] == "RESOLVED" and finding.status in {"OPEN", "CONFIRMED"} and timestamp <= state["watermark"]):
-                    outcome = "STALE"
-                elif finding.status in {"FIXED", "RETESTED"}:
-                    state.update(phase="RESOLVED", watermark=timestamp)
-                    outcome = "RESOLVED"
-                else:
-                    if state["phase"] == "RESOLVED":
-                        state.update(phase="ACTIVE", cycle=state["cycle"] + 1, alert_id=None)
-                    state["watermark"] = timestamp
-                    if state["alert_id"] is not None:
-                        outcome = "DUPLICATE"
-                    elif not self.policy.matches(finding.finding_type, finding.severity):
-                        outcome = "BELOW_THRESHOLD" if self.policy.enabled else "DISABLED"
-                    else:
-                        alert = tx.create_alert(finding, at)
-                        state["alert_id"] = alert.id
-                        outcome = "ALERT_CREATED"
-                _validate_state(state)
-                if outcome != "SUPPRESSED":
-                    raw["alerting"] = state
-                    tx.save_state(anchor, raw)
-                tx.audit(principal, finding, "alert.process", at, dict(outcome=outcome, cycle=state["cycle"],
-                         alert_id=state["alert_id"], policy_sha256=self.policy.sha256))
-                result = dict(outcome=outcome, findingId=finding.id, scopeId=scope.id, cycle=state["cycle"],
-                              alertId=state["alert_id"], notification="IN_APP" if alert else None)
+                result = self.process_transaction(tx, finding_id, principal, at)
             return result
         except VerificationError:
             raise
         except Exception:
             raise AlertError(50000, "告警事务失败，请查询当前结果后重试") from None
+
+    def process_transaction(self, tx, finding_id, principal, at):
+        """Join an existing authorized transaction (T25); never commits by itself."""
+        principal = _identity(principal, "write")
+        _id(finding_id)
+        scope, finding, anchor = tx.lock_risk(finding_id)
+        _scope(principal, scope)
+        _enum(finding.finding_type, TITLES)
+        _enum(finding.severity, LEVELS)
+        _enum(finding.status, ("OPEN", "CONFIRMED", "FALSE_POSITIVE", "FIXED", "RETESTED"))
+        raw = dict(anchor.raw_data or {})
+        state = raw.get("alerting")
+        source_time = finding.updated_at if finding.status in {"FIXED", "RETESTED", "FALSE_POSITIVE"} else finding.last_seen
+        if not isinstance(source_time, datetime):
+            raise AlertError(50000, "风险来源时间不合法")
+        timestamp = _timestamp(source_time)
+        if "alerting" in raw:
+            _validate_state(state)
+            state = dict(state)
+            if state["alert_id"] is not None and not tx.alert_belongs(state["alert_id"], scope.id, finding.dedup_key):
+                raise AlertError(50000, "告警关联不一致")
+        else:
+            previous = tx.latest_alert(scope.id, finding.dedup_key)
+            state = dict(version=1, phase="ACTIVE", cycle=1, watermark=timestamp,
+                         alert_id=previous.id if previous else None)
+
+        alert = None
+        if finding.status == "FALSE_POSITIVE":
+            outcome = "SUPPRESSED"
+        elif timestamp < state["watermark"] or (state["phase"] == "RESOLVED" and finding.status in {"OPEN", "CONFIRMED"} and timestamp <= state["watermark"]):
+            outcome = "STALE"
+        elif finding.status in {"FIXED", "RETESTED"}:
+            state.update(phase="RESOLVED", watermark=timestamp)
+            outcome = "RESOLVED"
+        else:
+            if state["phase"] == "RESOLVED":
+                state.update(phase="ACTIVE", cycle=state["cycle"] + 1, alert_id=None)
+            state["watermark"] = timestamp
+            if state["alert_id"] is not None:
+                outcome = "DUPLICATE"
+            elif not self.policy.matches(finding.finding_type, finding.severity):
+                outcome = "BELOW_THRESHOLD" if self.policy.enabled else "DISABLED"
+            else:
+                alert = tx.create_alert(finding, at)
+                state["alert_id"] = alert.id
+                outcome = "ALERT_CREATED"
+        _validate_state(state)
+        if outcome != "SUPPRESSED":
+            raw["alerting"] = state
+            tx.save_state(anchor, raw)
+        tx.audit(principal, finding, "alert.process", at, dict(outcome=outcome, cycle=state["cycle"],
+                 alert_id=state["alert_id"], policy_sha256=self.policy.sha256))
+        result = dict(outcome=outcome, findingId=finding.id, scopeId=scope.id, cycle=state["cycle"],
+                      alertId=state["alert_id"], notification="IN_APP" if alert else None)
+        return result
 
     def list(self, principal, *, page=1, page_size=20, status=None, severity=None, scope_id=None):
         principal = _identity(principal, "list")
