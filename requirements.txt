@@ -1,18 +1,21 @@
+# -*- coding: utf-8 -*-
 fastapi>=0.115,<1
 uvicorn[standard]>=0.30,<1
 pydantic-settings>=2.6,<3
 SQLAlchemy>=2.0,<3
-<<<<<<< HEAD
 httpx[socks]>=0.27,<1
-=======
 
 # T17 Wappalyzer 指纹识别：Wappalyzer 规则的 Python 实现（npm CLI 已废弃）
 # 注：python-Wappalyzer 声明的 httpretty / aioresponses 仅测试用，但其源码包在部分网络下
 #     无法构建（拉不到 setuptools）。装不上时用：
 #       pip install python-Wappalyzer --no-deps && pip install aiohttp
 python-Wappalyzer>=0.3.1,<1
+# python-Wappalyzer 0.3.1 imports pkg_resources at runtime.
+setuptools>=70,<81
 aiohttp>=3.9,<4
 
 # T20 敏感信息检测
 regex>=2024.11.6
->>>>>>> a538810fcfe47953f0692438fa085a009b55d6d1
+
+# PostgreSQL runtime (DATABASE_URL=postgresql+psycopg://...)
+psycopg[binary]>=3.2,<4

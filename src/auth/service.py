@@ -1,8 +1,4 @@
-"""Small, dependency-light authentication service for T09.
-
-The store is intentionally in-memory for the first integration milestone. The
-JWT and password interfaces stay stable when the store is replaced by SQLAlchemy.
-"""
+"""T09 JWT/password service with interchangeable memory and SQL user stores."""
 from __future__ import annotations
 
 import base64
@@ -11,7 +7,8 @@ import hmac
 import json
 import secrets
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from threading import RLock
 from typing import Iterable
 
 
@@ -53,19 +50,37 @@ class User:
     role: str
     nickname: str = ""
     enabled: bool = True
+    id: int | None = None
 
 
 class InMemoryUserStore:
     def __init__(self, users: Iterable[User] = ()) -> None:
         self._users = {user.username: user for user in users}
+        self._revoked: set[str] = set()
+        self._lock = RLock()
 
     def add(self, username: str, password: str, role: str, nickname: str = "") -> User:
-        user = User(username, hash_password(password), role, nickname)
+        if role not in {"ADMIN", "SEC_OPS", "RULE_ADMIN"}:
+            raise ValueError("unsupported role")
+        user = User(username, hash_password(password), role, nickname, id=len(self._users) + 1)
         self._users[username] = user
         return user
 
     def get(self, username: str) -> User | None:
         return self._users.get(username)
+
+    def change_password(self, user: User, encoded: str):
+        with self._lock:
+            if self.get(user.username) != user:
+                raise AuthError("user credentials changed; log in again")
+            self._users[user.username] = replace(user, password_hash=encoded)
+
+    def is_revoked(self, jti: str) -> bool:
+        return jti in self._revoked
+
+    def revoke(self, jti: str, user: User):
+        with self._lock:
+            self._revoked.add(jti)
 
 
 class JwtService:
@@ -77,6 +92,15 @@ class JwtService:
         self._secret = secret.encode()
         self._issuer = issuer
         self._ttl = ttl_seconds
+        if ttl_seconds <= 0:
+            raise ValueError("JWT TTL must be positive")
+
+    @property
+    def ttl_seconds(self):
+        return self._ttl
+
+    def credential_tag(self, user: User) -> str:
+        return hmac.new(self._secret, user.password_hash.encode(), hashlib.sha256).hexdigest()
 
     def issue(self, user: User) -> str:
         now = int(time.time())
@@ -90,6 +114,7 @@ class JwtService:
             "iat": now,
             "exp": now + self._ttl,
             "jti": secrets.token_urlsafe(12),
+            "pwd": self.credential_tag(user),
         }
         encoded_header = _b64(json.dumps(header, separators=(",", ":")).encode())
         encoded_payload = _b64(json.dumps(payload, separators=(",", ":")).encode())
@@ -99,20 +124,29 @@ class JwtService:
 
     def verify(self, token: str) -> dict:
         try:
-            header, payload, signature = token.split(".", 2)
+            if not isinstance(token, str) or len(token) > 8192:
+                raise AuthError("invalid token")
+            header, payload, signature = token.split(".")
             signing_input = f"{header}.{payload}".encode()
             expected = _b64(hmac.new(self._secret, signing_input, hashlib.sha256).digest())
             if not hmac.compare_digest(signature, expected):
                 raise AuthError("invalid token signature")
-            if json.loads(_unb64(header)).get("alg") != "HS256":
+            decoded_header = json.loads(_unb64(header))
+            if not isinstance(decoded_header, dict) or decoded_header.get("alg") != "HS256":
                 raise AuthError("unsupported token algorithm")
             claims = json.loads(_unb64(payload))
-            if claims.get("iss") != self._issuer or int(claims.get("exp", 0)) <= int(time.time()):
+            if not isinstance(claims, dict):
+                raise AuthError("invalid token claims")
+            if (claims.get("iss") != self._issuer or type(claims.get("exp")) is not int
+                    or claims["exp"] <= int(time.time()) or type(claims.get("iat")) is not int
+                    or claims["iat"] > int(time.time()) + 30):
                 raise AuthError("token expired or issuer mismatch")
-            if not claims.get("sub") or not claims.get("role"):
+            if (any(not isinstance(claims.get(key), str) or not claims[key]
+                    for key in ("sub", "role", "jti", "pwd"))
+                    or claims["role"] not in {"ADMIN", "SEC_OPS", "RULE_ADMIN"}):
                 raise AuthError("token claims incomplete")
             return claims
-        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+        except (ValueError, TypeError, UnicodeDecodeError, OverflowError) as exc:
             raise AuthError("invalid token") from exc
 
 
@@ -120,23 +154,32 @@ class AuthService:
     def __init__(self, store: InMemoryUserStore, jwt: JwtService) -> None:
         self.store = store
         self.jwt = jwt
-        self._revoked: set[str] = set()
 
     def login(self, username: str, password: str) -> tuple[str, User]:
         user = self.store.get(username)
-        if user is None or not user.enabled or not verify_password(password, user.password_hash):
+        if (user is None or not user.enabled or user.role not in {"ADMIN", "SEC_OPS", "RULE_ADMIN"}
+                or not verify_password(password, user.password_hash)):
             raise AuthError("username or password incorrect")
         return self.jwt.issue(user), user
 
     def current_user(self, token: str) -> User:
         claims = self.jwt.verify(token)
-        if claims.get("jti") in self._revoked:
+        if self.store.is_revoked(claims["jti"]):
             raise AuthError("token revoked")
         user = self.store.get(claims["sub"])
-        if user is None or not user.enabled:
+        if (user is None or not user.enabled or user.role != claims["role"]
+                or not hmac.compare_digest(self.jwt.credential_tag(user), claims["pwd"])):
             raise AuthError("user unavailable")
         return user
 
     def logout(self, token: str) -> None:
+        user = self.current_user(token)
         claims = self.jwt.verify(token)
-        self._revoked.add(claims["jti"])
+        self.store.revoke(claims["jti"], user)
+
+    def change_password(self, user: User, old_password: str, new_password: str):
+        if not verify_password(old_password, user.password_hash):
+            raise AuthError("username or password incorrect")
+        if old_password == new_password:
+            raise ValueError("new password must differ from old password")
+        self.store.change_password(user, hash_password(new_password))

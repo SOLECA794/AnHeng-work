@@ -29,15 +29,16 @@ class AuthTests(unittest.TestCase):
 class AgentTests(unittest.TestCase):
     def test_signature_and_sse_aggregation(self):
         headers = HenganSigner("key", "secret").headers()
-        self.assertTrue(headers["sign"].startswith("".join(c for c in headers["sign"][:13])))
+        self.assertEqual(len(headers["sign"]), 57)
         one = parse_sse_line('data:' + json.dumps({"code": 0, "data": {"message_id": "m", "from": "basic_llm", "content": "a"}}))
         two = parse_sse_line('data:' + json.dumps({"code": 0, "data": {"message_id": "m", "from": "basic_llm", "content": "b", "done": True}}))
         self.assertEqual(aggregate_events([one, two])[0]["text"], "ab")
 
     def test_status_payload_and_error_mapping(self):
-        provider = HenganAgentProvider.__new__(HenganAgentProvider)
+        provider = HenganAgentProvider("https://fixture.invalid", "key", "secret")
         provider._post = lambda name, payload: 2
         self.assertEqual(provider.async_status("task"), 2)
+        provider.close()
         self.assertEqual(HenganAgentProvider.map_error(-301).project_code, 50002)
         self.assertTrue(HenganAgentProvider.map_error(-301).retryable)
         self.assertEqual(HenganAgentProvider.map_error(-402).project_code, 40300)

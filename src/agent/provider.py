@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any, BinaryIO, Iterable, Protocol
 
 
-@dataclass(frozen=True)
+@dataclass
 class AgentError(Exception):
     provider_code: int | None
     project_code: int
@@ -44,14 +44,34 @@ def parse_sse_line(line: str) -> AgentEvent | None:
 
     if not line.startswith("data:"):
         return None
-    payload = json.loads(line[5:].strip())
-    if payload.get("code", 0) != 0:
-        raise AgentError(payload.get("code"), 50001, payload.get("msg", "agent request failed"), True)
-    data = payload.get("data") or {}
+    from src.agent.errors import map_error
+    try:
+        payload = json.loads(line[5:].strip())
+        if not isinstance(payload, dict):
+            raise ValueError("invalid event envelope")
+        if "code" in payload:
+            code = int(payload["code"])
+            if code != 0 or payload.get("flag") == 2:
+                error = map_error(code)
+                if payload.get("flag") == 2:
+                    error.retryable = False
+                raise error
+            data = payload.get("data")
+        else:
+            data = payload  # Published documentation also has direct question events.
+        if not isinstance(data, dict):
+            raise ValueError("invalid event data")
+    except (ValueError, TypeError, OverflowError) as exc:
+        raise map_error(None) from exc
+    content = data.get("content", data.get("message", ""))
+    if content is None:
+        content = ""
+    if not isinstance(content, str):
+        content = json.dumps(content, ensure_ascii=False)
     return AgentEvent(
         message_id=data.get("message_id"),
         source=data.get("from"),
-        content=data.get("content", ""),
+        content=content,
         done=bool(data.get("done", False)),
         mode=data.get("mode"),
         node_id=data.get("node_id"),
@@ -70,7 +90,7 @@ def aggregate_events(events: Iterable[AgentEvent]) -> list[dict[str, Any]]:
             "source": chunks[0].source,
             "text": "".join(chunk.content for chunk in chunks),
             "done": chunks[-1].done,
-            "mode": chunks[0].mode,
+            "mode": next((c.mode for c in chunks if c.mode), None),
         }
         for message_id, chunks in grouped.items()
     ]

@@ -1,5 +1,17 @@
 # tests/ 测试目录
 
+## B 组 T09/T10 与 T11 回归（2026-10-19）
+
+```powershell
+$env:PYTHONUTF8='1'
+.\.venv\Scripts\python.exe -m pip install -r requirements-test.txt
+.\.venv\Scripts\python.exe scripts/verify_b_auth_agent.py
+.\.venv\Scripts\python.exe -m unittest discover -s tests/unit -t tests/unit
+.\.venv\Scripts\python.exe scripts/verify_b_models.py
+```
+
+T09/T10 专项 38 项通过；使用私有临时 SQLite、真实 ASGI/JWT 和 `httpx.MockTransport` 回放 A 的平台数据。覆盖跨服务重启退出失效、改密、多角色、错误信封、平台字符串返回、734 条 SSE、question/resume、二进制下载、并发/退避/轮询及审计落库。报告见 `reports/b-auth-agent-results.json`。不调用线上平台，也不代表 PostgreSQL 或 T28–T30 端到端已通过。工具注册表成功/失败/超时/拒绝的审计均保存目标指纹，配合 D 的 `test_sensitive.py` 验证脱敏。
+
 测试与用例设计以 `specs/03-测试规格/TEST-01-测试计划与用例设计.md` 为准。
 
 ```

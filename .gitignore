@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 venv/
 .env
+.local/
 *.log
 
 # Node（管理端如使用）

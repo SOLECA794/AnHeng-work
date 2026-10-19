@@ -139,16 +139,16 @@ class ToolRegistry:
                 raise ValueError("invalid adapter result")
         except FutureTimeoutError:
             future.cancel()
-            self._audit.append({"tool_id": tool_id, "target": target, "status": "TIMEOUT", "timeout_seconds": manifest.timeout_seconds})
+            self._audit.append({"tool_id": tool_id, "target": self._audit_target(target), "status": "TIMEOUT", "timeout_seconds": manifest.timeout_seconds})
             return ToolResult(tool_id=tool_id, status="TIMEOUT", error=f"execution exceeded {manifest.timeout_seconds}s")
         except Exception as exc:
-            self._audit.append({"tool_id": tool_id, "target": target, "status": "FAILED", "error": type(exc).__name__})
+            self._audit.append({"tool_id": tool_id, "target": self._audit_target(target), "status": "FAILED", "error": type(exc).__name__})
             return ToolResult(tool_id=tool_id, status="FAILED", error="tool execution failed")
         finally:
             # Do not wait for a timed-out worker; cancellation is best effort.
             executor.shutdown(wait=False, cancel_futures=True)
 
-        self._audit.append({"tool_id": tool_id, "target": target, "status": result.status})
+        self._audit.append({"tool_id": tool_id, "target": self._audit_target(target), "status": result.status})
         return result
 
     def _reject(self, tool_id: str, target: str, reason: str, audit_status: str = "REJECTED") -> ToolResult:

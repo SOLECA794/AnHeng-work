@@ -1,21 +1,13 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from src.auth.service import AuthError, AuthService, User
 
 bearer = HTTPBearer(auto_error=False)
-_auth_service: AuthService | None = None
-
-
-def set_auth_service(auth: AuthService) -> None:
-    global _auth_service
-    _auth_service = auth
-
-
-def get_auth_service() -> AuthService:
-    if _auth_service is None:
-        raise RuntimeError("authentication service is not initialized")
-    return _auth_service
+def get_auth_service(request: Request) -> AuthService:
+    if hasattr(request.app.state, "auth_service"):
+        return request.app.state.auth_service
+    raise RuntimeError("authentication service is not initialized")
 
 
 def current_user(
