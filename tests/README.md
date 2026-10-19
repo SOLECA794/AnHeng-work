@@ -63,3 +63,13 @@ python scripts/verify_t22.py --output reports/t22-verification-results.json
 ```
 
 SQL/API 测试使用 `tests/support/verification_db.py` 创建的独立内存 SQLite 夹具，仅在克隆的测试 DDL 中替换 PostgreSQL JSONB 与自增主键类型；生产 ORM、配置数据库及迁移不受影响。覆盖成功持久化与重新查询、审计失败回滚、状态/来源 CAS、角色与资产权限、同源规则复核和默认拒绝的 API 工厂。契约及接入边界见 `specs/02-设计规格/SDD-06-结果验证与状态流转契约.md`、`docs/03-模块实现/T22-结果验证与状态流转.md`。
+
+## T26 报告导出
+
+```powershell
+python -m unittest discover -s tests/unit -p test_reporting.py -v
+python -m unittest discover -s tests/integration -p "test_reporting*.py" -v
+python scripts/verify_t26.py
+```
+
+43 项专项（7 单元、28 数据/事务/文件、8 API）验证统计去重、上海日期/UTC 存储边界、快照冻结、权限、失败回滚、真实中文 PDF/HTML、敏感内容不出报告及文件损坏拒绝。14 个离线验收场景写入 `reports/t26-acceptance.json`，示例输出在被忽略的 `output/pdf/`。独立 SQLite/ASGI 验收不代表生产 PostgreSQL 或真实用户资产授权联调通过；详见 SDD-11。
