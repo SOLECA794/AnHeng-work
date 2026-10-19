@@ -1,6 +1,6 @@
 # SDD-03 · 接口规格
 
-- 规格状态：基线 v1.0；v1.1 字段细化草案随功能分支评审
+- 规格状态：基线 v1.0
 - 需求依据：SRS-02 F1–F7；数据依据：SDD-02
 
 ## 1. 通用约定
@@ -213,14 +213,6 @@ data: {"event":"done","message":"巡检完成：共发现 3 个风险（高危 1
 
 生成完成后 `filePath` 就绪，经 `GET /api/reports/{id}/file` 下载。
 
-### 5.5 认证字段（T09，2026-10-19 实现细化）
-
-- 登录请求：`{"username":"ops","password":"..."}`；成功 data：`{"token":"...","tokenType":"Bearer","expiresIn":3600,"user":{"id":1,"username":"ops","nickname":"运维","role":"SEC_OPS"}}`。
-- `/auth/me` 返回上述 user 对象。角色严格按 §4 的集合校验，ADMIN 不自动获得 SEC_OPS 权限。
-- `/auth/password` 请求：`{"oldPassword":"...","newPassword":"..."}`，新密码长度 8–128；成功后全部旧 Token 失效，需要重新登录。`/auth/logout` 使当前 Token 失效。
-- 缺失、失效、停用用户：HTTP 401 / 40100；角色越权：HTTP 403 / 40300；参数错误：HTTP 400 / 40001。响应不回显密码或 Token。
-- `/agent/logs` 支持 `page`、`size`、`action`、`resultStatus` 筛选；结果包含动作、结果状态、耗时、创建时间和仅含上游错误码的 `paramsSummary`，不保存输入/回复/凭据。
-
 ## 6. 开发期建议
 
 - 能力服务先行按本文档实现并维护 Apifox；管理端按 Apifox 联调；
@@ -233,4 +225,3 @@ data: {"event":"done","message":"巡检完成：共发现 3 个风险（高危 1
 | 版本 | 日期 | 变更人 | 变更内容 | 影响范围 |
 | --- | --- | --- | --- | --- |
 | v1.0 | 2026-10-09 | 课题立项 | 基线发布（资产/计划/任务/风险/告警/报告/规则/智能体接口） | 全量 |
-| v1.1 | 2026-10-19 | B（待评审） | 细化既有认证与审计接口字段、密码失效语义和统一错误响应；不改变角色集合 | §5.5、T09/T10 |
