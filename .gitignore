@@ -22,3 +22,8 @@ Thumbs.db
 tests/.cache/
 reports/*.html
 reports/*.pdf
+
+# Nuclei 模板（体积大，本地 Docker 命名卷使用，不入库）
+nuclei-templates/
+nuclei-templates.tar.gz
+reports/nuclei-*.jsonl

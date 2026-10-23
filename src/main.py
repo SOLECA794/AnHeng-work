@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from src.api.auth import router as auth_router
 from src.api.agent_logs import router as agent_logs_router
 from src.api.health import router as health_router
+from src.api.scan import router as scan_router
 from src.auth.persistence import SqlAlchemyUserStore
 from src.auth.service import AuthService, JwtService
 from src.core.config import get_settings
@@ -52,6 +53,7 @@ def create_app(settings=None, *, auth_service=None):
     app.include_router(health_router, prefix=settings.api_prefix)
     app.include_router(auth_router, prefix=settings.api_prefix)
     app.include_router(agent_logs_router, prefix=settings.api_prefix)
+    app.include_router(scan_router, prefix=settings.api_prefix)
 
     @app.get("/", include_in_schema=False)
     def root():
