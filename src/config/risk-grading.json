@@ -1,0 +1,14 @@
+{
+  "version": "t23-v1.0.0",
+  "page_floors": {"HOME": "HIGH", "LOGIN": "HIGH", "CORE": "HIGH"},
+  "exposure_floors": {"INTERNET": "HIGH"},
+  "rule_overrides": [
+    {"type": "MALICIOUS_LINK", "tool_name": "external-link-detector", "rule_id": "BLACKLISTED_LINK", "severity": "HIGH"},
+    {"type": "MALICIOUS_SCRIPT", "tool_name": "external-link-detector", "rule_id": "BLACKLISTED_SCRIPT", "severity": "HIGH"},
+    {"type": "MALICIOUS_SCRIPT", "tool_name": "external-link-detector", "rule_id": "HIDDEN_IFRAME", "severity": "HIGH"},
+    {"type": "MALICIOUS_SCRIPT", "tool_name": "external-link-detector", "rule_id": "EXTERNAL_IFRAME", "severity": "MEDIUM"},
+    {"type": "MALICIOUS_SCRIPT", "tool_name": "external-link-detector", "rule_id": "META_REFRESH_EXTERNAL", "severity": "HIGH"},
+    {"type": "MALICIOUS_SCRIPT", "tool_name": "external-link-detector", "rule_id": "JS_REDIRECT_EXTERNAL", "severity": "HIGH"},
+    {"type": "MALICIOUS_SCRIPT", "tool_name": "external-link-detector", "rule_id": "OBFUSCATED_SCRIPT", "severity": "MEDIUM"}
+  ]
+}

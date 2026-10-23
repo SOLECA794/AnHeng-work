@@ -63,3 +63,15 @@ python scripts/verify_t22.py --output reports/t22-verification-results.json
 ```
 
 SQL/API 测试使用 `tests/support/verification_db.py` 创建的独立内存 SQLite 夹具，仅在克隆的测试 DDL 中替换 PostgreSQL JSONB 与自增主键类型；生产 ORM、配置数据库及迁移不受影响。覆盖成功持久化与重新查询、审计失败回滚、状态/来源 CAS、角色与资产权限、同源规则复核和默认拒绝的 API 工厂。契约及接入边界见 `specs/02-设计规格/SDD-06-结果验证与状态流转契约.md`、`docs/03-模块实现/T22-结果验证与状态流转.md`。
+
+## T23 风险分级验证
+
+```powershell
+python -m pip install -r requirements-test.txt
+python -m unittest discover -s tests/unit -p test_risk_grading.py -v
+python -m unittest discover -s tests/integration -p test_risk_grading_sql.py -v
+python scripts/verify_t23.py --output reports/t23-risk-grading-results.json
+python -m unittest discover -s tests/unit -t tests/unit -q
+```
+
+34 项专项单元测试覆盖 CVSS 等级边界/非法数值、按工具和类型绑定规则、影响面取高、不降级、INFO 保持、策略校验与摘要、资产错配、脱敏及输入不可变。2 项集成测试验证隔离 SQLite 的 ORM 字段往返与状态/身份保持。18 个确定性验收场景包含 T20→T21→T23 对 F 正负样例的验证，以及 T18/T19 合成输出接入；不调用外部站点或恒脑。分级需在归一化/去重后执行，生产持久化和在线装配另行联调；见 `specs/02-设计规格/SDD-08-风险分级契约.md`、`docs/03-模块实现/T23-风险分级模型.md`。
