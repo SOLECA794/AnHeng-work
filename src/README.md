@@ -35,3 +35,11 @@ Copy-Item .env.example .env  # 仅首次创建；已有 .env 时不要覆盖
 - T28–T30 的对话路由尚未挂载；需 A 提供本项目已发布 ID、输入契约及授权范围约束后联调。用户/资产授权映射不能从请求体信任传入，也不能直接给 D 的 Principal 开放全部 scope_ids。
 
 详细交付说明：`docs/03-模块实现/T09-T10-B组交付.md`；演示流程：`docs/02-质量与验收/T49-B组演示流程与答辩材料.md`。
+
+## T26 巡检报告
+
+`src/services/reporting.py` 汇总有界一致快照，`src/services/report_files.py` 生成脱敏 HTML/中文 PDF 与摘要校验文件，`src/repositories/reporting.py` 复用 report/agent_log 表。`src/api/reporting.py` 提供生成、分页列表、详情、下载四接口工厂。生产装配须注入可信身份与资产授权，当前默认应用未挂载。统计、接入和崩溃恢复边界见 `docs/03-模块实现/T26-报告生成与导出.md`，运行 `python scripts/verify_t26.py` 生成实际可打开的两种示例。
+
+## D 模块集成候选
+
+`feature/d-closure-20261023` 汇集 T23/T24/T25/T26/T47 与最新 main。`python scripts/verify_d_closure.py` 在私有数据库和 ASGI 实例中复现检测、分级、确认、告警、真实规则复测和报告下载；19 项跨模块检查通过。默认应用的业务装配、采集/历史 upsert、真实身份资产授权仍有单独交接边界，见 `docs/03-模块实现/D模块本地闭环与联调交接-20261023.md`。

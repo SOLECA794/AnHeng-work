@@ -22,3 +22,5 @@ Thumbs.db
 tests/.cache/
 reports/*.html
 reports/*.pdf
+output/pdf/
+tmp/pdfs/

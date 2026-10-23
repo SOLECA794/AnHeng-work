@@ -1,0 +1,6 @@
+{
+  "version": "t24-v1.0.0",
+  "enabled": true,
+  "min_severity": "HIGH",
+  "always_types": ["TAMPER", "SENSITIVE"]
+}
