@@ -1,0 +1,119 @@
+{
+  "task": "D_INTEGRATION_READINESS",
+  "date": "2026-10-23",
+  "mainSha": "42bc12fe44446407320e6310e1ee89c43399e08d",
+  "candidateBranch": "feature/d-closure-20261023",
+  "componentMergeHead": "8738951",
+  "originalPullRequests": [
+    {
+      "number": 6,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "mergeable": false,
+      "mergeable_state": "dirty",
+      "head": "feature/d-t23-risk-grading",
+      "headSha": "c70c9d27f1a3472250f4eda89b72b7c64435c3f5",
+      "base": "main",
+      "baseSha": "a538810fcfe47953f0692438fa085a009b55d6d1"
+    },
+    {
+      "number": 7,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "mergeable": false,
+      "mergeable_state": "dirty",
+      "head": "feature/d-t24-alerts",
+      "headSha": "c8d656f59ee9cb4306e8d2ddea0e0d76f2e92616",
+      "base": "main",
+      "baseSha": "a538810fcfe47953f0692438fa085a009b55d6d1"
+    },
+    {
+      "number": 8,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "mergeable_state": "clean",
+      "head": "feature/d-t25-retest",
+      "headSha": "47c42d41135cf15fb6ad69fb02e05211d055e421",
+      "base": "feature/d-t24-alerts",
+      "baseSha": "c8d656f59ee9cb4306e8d2ddea0e0d76f2e92616"
+    },
+    {
+      "number": 10,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "mergeable_state": "clean",
+      "head": "feature/d-t26-reports",
+      "headSha": "00748e8b5cab1b717cca182fc18ade7cdead31c9",
+      "base": "main",
+      "baseSha": "42bc12fe44446407320e6310e1ee89c43399e08d"
+    },
+    {
+      "number": 11,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "mergeable_state": "clean",
+      "head": "feature/d-t47-demo-guide",
+      "headSha": "4ab39a31c251369aa9b74201d38f89f7955f595e",
+      "base": "main",
+      "baseSha": "42bc12fe44446407320e6310e1ee89c43399e08d"
+    }
+  ],
+  "conflictsResolvedInCandidate": {
+    "files": [
+      "docs/01-项目治理/03-待办事项清单.md",
+      "tests/README.md"
+    ],
+    "mergeSteps": 5,
+    "fileConflictOccurrences": 7,
+    "strategy": "保留 B/D 历史与 T23—T26 验证说明；任务表只保留一行，历史同号 v2.7 按负责人标注。"
+  },
+  "verification": {
+    "unit": {
+      "testsRun": 400,
+      "passed": true
+    },
+    "integration": {
+      "testsRun": 138,
+      "passed": true,
+      "skippedPostgresClasses": 2,
+      "skipReason": "本机缺少 PostgreSQL 测试所需 psycopg2 驱动，未执行真库连接或断言。"
+    },
+    "closure": {
+      "passedChecks": 19,
+      "totalChecks": 19,
+      "passed": true,
+      "report": "reports/d-closure-20261023.json",
+      "repeatJsonIdentical": true
+    },
+    "retestAcceptance": {
+      "passedChecks": 17,
+      "totalChecks": 17,
+      "passed": true
+    },
+    "pdf": {
+      "pages": 4,
+      "visualReviewPassed": true,
+      "output": "output/pdf/d-closure-20261023.pdf"
+    }
+  },
+  "fix": {
+    "files": [
+      "tests/support/alert_db.py",
+      "tests/support/retest_db.py"
+    ],
+    "description": "固定初始化时间，并强制包含相等的 updated_at 赋值，防止 SQLAlchemy onupdate=now() 覆盖历史测试时钟。生产新鲜度校验保持有效。"
+  },
+  "boundaries": [
+    "原 PR 状态为10/23核对快照；共享文档冲突在统一候选中解决，原 PR 的目标与合并状态未改。",
+    "候选不是主分支；未做线上采集/幂等 upsert、真实 JWT 资产映射、生产 PostgreSQL、前端或恒脑验收。",
+    "SQLite、ASGI、固定合成样例的服务闭环；不是面向真实站点的生产流水线。"
+  ]
+}

@@ -108,3 +108,9 @@ python scripts/verify_t26.py
 ```
 
 43 项专项（7 单元、28 数据/事务/文件、8 API）验证统计去重、上海日期/UTC 存储边界、快照冻结、权限、失败回滚、真实中文 PDF/HTML、敏感内容不出报告及文件损坏拒绝。14 个离线验收场景写入 `reports/t26-acceptance.json`，示例输出在被忽略的 `output/pdf/`。独立 SQLite/ASGI 验收不代表生产 PostgreSQL 或真实用户资产授权联调通过；详见 SDD-11。
+
+## D 模块统一候选与跨模块闭环（2026-10-23）
+
+在包含 T23/T24/T25/T26 的统一候选分支中运行 `python scripts/verify_d_closure.py`。使用 F 正负样例和同一私有 SQLite，串联真实 T20→T21→T23→T22→T24→T25→T26，19 项检查包含检测/去重、分级落库、确认、通知去重、真实规则修复/复现、幂等、不确定结果、历史、权限、冻结报告及 HTML/PDF 下载。结果写入 `reports/d-closure-20261023.json`，导出物在 `output/pdf/`。
+
+T25 固定日期夹具显式维护 updated_at，并强制将相等赋值纳入更新，防止 ORM 的 onupdate=now() 让旧场景随运行日期失效；生产时间校验未放宽。全部单元 400 项、集成实际执行 138 项通过，另两个 PostgreSQL 测试类跳过。原 PR 合并与真实 JWT/数据库/前端/平台联调仍待推进，详见 `docs/03-模块实现/D模块本地闭环与联调交接-20261023.md`。

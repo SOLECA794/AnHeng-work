@@ -9,6 +9,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tests/support"))
 
 from src.models import Finding
+from sqlalchemy.orm.attributes import flag_modified
 from src.repositories.retesting import SqlAlchemyRetestRepository
 from src.services.finding_verification import Principal
 from src.services.findings import normalize_finding, to_orm_values
@@ -50,7 +51,9 @@ class Runner:
 @contextmanager
 def retest_database(*, sqlite_file=None):
     with alert_database(sqlite_file=sqlite_file) as (_, sessions):
-        change(sessions, status="CONFIRMED")
+        # SQLAlchemy's onupdate=now() must not move a fixed historical fixture
+        # beyond its October 17 detector clock when the suite runs on a later day.
+        change(sessions, status="CONFIRMED", updated_at=BASE)
         yield SqlAlchemyRetestRepository(sessions), sessions
 
 
@@ -65,5 +68,6 @@ def sensitive_fixture(sessions, *, current_text="public safe content", url=URL, 
             setattr(finding, key, value)
         finding.status = "CONFIRMED"
         finding.updated_at = datetime.fromisoformat(BASE)
+        flag_modified(finding, "updated_at")
     binding = SensitiveRetestTarget(1, standard["dedup_key"], url, rule_id, rules_fingerprint(scanner))
     return SensitiveRetestRunner(scanner, {101: binding}, lambda target: FreshDocument(ScanDocument(target.url, current_text), OBSERVED)), binding

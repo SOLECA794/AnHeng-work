@@ -4,6 +4,8 @@ from datetime import datetime
 from pathlib import Path
 import sys
 
+from sqlalchemy.orm.attributes import flag_modified
+
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tests/support"))
@@ -38,3 +40,7 @@ def change(sessions, identifier=101, **values):
         finding = session.get(Finding, identifier)
         for name, value in values.items():
             setattr(finding, name, value)
+        if "updated_at" in values:
+            # Reassigning an equal timestamp is otherwise omitted from UPDATE,
+            # allowing the ORM's onupdate=now() to replace the fixed test clock.
+            flag_modified(finding, "updated_at")
