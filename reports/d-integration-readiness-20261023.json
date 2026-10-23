@@ -3,6 +3,8 @@
   "date": "2026-10-23",
   "mainSha": "42bc12fe44446407320e6310e1ee89c43399e08d",
   "candidateBranch": "feature/d-closure-20261023",
+  "candidatePullRequest": "https://github.com/SOLECA794/AnHeng-work/pull/12",
+  "newWorkCommit": "49bc49a64a64f11ab25697fa05cc39733e5b28d7",
   "componentMergeHead": "8738951",
   "originalPullRequests": [
     {
