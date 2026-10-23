@@ -45,7 +45,7 @@ def _run_nuclei_task(task_id: str, target: str, templates: list[str]) -> None:
 
         cmd = [
             "docker", "run", "--rm",
-            "-v", f"{tpl_dir}:/root/nuclei-templates:ro",
+            "-v", "nuclei-tpl:/root/nuclei-templates:ro",
             "--add-host", "host.docker.internal:host-gateway",
             "projectdiscovery/nuclei:latest",
             "-u", container_target,
