@@ -75,3 +75,15 @@ python -m unittest discover -s tests/unit -t tests/unit -q
 ```
 
 34 项专项单元测试覆盖 CVSS 等级边界/非法数值、按工具和类型绑定规则、影响面取高、不降级、INFO 保持、策略校验与摘要、资产错配、脱敏及输入不可变。2 项集成测试验证隔离 SQLite 的 ORM 字段往返与状态/身份保持。18 个确定性验收场景包含 T20→T21→T23 对 F 正负样例的验证，以及 T18/T19 合成输出接入；不调用外部站点或恒脑。分级需在归一化/去重后执行，生产持久化和在线装配另行联调；见 `specs/02-设计规格/SDD-08-风险分级契约.md`、`docs/03-模块实现/T23-风险分级模型.md`。
+
+## T24 告警与站内通知
+
+```powershell
+python -m pip install -r requirements-test.txt
+python -m unittest discover -s tests/unit -p test_alert_policy.py -v
+python -m unittest discover -s tests/integration -p "test_alerts*.py" -v
+python scripts/verify_t24.py --output reports/t24-alert-results.json
+python -m unittest discover -s tests/unit -t tests/unit -q
+```
+
+41 项专项测试包含 8 项规则配置、24 项生命周期/事务/并发和 9 项 API 测试；17 个验收场景包括 F 正负样例接入、站内收件箱、跨任务去重、关闭不重发、修复后复现、权限、回滚及脱敏。并发使用临时 SQLite 文件的独立连接；复用的 verification_database 默认仍是内存数据库，可选 sqlite_file 只用于测试。未连接生产数据库或外发邮件。Windows 受限环境可能需要允许测试的本机通信与临时文件访问。说明见 `docs/03-模块实现/T24-告警规则与通知.md` 与 `specs/02-设计规格/SDD-09-告警契约.md`。
