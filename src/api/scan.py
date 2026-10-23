@@ -40,12 +40,15 @@ def _run_nuclei_task(task_id: str, target: str, templates: list[str]) -> None:
         tpl_dir = project_root / "nuclei-templates"
         raw_out = project_root / "reports" / f"nuclei-{task_id}.jsonl"
 
+        # 容器内 127.0.0.1 指向容器自己，改写为 host.docker.internal
+        container_target = target.replace("127.0.0.1", "host.docker.internal").replace("localhost", "host.docker.internal")
+
         cmd = [
             "docker", "run", "--rm",
             "-v", f"{tpl_dir}:/root/nuclei-templates:ro",
             "--add-host", "host.docker.internal:host-gateway",
             "projectdiscovery/nuclei:latest",
-            "-u", target,
+            "-u", container_target,
             "-silent", "-nc", "-jsonl", "-no-interactsh",
             "-etags", "fuzz,intrusive,dos",
             "-rate-limit", "30",
@@ -64,9 +67,14 @@ def _run_nuclei_task(task_id: str, target: str, templates: list[str]) -> None:
         _tasks[task_id]["status"] = "done"
         _tasks[task_id]["findings"] = findings
         _tasks[task_id]["raw_output"] = str(raw_out)
+        if result.stderr:
+            _tasks[task_id]["nuclei_stderr"] = result.stderr[-500:]  # 最后500字符
     except subprocess.TimeoutExpired:
         _tasks[task_id]["status"] = "timeout"
         _tasks[task_id]["error"] = "Nuclei 扫描超时（600s）"
+    except FileNotFoundError:
+        _tasks[task_id]["status"] = "failed"
+        _tasks[task_id]["error"] = "docker 命令未找到，请确认 Docker Desktop 已启动"
     except Exception as e:
         _tasks[task_id]["status"] = "failed"
         _tasks[task_id]["error"] = str(e)
