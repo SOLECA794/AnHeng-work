@@ -12,3 +12,5 @@
 | `seed_demo.py` | 演示数据（测试集资产/规则）初始化 | G |
 
 约定：脚本幂等、可重复执行；涉及数据库操作遵循 `specs/02-设计规格/SDD-02-数据模型设计.md`。
+
+`verify_t26.py`：使用隔离合成数据完成 14 个报告验收场景，通过真实 ASGI 生成并下载中文 PDF/HTML；JSON 结果在 `reports/t26-acceptance.json`，示例在 `output/pdf/`。不访问配置数据库或外部目标。

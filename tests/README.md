@@ -98,3 +98,13 @@ python -m unittest discover -s tests/unit -t tests/unit -q
 ```
 
 8 项契约单元、28 项执行/事务/并发及 9 项 API，共 45 项专项；17 个确定性验收场景。覆盖真实 T20 原规则重新执行、修复与复现、不确定结果不修复、历史/当前状态区分、幂等与过期回收、旧结果晚到、业务/规则/绑定变化、权限、事务回滚及同事务告警周期。仅使用私有 SQLite、合成内容和进程内 HTTP 客户端。分支依赖 T24；契约与集成边界见 `specs/02-设计规格/SDD-10-复测闭环契约.md`、`docs/03-模块实现/T25-复测闭环.md`。
+
+## T26 报告导出
+
+```powershell
+python -m unittest discover -s tests/unit -p test_reporting.py -v
+python -m unittest discover -s tests/integration -p "test_reporting*.py" -v
+python scripts/verify_t26.py
+```
+
+43 项专项（7 单元、28 数据/事务/文件、8 API）验证统计去重、上海日期/UTC 存储边界、快照冻结、权限、失败回滚、真实中文 PDF/HTML、敏感内容不出报告及文件损坏拒绝。14 个离线验收场景写入 `reports/t26-acceptance.json`，示例输出在被忽略的 `output/pdf/`。独立 SQLite/ASGI 验收不代表生产 PostgreSQL 或真实用户资产授权联调通过；详见 SDD-11。
