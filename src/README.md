@@ -43,3 +43,5 @@ Copy-Item .env.example .env  # 仅首次创建；已有 .env 时不要覆盖
 ## D 模块集成候选
 
 `feature/d-closure-20261023` 汇集 T23/T24/T25/T26/T47 与最新 main。`python scripts/verify_d_closure.py` 在私有数据库和 ASGI 实例中复现检测、分级、确认、告警、真实规则复测和报告下载；19 项跨模块检查通过。默认应用的业务装配、采集/历史 upsert、真实身份资产授权仍有单独交接边界，见 `docs/03-模块实现/D模块本地闭环与联调交接-20261023.md`。
+
+10/27 增补 `src/auth/d_principal.py` 的真实 JWT→Principal 桥和 `src/api/d_module.py` 可选统一路由。宿主提供 `DModuleServices` 与同步 `grant_resolver(user_id)->frozenset[int]`，显式 include_router；不提供解析器即无资产授权，默认应用未自动挂载。32 项专项验证退出/改密/停用、角色与资产边界等。正式 ACL 存储、历史 upsert 等实际缺口见 `docs/03-模块实现/D模块完成情况与剩余工作-20261027.md`，契约见 SDD-12。

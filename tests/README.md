@@ -114,3 +114,15 @@ python scripts/verify_t26.py
 在包含 T23/T24/T25/T26 的统一候选分支中运行 `python scripts/verify_d_closure.py`。使用 F 正负样例和同一私有 SQLite，串联真实 T20→T21→T23→T22→T24→T25→T26，19 项检查包含检测/去重、分级落库、确认、通知去重、真实规则修复/复现、幂等、不确定结果、历史、权限、冻结报告及 HTML/PDF 下载。结果写入 `reports/d-closure-20261023.json`，导出物在 `output/pdf/`。
 
 T25 固定日期夹具显式维护 updated_at，并强制将相等赋值纳入更新，防止 ORM 的 onupdate=now() 让旧场景随运行日期失效；生产时间校验未放宽。全部单元 400 项、集成实际执行 138 项通过，另两个 PostgreSQL 测试类跳过。原 PR 合并与真实 JWT/数据库/前端/平台联调仍待推进，详见 `docs/03-模块实现/D模块本地闭环与联调交接-20261023.md`。
+
+## D 模块真实 JWT 桥接（2026-10-27）
+
+```powershell
+python scripts/verify_d_auth_bridge.py
+python -m unittest discover -s tests/unit -p test_d_principal.py -v
+python -m unittest discover -s tests/integration -p test_d_module_auth.py -v
+```
+
+9 项身份桥单元 + 23 项真实 JWT/同一私有 SQLite 集成，共 32 项。覆盖四组路由、确认事务与处理人审计、角色、跨资产、动态撤权、退出/改密/停用/删除、伪造凭证及头、解析器类型/异常脱敏和默认入口未挂载。401 具有 Bearer 认证响应头。全量单元 409 项、集成实际执行 161 项通过，另两个真库测试类因本机缺少所需驱动跳过。
+
+授权解析器是可信测试映射，不代表生产用户资产 ACL 已有实现；撤权在下一请求生效，不承诺打断正在执行的长请求。结果为 `reports/d-auth-bridge-20261027.json`，实现/待办边界见 SDD-12 与 D 模块 10/27 状态说明。
