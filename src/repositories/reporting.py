@@ -3,11 +3,31 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 import json
 
-from sqlalchemy import func, select, text
+from sqlalchemy import and_, case, exists, func, or_, select, text, type_coerce
+from sqlalchemy.dialects.postgresql import JSONB
 
 from src.models.entities import AgentLog, AuthScope, DetectionTask, Finding, Report, SitePage
 from src.services.finding_verification import VerificationError, _timestamp
+from src.services.findings import INGESTION_MARKER
 from src.services.reporting import MAX_FINDINGS, MAX_TASKS, SHANGHAI, build_snapshot
+
+
+def _observed_in_tasks(dialect, task_ids):
+    raw = Finding.raw_data
+    if dialect == "postgresql":
+        observations = raw["observations"]
+        rows = func.jsonb_array_elements(case(
+            (func.jsonb_typeof(observations) == "array", observations), else_=func.jsonb_build_array(),
+        )).table_valued("value")
+        task = type_coerce(rows.c.value, JSONB)["task_id"]
+        matches = task.in_([func.to_jsonb(identifier) for identifier in task_ids])
+        managed = raw.has_key(INGESTION_MARKER)
+    else:
+        rows = func.json_each(raw, "$.observations").table_valued("value", "type")
+        item = case((rows.c.type == "object", rows.c.value), else_="{}")
+        matches = func.json_extract(item, "$.task_id").in_(task_ids)
+        managed = func.json_type(raw, "$." + INGESTION_MARKER).is_not(None)
+    return managed & exists(select(1).select_from(rows).where(matches).correlate(Finding))
 
 
 def metadata(row):
@@ -71,9 +91,16 @@ class SqlAlchemyReportRepository:
             tasks = session.scalars(select(DetectionTask).where(
                 DetectionTask.scope_id == scope_id, DetectionTask.created_at >= begin,
                 DetectionTask.created_at < end).order_by(DetectionTask.id).limit(MAX_TASKS + 1)).all()
-            findings = session.scalars(select(Finding).join(DetectionTask, Finding.task_id == DetectionTask.id).where(
-                DetectionTask.scope_id == scope_id, DetectionTask.created_at >= begin,
-                DetectionTask.created_at < end).order_by(Finding.id).limit(MAX_FINDINGS + 1)).all()
+            if len(tasks) > MAX_TASKS:
+                raise VerificationError(40903, "数据超过报告上限，请缩小时间范围")
+            task_ids = [task.id for task in tasks]
+            findings = session.scalars(select(Finding).where(
+                # Include malformed legacy rows attached to an in-scope task so
+                # the snapshot rejects them, rather than silently omitting them.
+                or_(Finding.task_id.in_(task_ids), and_(
+                    Finding.scope_id == scope_id, _observed_in_tasks(session.get_bind().dialect.name, task_ids),
+                )),
+            ).order_by(Finding.id).limit(MAX_FINDINGS + 1)).all() if task_ids else []
             page_count = session.scalar(select(func.count()).select_from(SitePage).where(SitePage.scope_id == scope_id))
             snapshot = build_snapshot(scope, page_count, tasks, findings, first.isoformat(), last.isoformat(), at,
                                       task_timezone=self.task_timezone)

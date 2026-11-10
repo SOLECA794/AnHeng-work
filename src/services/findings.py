@@ -322,6 +322,9 @@ def deduplicate_findings(findings: Sequence[Mapping], *, existing: Sequence[Mapp
     return merged
 
 
+INGESTION_MARKER = "t21_ingestion"
+
+
 def to_orm_values(record: Mapping) -> dict:
     """Field conversion only; the caller owns historical lookup and transaction upsert."""
     record = _validate_record(record)

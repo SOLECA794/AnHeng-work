@@ -44,7 +44,7 @@
 | --- | --- | --- | --- |
 | id | BIGINT | PK | 用户 ID |
 | username | VARCHAR(50) | UNIQUE, NOT NULL | 账号 |
-| password | VARCHAR(100) | NOT NULL | 带算法标记的加盐密码哈希；T09 实现为 scrypt（N=16384、r=8、p=1），不保存明文 |
+| password | VARCHAR(255) | NOT NULL | 带算法标记的加盐密码哈希；T09 实现为 scrypt（N=16384、r=8、p=1），不保存明文 |
 | nickname | VARCHAR(50) | 可空 | 昵称 |
 | role | VARCHAR(20) | NOT NULL | SEC_OPS / RULE_ADMIN / ADMIN |
 | status | TINYINT | DEFAULT 1 | 1 正常，0 停用 |
@@ -256,10 +256,11 @@
 
 ## 8. 变更记录
 
-T09 退出吊销复用 `agent_log`：`log_type=AUTH`、`action=logout`、`params_summary=sha256(jti)`；密码修改记录 action=password。平台请求记录 `log_type=AGENT`，摘要只存 providerCode。以上变化不新增表/列、不改变 SQL 结构；scrypt 自描述哈希长度 73，兼容现有 VARCHAR(100)。v1.2 纠正前一版 B 认证代码与 BCrypt 文档的既有不一致；既有 BCrypt 账号不能直接导入当前实现，须通过受控方式重新设置密码。
+T09 退出吊销复用 `agent_log`：`log_type=AUTH`、`action=logout`、`params_summary=sha256(jti)`；密码修改记录 action=password。平台请求记录 `log_type=AGENT`，摘要只存 providerCode。v1.2 纠正前一版 B 认证代码与 BCrypt 文档的既有不一致；既有 BCrypt 账号不能直接导入当前实现，须通过受控方式重新设置密码。v1.3 真库验证发现当前 scrypt 自描述哈希实际为 116 个字符；旧 VARCHAR(100) 会拒绝创建账号或改密，需按迁移扩至 VARCHAR(255)，不改变算法和已有哈希。
 
 | 版本 | 日期 | 变更人 | 变更内容 | 影响范围 |
 | --- | --- | --- | --- | --- |
 | v1.0 | 2026-10-09 | 课题立项 | 基线发布（资产/任务/风险/告警/报告/审计模型） | 全量 |
 | v1.2 | 2026-10-19 | B（待评审） | 对齐既有 scrypt 认证实现，明确 AUTH/AGENT/CANCELLED 审计语义及无固定口令的账号初始化方式；表结构无需迁移 | T09/T10、§4.1/§4.11/§6 |
+| v1.3 | 2026-11-10 | D（待评审） | 真库联调补 D 用户—资产授权表并修正 scrypt 哈希列容量，迁移见 SDD-13 | T09/D 装配 |
 | v1.1 | 2026-10-12 | C 组（待评审） | `finding_type` 枚举补充 `MALICIOUS_SCRIPT`：挂马脚本类（混淆脚本、外部脚本、注入 iframe、外跳）与 `MALICIOUS_LINK`（页面指向外部的链接）分离。缘由：T40 样例集 v1.0.0 已按此口径标注（B-01/B-02 = MALICIOUS_LINK，B-03/B-04 = MALICIOUS_SCRIPT），原五类枚举无法表达；SRS-02 F3.3 与验收标准 §1 本就按「恶意外链 / 挂马」两项分别要求 | T19、T20、T42 检测效果统计口径 |

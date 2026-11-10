@@ -1,11 +1,11 @@
 """Public ORM model exports."""
 from .base import Base
 from .entities import (
-    AgentLog, Alert, AuthScope, Baseline, DetectionTask, Finding, Report,
+    AgentLog, Alert, AuthScope, Baseline, DScopeGrant, DetectionTask, Finding, Report,
     Schedule, SensitiveRule, SitePage, SysUser,
 )
 
 __all__ = [
     "Base", "SysUser", "AuthScope", "SitePage", "Schedule", "DetectionTask",
-    "Finding", "Alert", "Baseline", "SensitiveRule", "Report", "AgentLog",
+    "Finding", "Alert", "Baseline", "SensitiveRule", "Report", "AgentLog", "DScopeGrant",
 ]

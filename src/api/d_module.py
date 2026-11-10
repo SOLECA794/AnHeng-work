@@ -36,3 +36,25 @@ def create_d_module_router(services: DModuleServices, *, grant_resolver: GrantRe
     router.include_router(create_retest_router(services.retesting, principal_dependency=identity))
     router.include_router(create_report_router(services.reports, principal_dependency=identity, clock=report_clock))
     return router
+
+
+def create_database_d_module(sessions, report_directory, *, runner=None):
+    """Build the explicit database-backed host assembly, sharing B's user database."""
+    from src.auth.d_grants import SqlAlchemyDGrants
+    from src.repositories.alerts import SqlAlchemyAlertRepository
+    from src.repositories.finding_ingestion import SqlAlchemyFindingIngestion
+    from src.repositories.finding_verification import SqlAlchemyVerificationRepository
+    from src.repositories.reporting import SqlAlchemyReportRepository
+    from src.repositories.retesting import SqlAlchemyRetestRepository
+    from src.services.report_files import ReportStorage
+    from src.services.risk_grading import load_grading_policy
+
+    services = DModuleServices(
+        verification=VerificationService(SqlAlchemyVerificationRepository(sessions)),
+        alerts=AlertService(SqlAlchemyAlertRepository(sessions)),
+        retesting=RetestService(SqlAlchemyRetestRepository(sessions), runner=runner),
+        reports=ReportService(SqlAlchemyReportRepository(sessions), ReportStorage(report_directory)),
+    )
+    grants = SqlAlchemyDGrants(sessions)
+    return (create_d_module_router(services, grant_resolver=grants.resolve),
+            SqlAlchemyFindingIngestion(sessions, grading_policy=load_grading_policy(), alert_service=services.alerts))

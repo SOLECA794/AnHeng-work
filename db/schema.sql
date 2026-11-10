@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS sensitive_rule (
 CREATE TABLE IF NOT EXISTS sys_user (
 	id BIGSERIAL NOT NULL, 
 	username VARCHAR(50) NOT NULL, 
-	password VARCHAR(100) NOT NULL, 
+	password VARCHAR(255) NOT NULL,
 	nickname VARCHAR(50), 
 	role VARCHAR(20) NOT NULL, 
 	status INTEGER DEFAULT '1' NOT NULL, 
@@ -220,5 +220,12 @@ CREATE INDEX IF NOT EXISTS idx_finding_type ON finding (finding_type, severity);
 CREATE INDEX IF NOT EXISTS idx_alert_finding ON alert (finding_id);
 
 CREATE INDEX IF NOT EXISTS idx_alert_status ON alert (status);
+
+CREATE TABLE IF NOT EXISTS d_scope_grant (
+	user_id BIGINT NOT NULL REFERENCES sys_user(id) ON DELETE CASCADE,
+	scope_id BIGINT NOT NULL REFERENCES auth_scope(id) ON DELETE CASCADE,
+	PRIMARY KEY (user_id, scope_id)
+);
+CREATE INDEX IF NOT EXISTS idx_d_scope_grant_scope ON d_scope_grant (scope_id);
 
 COMMIT;

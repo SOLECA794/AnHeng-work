@@ -42,6 +42,21 @@ class RetestResult:
     coverage_complete: bool = False
 
 
+class RetestDispatcher:
+    """Use a server configured exact kind/tool pair. Unknown routes never infer CLEAN."""
+    def __init__(self, runners):
+        self._runners = dict(runners)
+        if any(not isinstance(key, tuple) or len(key) != 2
+               or any(not isinstance(value, str) or not value for value in key)
+               or not callable(getattr(runner, "run", None))
+               for key, runner in self._runners.items()):
+            raise ValueError("invalid retest runner registration")
+
+    def run(self, snapshot):
+        runner = self._runners.get((snapshot.kind, snapshot.tool_name))
+        return runner.run(snapshot) if runner else RetestResult("INCONCLUSIVE")
+
+
 _SHA = re.compile(r"[0-9a-f]{64}\Z")
 _STATUSES = {"OPEN", "CONFIRMED", "FALSE_POSITIVE", "FIXED", "RETESTED"}
 _OUTCOMES = {"RUNNING", "MATCH", "CLEAN", "INCONCLUSIVE", "CONFLICT", "EXPIRED"}

@@ -7,6 +7,7 @@ import hashlib
 import re
 
 from src.services.finding_verification import VerificationError, _id, _timestamp, require_principal
+from src.services.findings import INGESTION_MARKER
 
 MAX_TASKS = MAX_FINDINGS = 1000
 SEVERITIES = ("CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO")
@@ -62,16 +63,40 @@ def build_snapshot(scope, page_count, tasks, findings, begin, end, at, *, task_t
         safe_tasks.append({"taskId": task.id, "status": task.status, "createdAt": task_stamp})
     days = {t["taskId"]: t["createdAt"][:10] for t in safe_tasks}
     for finding in findings:
-        if (finding.scope_id != scope.id or finding.task_id not in task_ids or
+        if (finding.scope_id != scope.id or
                 finding.finding_type not in TEMPLATES or finding.severity not in SEVERITIES or
                 finding.status not in STATUSES or not isinstance(finding.dedup_key, str) or
                 not finding.dedup_key or len(finding.dedup_key) > 64):
             raise VerificationError(40903, "风险数据不符合报告契约")
-        groups[finding.dedup_key].append(finding)
-        daily_keys[days[finding.task_id]].add(finding.dedup_key)
+        raw = finding.raw_data
+        if isinstance(raw, dict) and INGESTION_MARKER in raw:
+            observations = raw.get("observations")
+            if not isinstance(observations, list) or not observations or len(observations) > 10_000:
+                raise VerificationError(40903, "风险观测不符合报告契约")
+            matching, times = set(), []
+            for item in observations:
+                if not isinstance(item, dict) or not _id(item.get("task_id")):
+                    raise VerificationError(40903, "风险观测任务不合法")
+                if item["task_id"] in task_ids:
+                    seen = item.get("seen_at")
+                    if not isinstance(seen, str) or _timestamp(seen) != seen:
+                        raise VerificationError(40903, "风险观测时间不合法")
+                    matching.add(item["task_id"])
+                    times.append(seen)
+            if not matching:
+                raise VerificationError(40903, "报告期内没有关联风险观测")
+            first_seen, last_seen = min(times), max(times)
+        else:
+            if finding.task_id not in task_ids:
+                raise VerificationError(40903, "风险任务不符合报告契约")
+            matching = {finding.task_id}
+            first_seen, last_seen = _timestamp(finding.first_seen), _timestamp(finding.last_seen)
+        groups[finding.dedup_key].append((finding, matching, first_seen, last_seen))
+        for identifier in matching:
+            daily_keys[days[identifier]].add(finding.dedup_key)
     details = []
     for records in groups.values():
-        latest = max(records, key=lambda f: (f.last_seen, f.id))
+        latest = max((row[0] for row in records), key=lambda f: (f.last_seen, f.id))
         title, impact, suggestion = TEMPLATES[latest.finding_type]
         source = (latest.raw_data or {}).get("source_sha256") if isinstance(latest.raw_data, dict) else None
         if not isinstance(source, str) or not SHA.fullmatch(source):
@@ -79,9 +104,10 @@ def build_snapshot(scope, page_count, tasks, findings, begin, end, at, *, task_t
         details.append({
             "findingId": latest.id, "type": latest.finding_type, "title": title,
             "severity": latest.severity, "status": latest.status,
-            "taskIds": sorted({f.task_id for f in records}), "findingIds": sorted(f.id for f in records),
-            "firstSeen": min(_timestamp(f.first_seen) for f in records),
-            "lastSeen": max(_timestamp(f.last_seen) for f in records),
+            "taskIds": sorted(set().union(*(row[1] for row in records))),
+            "findingIds": sorted(row[0].id for row in records),
+            "firstSeen": min(row[2] for row in records),
+            "lastSeen": max(row[3] for row in records),
             "evidenceSha256": source, "impact": impact, "suggestion": suggestion,
         })
     details.sort(key=lambda f: (SEVERITIES.index(f["severity"]), f["findingId"]))

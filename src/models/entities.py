@@ -22,7 +22,7 @@ class SysUser(TimestampMixin, SoftDeleteMixin, Base):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(String(100), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
     nickname: Mapped[str | None] = mapped_column(String(50))
     role: Mapped[str] = mapped_column(String(20), nullable=False)
     status: Mapped[int] = mapped_column(Integer, nullable=False, server_default="1", default=1)
@@ -39,6 +39,15 @@ class AuthScope(TimestampMixin, SoftDeleteMixin, Base):
     auth_note: Mapped[str | None] = mapped_column(String(500))
     owner: Mapped[str | None] = mapped_column(String(50))
     status: Mapped[str] = mapped_column(String(20), nullable=False)
+
+
+class DScopeGrant(Base):
+    """Explicit D module permissions; asset ownership labels do not grant access."""
+    __tablename__ = "d_scope_grant"
+    __table_args__ = (Index("idx_d_scope_grant_scope", "scope_id"),)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("sys_user.id", ondelete="CASCADE"), primary_key=True)
+    scope_id: Mapped[int] = mapped_column(ForeignKey("auth_scope.id", ondelete="CASCADE"), primary_key=True)
 
 
 class SitePage(CreatedAtMixin, Base):
