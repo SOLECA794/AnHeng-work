@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     dev_admin_password: str = "change-me-admin-password"
     database_url: str = "sqlite+pysqlite:///./.local/anheng.db"
     jwt_ttl_seconds: int = Field(default=3600, ge=60, le=86400)
+    d_module_enabled: bool = False
+    d_report_directory: str = "./.local/d-reports"
     hengan_timeout_seconds: float = Field(default=90, gt=0)
     hengan_max_concurrency: int = Field(default=2, ge=1, le=2)
     hengan_retry_attempts: int = Field(default=3, ge=0, le=5)

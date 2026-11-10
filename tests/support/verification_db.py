@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from sqlalchemy import BigInteger, Integer, JSON, MetaData, create_engine, event
+from sqlalchemy.engine import URL
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -25,7 +26,7 @@ FIXED_TIME = datetime(2026, 10, 14, 9, 0, 0)
 
 
 @contextmanager
-def verification_database():
+def verification_database(*, sqlite_file=None):
     """Yield (repository, session factory) backed by a fresh private in-memory DB.
 
     Only cloned test DDL substitutes JSONB and INTEGER primary keys. Connections
@@ -43,8 +44,9 @@ def verification_database():
                 column.type = JSON()
             if column.primary_key and isinstance(column.type, BigInteger):
                 column.type = Integer()
-    engine = create_engine("sqlite+pysqlite:///:memory:",
-                           connect_args={"check_same_thread": False}, poolclass=StaticPool)
+    url = URL.create("sqlite+pysqlite", database=str(sqlite_file) if sqlite_file is not None else ":memory:")
+    options = {} if sqlite_file is not None else {"poolclass": StaticPool}
+    engine = create_engine(url, connect_args={"check_same_thread": False, "timeout": 10}, **options)
 
     @event.listens_for(engine, "connect")
     def enable_foreign_keys(connection, _record):

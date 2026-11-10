@@ -63,3 +63,66 @@ python scripts/verify_t22.py --output reports/t22-verification-results.json
 ```
 
 SQL/API 测试使用 `tests/support/verification_db.py` 创建的独立内存 SQLite 夹具，仅在克隆的测试 DDL 中替换 PostgreSQL JSONB 与自增主键类型；生产 ORM、配置数据库及迁移不受影响。覆盖成功持久化与重新查询、审计失败回滚、状态/来源 CAS、角色与资产权限、同源规则复核和默认拒绝的 API 工厂。契约及接入边界见 `specs/02-设计规格/SDD-06-结果验证与状态流转契约.md`、`docs/03-模块实现/T22-结果验证与状态流转.md`。
+
+## T23 风险分级验证
+
+```powershell
+python -m pip install -r requirements-test.txt
+python -m unittest discover -s tests/unit -p test_risk_grading.py -v
+python -m unittest discover -s tests/integration -p test_risk_grading_sql.py -v
+python scripts/verify_t23.py --output reports/t23-risk-grading-results.json
+python -m unittest discover -s tests/unit -t tests/unit -q
+```
+
+34 项专项单元测试覆盖 CVSS 等级边界/非法数值、按工具和类型绑定规则、影响面取高、不降级、INFO 保持、策略校验与摘要、资产错配、脱敏及输入不可变。2 项集成测试验证隔离 SQLite 的 ORM 字段往返与状态/身份保持。18 个确定性验收场景包含 T20→T21→T23 对 F 正负样例的验证，以及 T18/T19 合成输出接入；不调用外部站点或恒脑。分级需在归一化/去重后执行，生产持久化和在线装配另行联调；见 `specs/02-设计规格/SDD-08-风险分级契约.md`、`docs/03-模块实现/T23-风险分级模型.md`。
+
+## T24 告警与站内通知
+
+```powershell
+python -m pip install -r requirements-test.txt
+python -m unittest discover -s tests/unit -p test_alert_policy.py -v
+python -m unittest discover -s tests/integration -p "test_alerts*.py" -v
+python scripts/verify_t24.py --output reports/t24-alert-results.json
+python -m unittest discover -s tests/unit -t tests/unit -q
+```
+
+41 项专项测试包含 8 项规则配置、24 项生命周期/事务/并发和 9 项 API 测试；17 个验收场景包括 F 正负样例接入、站内收件箱、跨任务去重、关闭不重发、修复后复现、权限、回滚及脱敏。并发使用临时 SQLite 文件的独立连接；复用的 verification_database 默认仍是内存数据库，可选 sqlite_file 只用于测试。未连接生产数据库或外发邮件。Windows 受限环境可能需要允许测试的本机通信与临时文件访问。说明见 `docs/03-模块实现/T24-告警规则与通知.md` 与 `specs/02-设计规格/SDD-09-告警契约.md`。
+
+## T25 复测闭环
+
+```powershell
+python -m unittest discover -s tests/unit -p test_retesting.py -v
+python -m unittest discover -s tests/integration -p "test_retesting*.py" -v
+python scripts/verify_t25.py --output reports/t25-retest-results.json
+python -m unittest discover -s tests/unit -t tests/unit -q
+```
+
+8 项契约单元、28 项执行/事务/并发及 9 项 API，共 45 项专项；17 个确定性验收场景。覆盖真实 T20 原规则重新执行、修复与复现、不确定结果不修复、历史/当前状态区分、幂等与过期回收、旧结果晚到、业务/规则/绑定变化、权限、事务回滚及同事务告警周期。仅使用私有 SQLite、合成内容和进程内 HTTP 客户端。分支依赖 T24；契约与集成边界见 `specs/02-设计规格/SDD-10-复测闭环契约.md`、`docs/03-模块实现/T25-复测闭环.md`。
+
+## T26 报告导出
+
+```powershell
+python -m unittest discover -s tests/unit -p test_reporting.py -v
+python -m unittest discover -s tests/integration -p "test_reporting*.py" -v
+python scripts/verify_t26.py
+```
+
+43 项专项（7 单元、28 数据/事务/文件、8 API）验证统计去重、上海日期/UTC 存储边界、快照冻结、权限、失败回滚、真实中文 PDF/HTML、敏感内容不出报告及文件损坏拒绝。14 个离线验收场景写入 `reports/t26-acceptance.json`，示例输出在被忽略的 `output/pdf/`。独立 SQLite/ASGI 验收不代表生产 PostgreSQL 或真实用户资产授权联调通过；详见 SDD-11。
+
+## D 模块统一候选与跨模块闭环（2026-10-23）
+
+在包含 T23/T24/T25/T26 的统一候选分支中运行 `python scripts/verify_d_closure.py`。使用 F 正负样例和同一私有 SQLite，串联真实 T20→T21→T23→T22→T24→T25→T26，19 项检查包含检测/去重、分级落库、确认、通知去重、真实规则修复/复现、幂等、不确定结果、历史、权限、冻结报告及 HTML/PDF 下载。结果写入 `reports/d-closure-20261023.json`，导出物在 `output/pdf/`。
+
+T25 固定日期夹具显式维护 updated_at，并强制将相等赋值纳入更新，防止 ORM 的 onupdate=now() 让旧场景随运行日期失效；生产时间校验未放宽。全部单元 400 项、集成实际执行 138 项通过，另两个 PostgreSQL 测试类跳过。原 PR 合并与真实 JWT/数据库/前端/平台联调仍待推进，详见 `docs/03-模块实现/D模块本地闭环与联调交接-20261023.md`。
+
+## D 模块真实 JWT 桥接（2026-10-27）
+
+```powershell
+python scripts/verify_d_auth_bridge.py
+python -m unittest discover -s tests/unit -p test_d_principal.py -v
+python -m unittest discover -s tests/integration -p test_d_module_auth.py -v
+```
+
+9 项身份桥单元 + 23 项真实 JWT/同一私有 SQLite 集成，共 32 项。覆盖四组路由、确认事务与处理人审计、角色、跨资产、动态撤权、退出/改密/停用/删除、伪造凭证及头、解析器类型/异常脱敏和默认入口未挂载。401 具有 Bearer 认证响应头。全量单元 409 项、集成实际执行 161 项通过，另两个真库测试类因本机缺少所需驱动跳过。
+
+授权解析器是可信测试映射，不代表生产用户资产 ACL 已有实现；撤权在下一请求生效，不承诺打断正在执行的长请求。结果为 `reports/d-auth-bridge-20261027.json`，实现/待办边界见 SDD-12 与 D 模块 10/27 状态说明。

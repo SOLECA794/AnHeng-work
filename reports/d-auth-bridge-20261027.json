@@ -1,0 +1,18 @@
+{
+  "task": "D_AUTH_BRIDGE",
+  "date": "2026-10-27",
+  "observedAt": "2026-10-27T15:40:22+08:00",
+  "execution": "Real JWT from B AuthService, private SQLite and D route factories",
+  "testsRun": 32,
+  "passed": true,
+  "failures": [],
+  "errors": [],
+  "skipped": [],
+  "boundaries": [
+    "服务器授权解析器在测试中由可信内存映射提供，不代表生产 ACL 表或维护服务已实现。",
+    "每请求重新读取授权，不承诺即时取消已在执行的请求。",
+    "仅可选路由装配，src.main 默认应用未自动挂载 D 业务路由。",
+    "使用隔离用户与私有数据库；不访问真实账号、业务库、外部靶标或恒脑。",
+    "未验证生产 PostgreSQL、前端按钮或线上采集/历史 upsert。"
+  ]
+}

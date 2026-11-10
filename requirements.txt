@@ -17,5 +17,8 @@ aiohttp>=3.9,<4
 # T20 敏感信息检测
 regex>=2024.11.6
 
+# T26 中文 PDF 报告（HTML 不依赖浏览器或外部资源）
+reportlab>=4.2,<5
+
 # PostgreSQL runtime (DATABASE_URL=postgresql+psycopg://...)
 psycopg[binary]>=3.2,<4

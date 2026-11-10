@@ -213,6 +213,8 @@ data: {"event":"done","message":"巡检完成：共发现 3 个风险（高危 1
 
 生成完成后 `filePath` 就绪，经 `GET /api/reports/{id}/file` 下载。
 
+T26 v1 实现细化（2026-10-19，D，待评审）：当前为有界同步生成，成功直接返回 DONE、filePath（HTML）及 pdfPath，失败返回统一错误并保留 FAILED 行。列表支持 scopeId/page/pageSize，下载支持 `format=html|pdf`，默认 html；统计、授权、脱敏、快照和故障边界见 SDD-11。上述 GENERATING 响应保留为未来异步队列契约示例。
+
 ### 5.5 认证字段（T09，2026-10-19 实现细化）
 
 - 登录请求：`{"username":"ops","password":"..."}`；成功 data：`{"token":"...","tokenType":"Bearer","expiresIn":3600,"user":{"id":1,"username":"ops","nickname":"运维","role":"SEC_OPS"}}`。
@@ -234,3 +236,4 @@ data: {"event":"done","message":"巡检完成：共发现 3 个风险（高危 1
 | --- | --- | --- | --- | --- |
 | v1.0 | 2026-10-09 | 课题立项 | 基线发布（资产/计划/任务/风险/告警/报告/规则/智能体接口） | 全量 |
 | v1.1 | 2026-10-19 | B（待评审） | 细化既有认证与审计接口字段、密码失效语义和统一错误响应；不改变角色集合 | §5.5、T09/T10 |
+| v1.2 | 2026-10-19 | D（待评审） | T26 有界同步生成返回 DONE、pdfPath，补分页与下载格式说明；沿用既有角色及 report 表，详见 SDD-11 | §4.7/§5.4、T26 |

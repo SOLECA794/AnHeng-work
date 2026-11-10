@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-10",
+  "status": "passed",
+  "environment": {
+    "postgresql_version": "16.13",
+    "isolated_local_fixture": true,
+    "sqlite_fixture": true,
+    "production_accessed": false,
+    "live_nuclei_zap_executed": false
+  },
+  "regression": {
+    "unit_passed": 413,
+    "integration_passed": 193,
+    "skipped": 0
+  },
+  "new_coverage_included_in_regression": {
+    "retest_contract_unit": 4,
+    "ingestion_and_acl_sqlite": 9,
+    "ingestion_and_acl_postgresql": 9,
+    "mounted_runtime_sqlite": 1,
+    "mounted_runtime_postgresql": 1
+  },
+  "verified": [
+    "Concurrent writes for one asset and risk keep one Finding and both task observations",
+    "Exact retries do not create a second Finding or alert",
+    "Late observations preserve severity, status, prior alert, pending retest and audit references",
+    "Alert audit failure rolls back the batch, finding and alert",
+    "Reports include in-period observations for a risk anchored outside the period",
+    "JWT and persisted asset grants protect all mounted D route groups; revocation affects the next request",
+    "Mounted pipeline detects four synthetic risk types and generates a downloadable PDF",
+    "Tamper, malicious link and script repeat the original rule with complete authorized content",
+    "Nuclei/ZAP contracts reject failure, incomplete coverage and non-isolated runs",
+    "PostgreSQL migration applied twice to a simulated old schema; existing values preserved, grant table empty, 116-character hash persisted"
+  ],
+  "pending": [
+    "Review and merge PR 12; execute migration and configure grants in the target environment",
+    "Wire the approved collector, task scheduler and source of production rule bindings",
+    "Validate real Nuclei/ZAP fresh-run coverage; integrate frontend and Hengan; rehearse full deployment"
+  ]
+}

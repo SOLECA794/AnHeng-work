@@ -1,0 +1,368 @@
+{
+  "task": "T25",
+  "fixture_version": "t25-sqlite-v1",
+  "fixed_start": "2026-10-17 09:00:00",
+  "mode": "private SQLite transactions, trusted result fixtures and actual offline T20 rules; no external scan",
+  "checks": [
+    {
+      "name": "actual T20 original rule rerun clean marks fixed",
+      "passed": true,
+      "evidence": {
+        "findingId": 101,
+        "scopeId": 1,
+        "actorId": 1,
+        "currentStatus": "FIXED",
+        "at": "2026-10-17 09:02:00",
+        "replayed": false,
+        "alert_outcome": "RESOLVED",
+        "error_code": 0,
+        "from_status": "CONFIRMED",
+        "observed_at": "2026-10-17 09:01:00",
+        "outcome": "CLEAN",
+        "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+        "rules_sha256": "7502b7ebf20bac5017c59ea32aed5a52491c50270aaef908a7de16c96b5b7d4e",
+        "source_sha256": "894749fcc79a019ed751b3a5c238f363bf69ac1b123e152533706cf4e297a084",
+        "status": "FIXED"
+      }
+    },
+    {
+      "name": "actual rule on F D-01 content still matching stays confirmed",
+      "passed": true,
+      "evidence": {
+        "findingId": 101,
+        "scopeId": 1,
+        "actorId": 1,
+        "currentStatus": "CONFIRMED",
+        "at": "2026-10-17 09:02:00",
+        "replayed": false,
+        "alert_id": 1,
+        "alert_outcome": "ALERT_CREATED",
+        "error_code": 0,
+        "from_status": "CONFIRMED",
+        "observed_at": "2026-10-17 09:01:00",
+        "outcome": "MATCH",
+        "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+        "rules_sha256": "7502b7ebf20bac5017c59ea32aed5a52491c50270aaef908a7de16c96b5b7d4e",
+        "source_sha256": "ff23ef39ecac5135432c6be39cb49a233903db5a3f6009777310b9946635c019",
+        "status": "CONFIRMED"
+      }
+    },
+    {
+      "name": "clean recheck after fixed becomes retested",
+      "passed": true,
+      "evidence": [
+        {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "FIXED",
+          "at": "2026-10-17 09:02:00",
+          "replayed": false,
+          "alert_outcome": "RESOLVED",
+          "error_code": 0,
+          "from_status": "CONFIRMED",
+          "observed_at": "2026-10-17 09:01:00",
+          "outcome": "CLEAN",
+          "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+          "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "FIXED"
+        },
+        {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "RETESTED",
+          "at": "2026-10-17 10:02:00",
+          "replayed": false,
+          "alert_outcome": "RESOLVED",
+          "error_code": 0,
+          "from_status": "FIXED",
+          "observed_at": "2026-10-17 10:01:00",
+          "outcome": "CLEAN",
+          "request_id": "56f1f90c-807c-4ee0-b331-4d7a23629ca2",
+          "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "RETESTED"
+        }
+      ]
+    },
+    {
+      "name": "repair resolves alert cycle and recurrence opens a new one",
+      "passed": true,
+      "evidence": [
+        {
+          "outcome": "ALERT_CREATED",
+          "findingId": 101,
+          "scopeId": 1,
+          "cycle": 1,
+          "alertId": 1,
+          "notification": "IN_APP"
+        },
+        {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "FIXED",
+          "at": "2026-10-17 09:02:00",
+          "replayed": false,
+          "alert_id": 1,
+          "alert_outcome": "RESOLVED",
+          "error_code": 0,
+          "from_status": "CONFIRMED",
+          "observed_at": "2026-10-17 09:01:00",
+          "outcome": "CLEAN",
+          "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+          "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "FIXED"
+        },
+        {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "CONFIRMED",
+          "at": "2026-10-17 10:02:00",
+          "replayed": false,
+          "alert_id": 2,
+          "alert_outcome": "ALERT_CREATED",
+          "error_code": 0,
+          "from_status": "FIXED",
+          "observed_at": "2026-10-17 10:01:00",
+          "outcome": "MATCH",
+          "request_id": "56f1f90c-807c-4ee0-b331-4d7a23629ca2",
+          "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "CONFIRMED"
+        }
+      ]
+    },
+    {
+      "name": "same request UUID replays without a second detector execution",
+      "passed": true,
+      "evidence": {
+        "first": {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "FIXED",
+          "at": "2026-10-17 09:02:00",
+          "replayed": false,
+          "alert_outcome": "RESOLVED",
+          "error_code": 0,
+          "from_status": "CONFIRMED",
+          "observed_at": "2026-10-17 09:01:00",
+          "outcome": "CLEAN",
+          "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+          "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "FIXED"
+        },
+        "replay": {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "FIXED",
+          "at": "2026-10-17 09:02:00",
+          "replayed": true,
+          "alert_outcome": "RESOLVED",
+          "error_code": 0,
+          "from_status": "CONFIRMED",
+          "observed_at": "2026-10-17 09:01:00",
+          "outcome": "CLEAN",
+          "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+          "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "FIXED"
+        },
+        "detector_calls": 1
+      }
+    },
+    {
+      "name": "uncertain result never claims repair",
+      "passed": true,
+      "evidence": {
+        "error_code": 40903,
+        "state": "CONFIRMED"
+      }
+    },
+    {
+      "name": "timeout preserves state and sanitized trace",
+      "passed": true,
+      "evidence": {
+        "error_code": 50002,
+        "state": "CONFIRMED",
+        "history": {
+          "findingId": 101,
+          "scopeId": 1,
+          "items": [
+            {
+              "findingId": 101,
+              "scopeId": 1,
+              "actorId": 1,
+              "currentStatus": "CONFIRMED",
+              "at": "2026-10-17 09:02:00",
+              "replayed": false,
+              "error_code": 50002,
+              "from_status": "CONFIRMED",
+              "outcome": "INCONCLUSIVE",
+              "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+              "status": "CONFIRMED"
+            },
+            {
+              "findingId": 101,
+              "scopeId": 1,
+              "actorId": 1,
+              "currentStatus": "CONFIRMED",
+              "at": "2026-10-17 09:00:00",
+              "replayed": false,
+              "error_code": 0,
+              "from_status": "CONFIRMED",
+              "outcome": "RUNNING",
+              "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+              "status": "CONFIRMED"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "missing adapter does not fabricate success",
+      "passed": true,
+      "evidence": {
+        "error_code": 40903,
+        "state": "CONFIRMED"
+      }
+    },
+    {
+      "name": "changed rule snapshot blocks clean conclusion",
+      "passed": true,
+      "evidence": {
+        "error_code": 40903,
+        "state": "CONFIRMED"
+      }
+    },
+    {
+      "name": "incomplete current content is not repair evidence",
+      "passed": true,
+      "evidence": {
+        "error_code": 40903,
+        "state": "CONFIRMED"
+      }
+    },
+    {
+      "name": "old content cannot change repair state",
+      "passed": true,
+      "evidence": {
+        "error_code": 40903,
+        "state": "CONFIRMED"
+      }
+    },
+    {
+      "name": "concurrent business update is not overwritten",
+      "passed": true,
+      "evidence": {
+        "error_code": 40902,
+        "state": "FALSE_POSITIVE"
+      }
+    },
+    {
+      "name": "terminal audit failure rolls back finding and alert cycle",
+      "passed": true,
+      "evidence": {
+        "error_code": 50000,
+        "state": "CONFIRMED",
+        "pending_trace_retained": true,
+        "alert_cycle_written": false
+      }
+    },
+    {
+      "name": "expired reservation is recovered with a durable prior outcome",
+      "passed": true,
+      "evidence": [
+        {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "FIXED",
+          "at": "2026-10-17 09:02:00",
+          "replayed": false,
+          "alert_outcome": "RESOLVED",
+          "error_code": 0,
+          "from_status": "CONFIRMED",
+          "observed_at": "2026-10-17 09:01:00",
+          "outcome": "CLEAN",
+          "request_id": "56f1f90c-807c-4ee0-b331-4d7a23629ca2",
+          "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "FIXED"
+        },
+        {
+          "findingId": 101,
+          "scopeId": 1,
+          "actorId": 1,
+          "currentStatus": "FIXED",
+          "at": "2026-10-17 09:00:00",
+          "replayed": true,
+          "error_code": 40903,
+          "from_status": "CONFIRMED",
+          "outcome": "EXPIRED",
+          "request_id": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+          "status": "CONFIRMED"
+        }
+      ]
+    },
+    {
+      "name": "identity role and asset boundaries precede detector execution",
+      "passed": true,
+      "evidence": {
+        "error_codes": [
+          40100,
+          40300,
+          40310
+        ],
+        "detector_calls": 0
+      }
+    },
+    {
+      "name": "bounded site retest exposes individual results",
+      "passed": true,
+      "evidence": {
+        "scopeId": 1,
+        "requestId": "ac6ac280-2dd2-45c4-9fbc-27a23eccd42b",
+        "items": [
+          {
+            "findingId": 101,
+            "scopeId": 1,
+            "actorId": 1,
+            "currentStatus": "FIXED",
+            "at": "2026-10-17 09:02:00",
+            "replayed": false,
+            "alert_outcome": "RESOLVED",
+            "error_code": 0,
+            "from_status": "CONFIRMED",
+            "observed_at": "2026-10-17 09:01:00",
+            "outcome": "CLEAN",
+            "request_id": "d23df08d-8c5e-556b-aa80-db932e3a3ced",
+            "rules_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "status": "FIXED"
+          }
+        ],
+        "nextAfterId": 101
+      }
+    },
+    {
+      "name": "report contains no raw synthetic secret or original target URL",
+      "passed": true,
+      "evidence": {
+        "raw_secret_absent": true,
+        "raw_url_absent": true
+      }
+    }
+  ],
+  "passed_checks": 17,
+  "total_checks": 17,
+  "passed": true,
+  "limitations": "No live PostgreSQL, production authentication, mounted frontend, external scanner or platform integration was performed."
+}

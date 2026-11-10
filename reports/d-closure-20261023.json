@@ -1,0 +1,231 @@
+{
+  "task": "D_MODULE_CLOSURE",
+  "date": "2026-10-23",
+  "dataset": "F-v1.0.0",
+  "passed": true,
+  "passedChecks": 19,
+  "totalChecks": 19,
+  "checks": [
+    {
+      "name": "F 正负样例真实 T20 检测",
+      "passed": true,
+      "evidence": {
+        "D-01": 4,
+        "D-02": 4,
+        "D-03": 1,
+        "E-04": 0
+      }
+    },
+    {
+      "name": "T21 重复输入去重",
+      "passed": true,
+      "evidence": {
+        "inputRows": 18,
+        "distinctRisks": 9
+      }
+    },
+    {
+      "name": "T23 分级结果真实落库",
+      "passed": true,
+      "evidence": {
+        "findingId": 1009,
+        "severity": "HIGH",
+        "policyVersion": "t23-v1.0.0"
+      }
+    },
+    {
+      "name": "T22 人工确认同库风险",
+      "passed": true,
+      "evidence": {
+        "findingId": 1009,
+        "status": "CONFIRMED"
+      }
+    },
+    {
+      "name": "T24 全部风险告警且重复不新增",
+      "passed": true,
+      "evidence": {
+        "initialAlerts": 9,
+        "repeatOutcome": "DUPLICATE"
+      }
+    },
+    {
+      "name": "T26 修复前报告与检测结果一致",
+      "passed": true,
+      "evidence": {
+        "activeRisks": 9,
+        "bySeverity": {
+          "CRITICAL": 0,
+          "HIGH": 7,
+          "INFO": 0,
+          "LOW": 1,
+          "MEDIUM": 1
+        },
+        "byStatus": {
+          "CONFIRMED": 1,
+          "FALSE_POSITIVE": 0,
+          "FIXED": 0,
+          "OPEN": 8,
+          "RETESTED": 0
+        },
+        "distinctRisks": 9,
+        "findingRows": 9,
+        "tasks": 1
+      }
+    },
+    {
+      "name": "T25 真实规则 CLEAN 修复",
+      "passed": true,
+      "evidence": {
+        "outcome": "CLEAN",
+        "status": "FIXED",
+        "alert": "RESOLVED"
+      }
+    },
+    {
+      "name": "复测重放不再次检测",
+      "passed": true,
+      "evidence": {
+        "replayed": true,
+        "providerCalls": 1
+      }
+    },
+    {
+      "name": "报告状态随已提交修复变化",
+      "passed": true,
+      "evidence": {
+        "activeRisks": 8,
+        "bySeverity": {
+          "CRITICAL": 0,
+          "HIGH": 7,
+          "INFO": 0,
+          "LOW": 1,
+          "MEDIUM": 1
+        },
+        "byStatus": {
+          "CONFIRMED": 0,
+          "FALSE_POSITIVE": 0,
+          "FIXED": 1,
+          "OPEN": 8,
+          "RETESTED": 0
+        },
+        "distinctRisks": 9,
+        "findingRows": 9,
+        "tasks": 1
+      }
+    },
+    {
+      "name": "再次 CLEAN 变为 RETESTED",
+      "passed": true,
+      "evidence": {
+        "status": "RETESTED"
+      }
+    },
+    {
+      "name": "重新命中开启下一告警周期",
+      "passed": true,
+      "evidence": {
+        "status": "CONFIRMED",
+        "cycle": 2,
+        "totalAlerts": 10
+      }
+    },
+    {
+      "name": "不完整内容不能宣称修复",
+      "passed": true,
+      "evidence": {
+        "code": 40903,
+        "currentStatus": "CONFIRMED"
+      }
+    },
+    {
+      "name": "历史结论与当前状态区分",
+      "passed": true,
+      "evidence": {
+        "terminalExecutions": 4,
+        "outcomes": [
+          "INCONCLUSIVE",
+          "MATCH",
+          "CLEAN",
+          "CLEAN"
+        ]
+      }
+    },
+    {
+      "name": "最终 HTML/PDF 真正下载且计数一致",
+      "passed": true,
+      "evidence": {
+        "reportId": 3,
+        "pages": 4,
+        "summary": {
+          "activeRisks": 9,
+          "bySeverity": {
+            "CRITICAL": 0,
+            "HIGH": 7,
+            "INFO": 0,
+            "LOW": 1,
+            "MEDIUM": 1
+          },
+          "byStatus": {
+            "CONFIRMED": 1,
+            "FALSE_POSITIVE": 0,
+            "FIXED": 0,
+            "OPEN": 8,
+            "RETESTED": 0
+          },
+          "distinctRisks": 9,
+          "findingRows": 9,
+          "tasks": 1
+        }
+      }
+    },
+    {
+      "name": "已生成报告保持冻结",
+      "passed": true,
+      "evidence": {
+        "oldReportId": 1,
+        "unchanged": true
+      }
+    },
+    {
+      "name": "跨资产接口一致拒绝",
+      "passed": true,
+      "evidence": {
+        "codes": [
+          40310,
+          40310,
+          40310
+        ]
+      }
+    },
+    {
+      "name": "缺少可信身份拒绝下载",
+      "passed": true,
+      "evidence": {
+        "code": 40100
+      }
+    },
+    {
+      "name": "分级元数据与审计跨服务保留",
+      "passed": true,
+      "evidence": {
+        "gradingPreserved": true,
+        "auditRows": 33
+      }
+    },
+    {
+      "name": "报告与审计不泄露合成敏感原文",
+      "passed": true,
+      "evidence": {
+        "rawSecretExported": false
+      }
+    }
+  ],
+  "boundaries": [
+    "固定合成输入、私有 SQLite 和可信测试 Principal；未访问业务数据库或真实外部站点。",
+    "跨模块使用真实检测/规则/服务/事务/ASGI；数据导入是测试夹具，不是上线采集/upsert 服务。",
+    "未修改 src.main 默认路由，未验证真实 JWT 到资产授权、生产 PostgreSQL、前端或恒脑全链路。",
+    "T21 标准快照与分级 ORM 元数据分开保留，不能将后者重新传给严格历史接口。",
+    "报告时间为本次固定合成场景，不能作为真实站点的巡检或效果指标。"
+  ]
+}

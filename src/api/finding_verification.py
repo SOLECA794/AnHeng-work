@@ -46,7 +46,10 @@ class VerificationRoute(APIRoute):
                 return _failure(VerificationError(40001, "请求参数不合法"))
             except HTTPException as error:
                 code = {400: 40001, 401: 40100, 403: 40300, 404: 40400}.get(error.status_code, 50000)
-                return _failure(VerificationError(code, "请求未通过校验或鉴权"))
+                response = _failure(VerificationError(code, "请求未通过校验或鉴权"))
+                if code == 40100:
+                    response.headers["WWW-Authenticate"] = "Bearer"
+                return response
 
         return safe_handler
 
