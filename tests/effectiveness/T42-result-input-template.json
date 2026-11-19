@@ -1,0 +1,138 @@
+{
+  "schema_version": "1",
+  "dataset_version": "1.0.0",
+  "dataset_sha256": "adef16c9bd731631a4fde31a421624606a9a514cc1fc53e4c503ed4b196be23a",
+  "run_id": "",
+  "code_commit": "",
+  "scan_config": {},
+  "results": [
+    {
+      "case_id": "A-01",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "A-02",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "A-03",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "B-01",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "B-02",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "C-01",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "C-02",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "D-01",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "D-02",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "D-03",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "E-01",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "E-05",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "E-02",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "E-04",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "B-03",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    },
+    {
+      "case_id": "B-04",
+      "status": "not_run",
+      "detected": null,
+      "finding_ids": [],
+      "evidence": [],
+      "reason": ""
+    }
+  ]
+}
