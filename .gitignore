@@ -27,3 +27,6 @@ reports/*.pdf
 nuclei-templates/
 nuclei-templates.tar.gz
 reports/nuclei-*.jsonl
+
+output/pdf/
+tmp/pdfs/

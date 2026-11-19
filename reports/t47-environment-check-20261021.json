@@ -1,0 +1,211 @@
+{
+  "task": "T47",
+  "date": "2026-10-21",
+  "observedAt": "2026-10-21T14:23:31+08:00",
+  "sourceBaseline": "42bc12fe44446407320e6310e1ee89c43399e08d",
+  "runtime": {
+    "python": "3.13.2",
+    "packages": {
+      "fastapi": "0.143.1",
+      "uvicorn": "0.54.0",
+      "SQLAlchemy": "2.1.4",
+      "regex": "2024.11.6",
+      "httpx": "0.28.1"
+    },
+    "dockerCliOnPath": true,
+    "dockerClientVersion": "29.4.3",
+    "dockerEngineReachable": false,
+    "npmCliOnPath": false,
+    "projectVenvExists": false
+  },
+  "listenersBeforeCheck": {
+    "8000": false,
+    "8080": false,
+    "18081": false,
+    "18082": false,
+    "18083": false,
+    "18084": false,
+    "18085": false
+  },
+  "fixedPortFixtureRun": {
+    "status": "STARTED_VERIFIED_STOPPED",
+    "ports": [
+      18081,
+      18082,
+      18083,
+      18084,
+      18085
+    ]
+  },
+  "checks": [
+    {
+      "name": "隔离后端实际启动与健康检查",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "loopbackOnly": true,
+        "privateDatabase": true,
+        "externalCredentialsDisabled": true
+      }
+    },
+    {
+      "name": "主分支实际挂载路由",
+      "passed": true,
+      "evidence": {
+        "paths": [
+          "/api/agent/logs",
+          "/api/auth/login",
+          "/api/auth/logout",
+          "/api/auth/me",
+          "/api/auth/password",
+          "/api/health"
+        ]
+      }
+    },
+    {
+      "name": "未登录访问拒绝",
+      "passed": true,
+      "evidence": {
+        "status": 401
+      }
+    },
+    {
+      "name": "临时管理员登录与角色",
+      "passed": true,
+      "evidence": {
+        "loginStatus": 200,
+        "meStatus": 200,
+        "role": "ADMIN",
+        "credentialExported": false
+      }
+    },
+    {
+      "name": "管理员审计接口",
+      "passed": true,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "name": "退出后旧凭证失效",
+      "passed": true,
+      "evidence": {
+        "logoutStatus": 200,
+        "oldTokenStatus": 401
+      }
+    },
+    {
+      "name": "隔离后端已停止",
+      "passed": true,
+      "evidence": {
+        "listenerReleased": true
+      }
+    },
+    {
+      "name": "固定端口 A–E 五靶标启动",
+      "passed": true,
+      "evidence": {
+        "httpStatusBySite": {
+          "A": 200,
+          "B": 200,
+          "C": 200,
+          "D": 200,
+          "E": 200
+        }
+      }
+    },
+    {
+      "name": "D 靶标虚拟路径映射",
+      "passed": true,
+      "evidence": {
+        "envPath": "/.env",
+        "backupPath": "/backup.bak",
+        "bodyExported": false
+      }
+    },
+    {
+      "name": "E 负例与响应头",
+      "passed": true,
+      "evidence": {
+        "negativeFixture": true,
+        "nosniff": true
+      }
+    },
+    {
+      "name": "五靶标服务已停止",
+      "passed": true,
+      "evidence": {
+        "listenersReleased": true
+      }
+    },
+    {
+      "name": "T20 现有演示命令复现",
+      "passed": true,
+      "evidence": {
+        "passed": true,
+        "metrics": {
+          "recall": 1.0,
+          "precision": 1.0,
+          "accuracy": 1.0,
+          "false_positive_rate": 0.0
+        }
+      }
+    },
+    {
+      "name": "T21 现有演示命令复现",
+      "passed": true,
+      "evidence": {
+        "passed": true,
+        "passed_checks": 10,
+        "total_checks": 10
+      }
+    },
+    {
+      "name": "T22 现有演示命令复现",
+      "passed": true,
+      "evidence": {
+        "passed": true,
+        "passed_checks": 16,
+        "total_checks": 16
+      }
+    },
+    {
+      "name": "B_T09_T10 现有演示命令复现",
+      "passed": true,
+      "evidence": {
+        "passed": true,
+        "testsRun": 38
+      }
+    },
+    {
+      "name": "数据集版本与数量",
+      "passed": true,
+      "evidence": {
+        "version": "1.0.0",
+        "cases": 16,
+        "sites": {
+          "A": "http://127.0.0.1:18081",
+          "B": "http://127.0.0.1:18082",
+          "C": "http://127.0.0.1:18083",
+          "D": "http://127.0.0.1:18084",
+          "E": "http://127.0.0.1:18085"
+        }
+      }
+    }
+  ],
+  "totalChecks": 16,
+  "passedChecks": 16,
+  "passed": true,
+  "unitRegression": {
+    "command": "python -m unittest discover -s tests/unit -t tests/unit -q",
+    "testsRun": 343,
+    "passed": true
+  },
+  "boundaries": [
+    "仅私有 SQLite、回环 HTTP 与固定合成样例；未读取业务数据库或更改真实账号。",
+    "临时服务验证后已停止；不宣称 8000/8080/18081–18085 日常服务常驻。",
+    "Docker 客户端只读版本核对通过但引擎不可达；DVWA、PostgreSQL、前端跨域与恒脑在线全链路未在本次验收。",
+    "T23/T24/T25/T26 未合入 main；各自 PR 为 6/7/8/10。",
+    "16 标签 HTTP 验证已单独执行 tests/fixtures/verify_dataset.py，不代表检测效果指标。"
+  ]
+}
